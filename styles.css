@@ -1,0 +1,186 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f9e6d700;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+#gameContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameCanvas {
+  border: none;
+  cursor: url('./binocs-cursor.ico') 16 16, crosshair;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Bird Journal Left Panel */
+#birdJournal {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 320px;
+  height: 480px;
+  background: #f5f1e8;
+  border: 1px solid #474747;
+  border-radius: 0 16px 16px 0;
+  /* subtle inner drop shadow and faint inner border */
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05),
+              inset 0 12px 24px rgba(0, 0, 0, 0.06),
+              inset -8px 0 16px rgba(0, 0, 0, 0.04);
+  z-index: 10;
+  display: flex;
+  overflow: hidden;
+}
+
+#journalBinding {
+  width: 8px;
+  background: #2c3e50;
+  flex-shrink: 0;
+}
+
+#journalContent {
+  flex: 1;
+  padding: 25px 20px;
+  position: relative;
+}
+
+#currentDate {
+  font-family: 'Caveat', 'Brush Script MT', cursive;
+  font-size: 18px;
+  font-weight: 400;
+  color: #5a9fd4;
+  margin: 0 0 15px 0;
+  line-height: 1.2;
+}
+
+#birdCountText {
+  font-family: 'Cormorant', 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #2c3e50;
+  margin: 0 0 25px 0;
+}
+
+ 
+
+#speciesList {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+#noSpeciesMessage {
+  color: #95a5a6;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  font-family: 'Cormorant', 'Times New Roman', serif;
+}
+
+.speciesEntry {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #d4d4d4;
+  padding: 8px 0;
+  margin: 0;
+  transition: all 0.3s ease;
+  animation: slideIn 0.5s ease-out;
+}
+
+.speciesEntry:last-child {
+  border-bottom: none;
+}
+
+.speciesEntry:hover {
+  background: rgba(90, 159, 212, 0.1);
+  transform: translateX(5px);
+}
+
+.speciesEntry.newSpecies {
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 3px solid #ffc107;
+  padding-left: 8px;
+}
+
+.speciesName {
+  font-family: 'Cormorant', 'Times New Roman', serif;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.speciesTime {
+  display: none;
+}
+
+.speciesPoints {
+  display: none;
+}
+
+.newSpeciesBadge {
+  display: none;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Custom scrollbar for species list */
+#speciesList::-webkit-scrollbar {
+  width: 6px;
+}
+
+#speciesList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+#speciesList::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+#speciesList::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+#ui {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+#debug {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: monospace;
+}
