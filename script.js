@@ -365,7 +365,7 @@
             }
             
             updateBinoculars() {
-                this.binoculars.x = this.mouse.x;
+                this.binoculars.x = this.mouse.x+25;
                 this.binoculars.y = this.mouse.y;
             }
             
