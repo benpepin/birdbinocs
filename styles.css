@@ -15,7 +15,11 @@ body {
 
 #gameCanvas {
   border: none;
-  cursor: url('./binocs-cursor.ico') 16 16, crosshair;
+  cursor: url('./Binocs.png') 24 16, crosshair;
+}
+
+#gameCanvas.zoomed {
+  cursor: none;
   /* Stretch to fill entire container without maintaining aspect ratio */
   width: 100vw;
   height: 100vh;

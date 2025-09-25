@@ -90,6 +90,14 @@
                 };
                 this.backgroundImage.src = 'background.png';
                 
+                // Binocs cursor image
+                this.binocsImage = new Image();
+                this.isBinocsLoaded = false;
+                this.binocsImage.onload = () => {
+                    this.isBinocsLoaded = true;
+                };
+                this.binocsImage.src = 'Binocs.png';
+                
                 // Sprite sheet for birds (replaces per-species drawings)
                 this.spriteSheet = new Image();
                 this.isSpriteSheetLoaded = false;
@@ -152,10 +160,10 @@
                 // Frame boundaries for bird movement (based on background image frame)
                 // These will be set proportionally in updateCanvasSize()
                 this.frameBounds = {
-                    left: 300,     // Left edge of black frame (more centered)
-                    right: 900,   // Right edge of black frame (smaller frame)
-                    top: 100,      // Top edge of black frame
-                    bottom: 700    // Bottom edge of black frame
+                    left: 0,       // Left edge of screen
+                    right: 1200,   // Right edge of screen
+                    top: 0,        // Top edge of screen
+                    bottom: 800    // Bottom edge of screen
                 };
                 
                 this.setupCanvas();
@@ -171,15 +179,12 @@
                 this.canvasWidth = window.innerWidth;
                 this.canvasHeight = window.innerHeight;
                 
-                // Update frame bounds proportionally
-                const scaleX = this.canvasWidth / 1200;
-                const scaleY = this.canvasHeight / 800;
-                
+                // Update frame bounds to use full screen
                 this.frameBounds = {
-                    left: 300 * scaleX,
-                    right: 900 * scaleX,
-                    top: 100 * scaleY,
-                    bottom: 700 * scaleY
+                    left: 0,
+                    right: this.canvasWidth,
+                    top: 0,
+                    bottom: this.canvasHeight
                 };
             }
             
@@ -207,12 +212,14 @@
                     this.mouse.isDown = true;
                     this.binoculars.isActive = true;
                     this.binoculars.zoomLevel = 2.5;
+                    this.canvas.classList.add('zoomed');
                 });
                 
                 this.canvas.addEventListener('mouseup', (e) => {
                     this.mouse.isDown = false;
                     this.binoculars.isActive = false;
                     this.binoculars.zoomLevel = 1.0;
+                    this.canvas.classList.remove('zoomed');
                 });
                 
                 this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -1060,17 +1067,7 @@
             }
             
             drawCursor() {
-                if (!this.binoculars.isActive) {
-                    const ctx = this.ctx;
-                    ctx.strokeStyle = 'rgba(100, 100, 100, 0.7)';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(this.mouse.x - 10, this.mouse.y);
-                    ctx.lineTo(this.mouse.x + 10, this.mouse.y);
-                    ctx.moveTo(this.mouse.x, this.mouse.y - 10);
-                    ctx.lineTo(this.mouse.x, this.mouse.y + 10);
-                    ctx.stroke();
-                }
+                // Cursor is now handled by CSS, no need to draw it here
             }
             
             drawBirds() {
