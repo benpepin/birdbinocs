@@ -10,16 +10,17 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* Remove centering - let canvas fill the entire container */
 }
 
 #gameCanvas {
   border: none;
   cursor: url('./binocs-cursor.ico') 16 16, crosshair;
-  max-width: 100%;
-  max-height: 100%;
+  /* Stretch to fill entire container without maintaining aspect ratio */
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  object-fit: fill;
 }
 
 /* Bird Journal Left Panel */

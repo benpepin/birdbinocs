@@ -146,12 +146,11 @@
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
                 
-                // Game settings
-                this.canvasWidth = 1200;
-                this.canvasHeight = 800;
+                // Game settings - now dynamic based on viewport
+                this.updateCanvasSize();
                 
                 // Frame boundaries for bird movement (based on background image frame)
-                // These represent the black frame boundaries within the canvas
+                // These will be set proportionally in updateCanvasSize()
                 this.frameBounds = {
                     left: 300,     // Left edge of black frame (more centered)
                     right: 900,   // Right edge of black frame (smaller frame)
@@ -167,10 +166,31 @@
                 this.createBirdSprites();
             }
             
+            updateCanvasSize() {
+                // Set canvas size to match the viewport
+                this.canvasWidth = window.innerWidth;
+                this.canvasHeight = window.innerHeight;
+                
+                // Update frame bounds proportionally
+                const scaleX = this.canvasWidth / 1200;
+                const scaleY = this.canvasHeight / 800;
+                
+                this.frameBounds = {
+                    left: 300 * scaleX,
+                    right: 900 * scaleX,
+                    top: 100 * scaleY,
+                    bottom: 700 * scaleY
+                };
+            }
+            
             setupCanvas() {
                 this.canvas.width = this.canvasWidth;
                 this.canvas.height = this.canvasHeight;
                 this.ctx.imageSmoothingEnabled = true;
+                
+                // Set canvas style to fill the entire viewport
+                this.canvas.style.width = '100vw';
+                this.canvas.style.height = '100vh';
             }
             
             setupEventListeners() {
@@ -294,20 +314,14 @@
             }
             
             handleResize() {
-                const container = document.getElementById('gameContainer');
-                const containerRect = container.getBoundingClientRect();
-                const aspectRatio = this.canvasWidth / this.canvasHeight;
-                let newWidth = containerRect.width;
-                let newHeight = containerRect.height;
+                // Update canvas size to match new viewport
+                this.updateCanvasSize();
+                this.canvas.width = this.canvasWidth;
+                this.canvas.height = this.canvasHeight;
                 
-                if (newWidth / newHeight > aspectRatio) {
-                    newWidth = newHeight * aspectRatio;
-                } else {
-                    newHeight = newWidth / aspectRatio;
-                }
-                
-                this.canvas.style.width = newWidth + 'px';
-                this.canvas.style.height = newHeight + 'px';
+                // Update canvas style to fill the entire viewport
+                this.canvas.style.width = '100vw';
+                this.canvas.style.height = '100vh';
             }
             
             update(currentTime) {
@@ -789,11 +803,14 @@
                 if (this.isBackgroundLoaded) {
                     const imgW = this.backgroundImage.naturalWidth || this.backgroundImage.width;
                     const imgH = this.backgroundImage.naturalHeight || this.backgroundImage.height;
-                    const scale = Math.min(this.canvasWidth / imgW, this.canvasHeight / imgH);
+                    
+                    // Use "cover" approach - maintain aspect ratio but fill entire canvas
+                    const scale = Math.max(this.canvasWidth / imgW, this.canvasHeight / imgH);
                     const drawW = imgW * scale;
                     const drawH = imgH * scale;
                     const offsetX = (this.canvasWidth - drawW) / 2;
                     const offsetY = (this.canvasHeight - drawH) / 2;
+                    
                     ctx.drawImage(this.backgroundImage, 0, 0, imgW, imgH, offsetX, offsetY, drawW, drawH);
                 }
             }
