@@ -294,7 +294,7 @@
                 // Setup species list clicks
                 this.notebookElements.speciesList.addEventListener('click', (e) => {
                     if (e.target.classList.contains('species-item')) {
-                        const birdName = e.target.textContent.trim();
+                        const birdName = e.target.textContent.trim().replace(/\s*\(\d+\)$/, '');
                         // Find the bird type based on the name from discovered species
                         const matchingSpecies = this.todaysSpecies.find(species => species.name === birdName);
                         if (matchingSpecies) {
@@ -479,7 +479,7 @@ A miracle of nature's flight.`,
                     if (species.type === this.currentNotebookBird) {
                         item.classList.add('active');
                     }
-                    item.textContent = species.name;
+                    item.textContent = species.count > 1 ? `${species.name} (${species.count})` : species.name;
                     speciesList.appendChild(item);
                 });
                 
