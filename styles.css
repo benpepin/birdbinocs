@@ -120,14 +120,13 @@ body {
 
 .poem-image {
   text-align: center;
-  margin-top: auto;
+  margin-bottom: 20px;
 }
 
 .poem-image img {
-  max-width: 120px;
-  max-height: 80px;
+  max-width: 160px;
+  max-height: 120px;
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .species-info {

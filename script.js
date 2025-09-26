@@ -322,7 +322,7 @@ They looked so beautiful in flight<br>
 And the breezes were just right.<br>
 They had spent a day of fun.<br>
 Floating in the duck pond.`,
-                        image: "flamingo.png"
+                        image: "Flamingoimage.png"
                     },
                     robin: {
                         title: "The Early Robin",
