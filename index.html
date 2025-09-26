@@ -16,17 +16,42 @@
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         
-        <!-- Left Panel for Bird Journal -->
-        <div id="birdJournal">
-            <div id="journalBinding"></div>
-            <div id="journalContent">
-                <div id="currentDate"></div>
-                <div id="birdCountText"></div>
-                <div id="speciesList">
-                    <div id="noSpeciesMessage">No species spotted yet today</div>
+        <!-- Right Panel for Bird Notebook -->
+        <div id="birdNotebook">
+            <div class="notebook-content">
+                <div class="notebook-left-panel">
+                    <div class="poem-section">
+                        <h2 id="poemTitle" class="poem-title">Flying Flamingos</h2>
+                        <p id="poemAuthor" class="poem-author">by Lamar Cole</p>
+                        <div id="poemText" class="poem-text">
+                            It was the ending of a beautiful day.<br>
+                            And the flamingos were sailing away.<br>
+                            They looked so beautiful in flight<br>
+                            And the breezes were just right.<br>
+                            They had spent a day of fun.<br>
+                            Floating in the duck pond.
+                        </div>
+                        <div class="poem-image">
+                            <img id="poemImage" src="flamingo.png" alt="Bird illustration" />
+                        </div>
+                    </div>
+                </div>
+                <div class="notebook-right-panel">
+                    <div class="species-info">
+                        <div class="notebook-header">
+                            <div id="notebookDate" class="notebook-date">March 20, 2025</div>
+                            <div id="notebookSpeciesCount" class="species-count">2 species</div>
+                        </div>
+                        <div id="notebookSpeciesList" class="notebook-species-list">
+                            <div class="species-item active">Flamingo</div>
+                            <div class="species-item">American Robin</div>
+                            <div class="species-item">Black Phoebe</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
         
         <div id="ui">
             <div>🔭 Binoculars: <span id="binocularStatus">Ready</span></div>
@@ -35,10 +60,7 @@
             <div>🏆 Score: <span id="scoreDisplay">0</span></div>
         </div>
         
-        <div id="debug">
-            <div>FPS: <span id="fps">0</span></div>
-            <div>Frame: <span id="frameCount">0</span></div>
-        </div>
+
     </div>
 
     <script src="script.js"></script>

@@ -154,6 +154,10 @@
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
                 
+                // Notebook system
+                this.notebookData = this.createNotebookData();
+                this.currentNotebookBird = null;
+                
                 // Game settings - now dynamic based on viewport
                 this.updateCanvasSize();
                 
@@ -169,7 +173,7 @@
                 this.setupCanvas();
                 this.setupEventListeners();
                 this.setupUI();
-                this.setupBirdJournal();
+                this.setupNotebook();
                 // Keep SVG sprites available as a fallback if no sprite sheet is present
                 this.createBirdSprites();
             }
@@ -201,9 +205,11 @@
             setupEventListeners() {
                 this.canvas.addEventListener('mousemove', (e) => {
                     const rect = this.canvas.getBoundingClientRect();
-                    const scaleX = this.canvas.width / rect.width;
-                    const scaleY = this.canvas.height / rect.height;
-                    
+                    // Account for pixel ratio in mouse coordinate calculation
+                    const pixelRatio = window.devicePixelRatio || 1;
+                    const scaleX = (this.canvas.width / pixelRatio) / rect.width;
+                    const scaleY = (this.canvas.height / pixelRatio) / rect.height;
+
                     this.mouse.x = (e.clientX - rect.left) * scaleX;
                     this.mouse.y = (e.clientY - rect.top) * scaleY;
                 });
@@ -223,6 +229,7 @@
                 });
                 
                 this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+                this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
                 window.addEventListener('resize', () => this.handleResize());
             }
             
@@ -231,38 +238,8 @@
                     binocularStatus: document.getElementById('binocularStatus'),
                     birdCount: document.getElementById('birdCount'),
                     mousePos: document.getElementById('mousePos'),
-                    fps: document.getElementById('fps'),
-                    frameCount: document.getElementById('frameCount'),
                     scoreDisplay: document.getElementById('scoreDisplay')
                 };
-            }
-            
-            setupBirdJournal() {
-                this.journalElements = {
-                    currentDate: document.getElementById('currentDate'),
-                    birdCountText: document.getElementById('birdCountText'),
-                    speciesList: document.getElementById('speciesList'),
-                    noSpeciesMessage: document.getElementById('noSpeciesMessage')
-                };
-                
-                this.updateJournalDate();
-                this.updateBirdCountText();
-                this.updateSpeciesList();
-            }
-            
-            updateJournalDate() {
-                const options = { 
-                    month: 'long', 
-                    day: 'numeric', 
-                    year: 'numeric'
-                };
-                this.journalElements.currentDate.textContent = this.currentDate.toLocaleDateString('en-US', options);
-            }
-            
-            updateBirdCountText() {
-                const totalBirds = this.todaysSpecies.length;
-                const text = totalBirds === 1 ? '1 bird spotted' : `${totalBirds} birds spotted`;
-                this.journalElements.birdCountText.textContent = text;
             }
             
             addSpeciesToJournal(bird) {
@@ -286,46 +263,258 @@
                     this.todaysSpecies.unshift(speciesEntry); // Add to beginning of list
                 }
                 
-                this.updateBirdCountText();
-                this.updateSpeciesList();
+                // Update notebook species list
+                this.updateNotebookSpeciesList();
             }
             
-            updateSpeciesList() {
-                const speciesList = this.journalElements.speciesList;
-                const noSpeciesMessage = this.journalElements.noSpeciesMessage;
-                
-                if (this.todaysSpecies.length === 0) {
-                    noSpeciesMessage.style.display = 'block';
-                    return;
-                }
-                
-                noSpeciesMessage.style.display = 'none';
-                
-                // Clear existing entries
-                const existingEntries = speciesList.querySelectorAll('.speciesEntry');
-                existingEntries.forEach(entry => entry.remove());
-                
-                // Add species entries
-                this.todaysSpecies.forEach((species, index) => {
-                    const entry = document.createElement('div');
-                    entry.className = `speciesEntry ${species.isNewSpecies ? 'newSpecies' : ''}`;
-                    
-                    const countText = species.count === 1 ? '' : `${species.count} `;
-                    
-                    entry.innerHTML = `
-                        <div class="speciesName">${countText}${species.name}</div>
-                    `;
-                    
-                    speciesList.appendChild(entry);
+            setupNotebook() {
+                this.notebookElements = {
+                    container: document.getElementById('birdNotebook'),
+                    title: document.getElementById('poemTitle'),
+                    author: document.getElementById('poemAuthor'),
+                    text: document.getElementById('poemText'),
+                    image: document.getElementById('poemImage'),
+                    date: document.getElementById('notebookDate'),
+                    speciesCount: document.getElementById('notebookSpeciesCount'),
+                    speciesList: document.getElementById('notebookSpeciesList')
+                };
+
+                // Track if mouse is over notebook
+                this.isMouseOverNotebookElement = false;
+
+                // Add mouse enter/leave listeners to notebook
+                this.notebookElements.container.addEventListener('mouseenter', () => {
+                    this.isMouseOverNotebookElement = true;
                 });
+
+                this.notebookElements.container.addEventListener('mouseleave', () => {
+                    this.isMouseOverNotebookElement = false;
+                });
+
+                // Setup species list clicks
+                this.notebookElements.speciesList.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('species-item')) {
+                        const birdName = e.target.textContent.trim();
+                        // Find the bird type based on the name from discovered species
+                        const matchingSpecies = this.todaysSpecies.find(species => species.name === birdName);
+                        if (matchingSpecies) {
+                            this.showNotebookForBird(matchingSpecies.type);
+                        } else {
+                            // Fallback: try to match by converting name to type
+                            const birdType = birdName.toLowerCase().replace(/\s+/g, '').replace('american', '').replace('northern', '');
+                            this.showNotebookForBird(birdType);
+                        }
+                    }
+                });
+
+                // Initialize with default content
+                this.updateNotebookSpeciesList();
             }
+            
+            createNotebookData() {
+                return {
+                    flamingo: {
+                        title: "Flying Flamingos",
+                        author: "by Lamar Cole",
+                        poem: `It was the ending of a beautiful day.<br>
+And the flamingos were sailing away.<br>
+They looked so beautiful in flight<br>
+And the breezes were just right.<br>
+They had spent a day of fun.<br>
+Floating in the duck pond.`,
+                        image: "flamingo.png"
+                    },
+                    robin: {
+                        title: "The Early Robin",
+                        author: "by Sarah Williams",
+                        poem: `The robin sings at break of day,<br>
+Her melody so sweet and gay.<br>
+She hops about with cheerful heart,<br>
+Nature's artist, playing her part.<br>
+Red breast bright against the green,<br>
+The most beautiful bird I've seen.`,
+                        image: "AmericanRobin.png"
+                    },
+                    cardinal: {
+                        title: "Crimson Cardinal",
+                        author: "by Michael Chen",
+                        poem: `A flash of red against the snow,<br>
+The cardinal comes and goes.<br>
+His song rings clear in winter's chill,<br>
+A promise that spring will fulfill.<br>
+Crested head held proud and high,<br>
+Painting hope across the sky.`,
+                        image: "NorthernCardinal.png"
+                    },
+                    bluejay: {
+                        title: "The Bold Blue Jay",
+                        author: "by Emma Rodriguez",
+                        poem: `Bold and brash, the blue jay calls,<br>
+His voice echoes through the halls<br>
+Of ancient trees and morning mist,<br>
+A creature that cannot be missed.<br>
+Blue and white in perfect blend,<br>
+Nature's message he will send.`,
+                        image: "bird-spritesheet.png"
+                    },
+                    sparrow: {
+                        title: "Little Sparrow",
+                        author: "by David Kim",
+                        poem: `Small and brown, the sparrow flies,<br>
+Underneath the open skies.<br>
+Quick and nimble, never still,<br>
+Fulfilling nature's perfect will.<br>
+Common beauty, often missed,<br>
+In morning's golden light she's kissed.`,
+                        image: "bird-spritesheet.png"
+                    },
+                    chickadee: {
+                        title: "Chickadee's Song",
+                        author: "by Alice Thompson",
+                        poem: `Chick-a-dee-dee-dee they say,<br>
+Through the cold of winter's day.<br>
+Small but mighty, brave and true,<br>
+With a cap of midnight blue.<br>
+In the feeder they appear,<br>
+Bringing joy throughout the year.`,
+                        image: "bird-spritesheet.png"
+                    },
+                    goldfinch: {
+                        title: "Golden Flight",
+                        author: "by Robert Hayes",
+                        poem: `Like sunshine with wings they fly,<br>
+Golden finches in the sky.<br>
+Dancing through the summer air,<br>
+Bright and beautiful beyond compare.<br>
+On thistle seeds they love to dine,<br>
+These treasures of the bird divine.`,
+                        image: "bird-spritesheet.png"
+                    },
+                    hawk: {
+                        title: "Red-Tailed Hunter",
+                        author: "by Maria Santos",
+                        poem: `High above on thermal's rise,<br>
+The hawk surveys with keen, sharp eyes.<br>
+Majestic wings spread wide and strong,<br>
+A wild and ancient freedom song.<br>
+Red tail catches morning light,<br>
+A ruler of the endless flight.`,
+                        image: "bird-spritesheet.png"
+                    },
+                    crow: {
+                        title: "The Clever Crow",
+                        author: "by James Mitchell",
+                        poem: `Black as midnight, smart as can be,<br>
+The crow calls from the old oak tree.<br>
+With intelligence beyond compare,<br>
+They solve problems with cunning care.<br>
+In family groups they stick together,<br>
+Through every season, every weather.`,
+                        image: "bird-spritesheet.png"
+                    },
+                    hummingbird: {
+                        title: "Ruby Jewel",
+                        author: "by Lisa Park",
+                        poem: `Tiny jewel of emerald green,<br>
+The fastest wings I've ever seen.<br>
+Hovering at the flower's face,<br>
+Moving with impossible grace.<br>
+Ruby throat that catches light,<br>
+A miracle of nature's flight.`,
+                        image: "bird-spritesheet.png"
+                    }
+                };
+            }
+            
+            handleCanvasClick(e) {
+                if (this.binoculars.isActive) return; // Don't open notebook when using binoculars
+                
+                const rect = this.canvas.getBoundingClientRect();
+                // Account for pixel ratio in mouse coordinate calculation
+                const pixelRatio = window.devicePixelRatio || 1;
+                const scaleX = (this.canvas.width / pixelRatio) / rect.width;
+                const scaleY = (this.canvas.height / pixelRatio) / rect.height;
+
+                const clickX = (e.clientX - rect.left) * scaleX;
+                const clickY = (e.clientY - rect.top) * scaleY;
+                
+                // Check if click is on a bird
+                for (let bird of this.birds) {
+                    const distance = Math.sqrt(
+                        Math.pow(bird.x - clickX, 2) + 
+                        Math.pow(bird.y - clickY, 2)
+                    );
+                    
+                    if (distance < bird.size * 1.5) { // Click within bird area
+                        this.showNotebookForBird(bird.type);
+                        break;
+                    }
+                }
+            }
+            
+            showNotebookForBird(birdType) {
+                const birdData = this.notebookData[birdType];
+                if (!birdData) return;
+                
+                this.currentNotebookBird = birdType;
+                
+                // Update poem content
+                this.notebookElements.title.textContent = birdData.title;
+                this.notebookElements.author.textContent = birdData.author;
+                this.notebookElements.text.innerHTML = birdData.poem;
+                this.notebookElements.image.src = birdData.image;
+                
+                // Update species list
+                this.updateNotebookSpeciesList();
+            }
+            
+            updateNotebookSpeciesList() {
+                const speciesList = this.notebookElements.speciesList;
+                speciesList.innerHTML = '';
+                
+                // Add discovered species
+                this.todaysSpecies.forEach(species => {
+                    const item = document.createElement('div');
+                    item.className = 'species-item';
+                    if (species.type === this.currentNotebookBird) {
+                        item.classList.add('active');
+                    }
+                    item.textContent = species.name;
+                    speciesList.appendChild(item);
+                });
+                
+                // Update species count
+                this.notebookElements.speciesCount.textContent = 
+                    `${this.todaysSpecies.length} species`;
+                
+                // Update date
+                const options = { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric'
+                };
+                this.notebookElements.date.textContent = 
+                    this.currentDate.toLocaleDateString('en-US', options);
+            }
+            
             
             handleResize() {
                 // Update canvas size to match new viewport
                 this.updateCanvasSize();
-                this.canvas.width = this.canvasWidth;
-                this.canvas.height = this.canvasHeight;
-                
+
+                // Get device pixel ratio for crisp rendering
+                const pixelRatio = window.devicePixelRatio || 1;
+
+                // Set canvas size accounting for pixel ratio
+                this.canvas.width = this.canvasWidth * pixelRatio;
+                this.canvas.height = this.canvasHeight * pixelRatio;
+
+                // Scale the canvas context to account for pixel ratio
+                this.ctx.scale(pixelRatio, pixelRatio);
+
+                // Disable image smoothing for crisp rendering
+                this.ctx.imageSmoothingEnabled = false;
+
                 // Update canvas style to fill the entire viewport
                 this.canvas.style.width = '100vw';
                 this.canvas.style.height = '100vh';
@@ -360,12 +549,10 @@
                 this.uiElements.birdCount.textContent = this.birdsSpotted;
                 this.uiElements.mousePos.textContent = `Species: ${this.discoveredSpecies.size}/${this.speciesCatalog.length}`;
                 this.uiElements.scoreDisplay.textContent = this.totalScore.toLocaleString();
-                this.uiElements.fps.textContent = this.fps;
-                this.uiElements.frameCount.textContent = this.frameCount;
             }
             
             updateBinoculars() {
-                this.binoculars.x = this.mouse.x+25;
+                this.binoculars.x = this.mouse.x;
                 this.binoculars.y = this.mouse.y;
             }
             
@@ -765,8 +952,10 @@
                 this.drawParticles();
                 ctx.restore();
 
-                // 4) HUD/overlays on top (not zoomed)
-                this.drawBinocularMask();
+                // 4) HUD/overlays on top (not zoomed) - only draw if binoculars are still active
+                if (this.binoculars.isActive) {
+                    this.drawBinocularMask();
+                }
             }
             
             drawBinocularMask() {
@@ -1066,8 +1255,56 @@
                 ctx.stroke();
             }
             
+            isMouseOverNotebook() {
+                // Simple bounds check using viewport coordinates
+                // Notebook is positioned: bottom: 20px, right: 20px, width: 500px, height: 320px
+                const notebookLeft = window.innerWidth - 520;  // right margin + width
+                const notebookRight = window.innerWidth - 20;  // right margin
+                const notebookTop = window.innerHeight - 340;  // bottom margin + height
+                const notebookBottom = window.innerHeight - 20; // bottom margin
+
+                // Convert canvas mouse coordinates to viewport coordinates
+                const viewportX = (this.mouse.x / this.canvasWidth) * window.innerWidth;
+                const viewportY = (this.mouse.y / this.canvasHeight) * window.innerHeight;
+
+                return viewportX >= notebookLeft &&
+                       viewportX <= notebookRight &&
+                       viewportY >= notebookTop &&
+                       viewportY <= notebookBottom;
+            }
+
+            updateCursorStyle() {
+                if (this.isMouseOverNotebook()) {
+                    // Show normal cursor when over notebook
+                    document.body.style.cursor = 'auto';
+                    this.canvas.style.cursor = 'auto';
+                } else {
+                    // Hide cursor when not over notebook (let custom binoculars show)
+                    document.body.style.cursor = 'none';
+                    this.canvas.style.cursor = 'none';
+                }
+            }
+
             drawCursor() {
-                // Cursor is now handled by CSS, no need to draw it here
+                if (!this.binoculars.isActive && this.isBinocsLoaded && !this.isMouseOverNotebookElement) {
+                    const ctx = this.ctx;
+                    ctx.save();
+
+                    // Draw binoculars image at mouse position with proper aspect ratio
+                    const scale = 1; // Scale factor for the binoculars
+                    const width = this.binocsImage.naturalWidth * scale;
+                    const height = this.binocsImage.naturalHeight * scale;
+
+                    ctx.drawImage(
+                        this.binocsImage,
+                        this.mouse.x - width/2,
+                        this.mouse.y - height/2,
+                        width,
+                        height
+                    );
+
+                    ctx.restore();
+                }
             }
             
             drawBirds() {

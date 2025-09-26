@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(python3:*)",
-      "Bash(sips:*)"
+      "Bash(sips:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
