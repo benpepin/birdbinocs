@@ -88,7 +88,7 @@
                 this.backgroundImage.onload = () => {
                     this.isBackgroundLoaded = true;
                 };
-                this.backgroundImage.src = 'background.png';
+                this.backgroundImage.src = 'assets/images/ui/background.png';
                 
                 // Binocs cursor image
                 this.binocsImage = new Image();
@@ -96,7 +96,7 @@
                 this.binocsImage.onload = () => {
                     this.isBinocsLoaded = true;
                 };
-                this.binocsImage.src = 'Binocs.png';
+                this.binocsImage.src = 'assets/images/ui/Binocs.png';
                 
                 // Sprite sheet for birds (replaces per-species drawings)
                 this.spriteSheet = new Image();
@@ -110,7 +110,7 @@
                     this.isSpriteSheetLoaded = true;
                 };
                 // Place the sprite sheet image in the project root with this name
-                this.spriteSheet.src = 'bird-spritesheet.png';
+                this.spriteSheet.src = 'assets/images/sprites/bird-spritesheet.png';
 
                 // Flamingo-specific sprite sheet
                 this.flamingoSpriteSheet = new Image();
@@ -123,7 +123,7 @@
                 this.flamingoSpriteSheet.onload = () => {
                     this.isFlamingoSpriteSheetLoaded = true;
                 };
-                this.flamingoSpriteSheet.src = 'flamingo.png';
+                this.flamingoSpriteSheet.src = 'assets/images/sprites/flamingo.png';
 
                 // American Robin-specific sprite sheet
                 this.robinSpriteSheet = new Image();
@@ -136,7 +136,7 @@
                 this.robinSpriteSheet.onload = () => {
                     this.isRobinSpriteSheetLoaded = true;
                 };
-                this.robinSpriteSheet.src = 'AmericanRobin.png';
+                this.robinSpriteSheet.src = 'assets/images/sprites/AmericanRobin.png';
 
                 // Northern Cardinal-specific sprite sheet
                 this.cardinalSpriteSheet = new Image();
@@ -149,7 +149,46 @@
                 this.cardinalSpriteSheet.onload = () => {
                     this.isCardinalSpriteSheetLoaded = true;
                 };
-                this.cardinalSpriteSheet.src = 'NorthernCardinal.png';
+                this.cardinalSpriteSheet.src = 'assets/images/sprites/NorthernCardinal.png';
+
+                // Downy Woodpecker-specific sprite sheet
+                this.woodpeckerSpriteSheet = new Image();
+                this.isWoodpeckerSpriteSheetLoaded = false;
+                // Configure woodpecker sprite sheet layout (assuming same 4x4 grid)
+                this.woodpeckerSpriteSheetCols = 4;
+                this.woodpeckerSpriteSheetRows = 4;
+                this.woodpeckerSpriteTotalFrames = this.woodpeckerSpriteSheetCols * this.woodpeckerSpriteSheetRows;
+                this.woodpeckerSpriteAnimFps = 12; // animation speed in frames per second
+                this.woodpeckerSpriteSheet.onload = () => {
+                    this.isWoodpeckerSpriteSheetLoaded = true;
+                };
+                this.woodpeckerSpriteSheet.src = 'assets/images/sprites/DownySprite.png';
+
+                // Mallard-specific sprite sheet
+                this.mallardSpriteSheet = new Image();
+                this.isMallardSpriteSheetLoaded = false;
+                // Configure mallard sprite sheet layout (4x4 grid)
+                this.mallardSpriteSheetCols = 4;
+                this.mallardSpriteSheetRows = 4;
+                this.mallardSpriteTotalFrames = this.mallardSpriteSheetCols * this.mallardSpriteSheetRows;
+                this.mallardSpriteAnimFps = 12; // animation speed in frames per second
+                this.mallardSpriteSheet.onload = () => {
+                    this.isMallardSpriteSheetLoaded = true;
+                };
+                this.mallardSpriteSheet.src = 'assets/images/sprites/mallard-sprite.png';
+
+                // American Goldfinch-specific sprite sheet
+                this.goldfinchSpriteSheet = new Image();
+                this.isGoldfinchSpriteSheetLoaded = false;
+                // Configure goldfinch sprite sheet layout (4x4 grid)
+                this.goldfinchSpriteSheetCols = 4;
+                this.goldfinchSpriteSheetRows = 4;
+                this.goldfinchSpriteTotalFrames = this.goldfinchSpriteSheetCols * this.goldfinchSpriteSheetRows;
+                this.goldfinchSpriteAnimFps = 12; // animation speed in frames per second
+                this.goldfinchSpriteSheet.onload = () => {
+                    this.isGoldfinchSpriteSheetLoaded = true;
+                };
+                this.goldfinchSpriteSheet.src = 'assets/images/sprites/American-Goldfinch-Sprite.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -322,7 +361,7 @@ They looked so beautiful in flight<br>
 And the breezes were just right.<br>
 They had spent a day of fun.<br>
 Floating in the duck pond.`,
-                        image: "Flamingoimage.png"
+                        image: "assets/images/notebook/Flamingoimage.png"
                     },
                     robin: {
                         title: "The Early Robin",
@@ -333,7 +372,7 @@ She hops about with cheerful heart,<br>
 Nature's artist, playing her part.<br>
 Red breast bright against the green,<br>
 The most beautiful bird I've seen.`,
-                        image: "AmericanRobin.png"
+                        image: "assets/images/sprites/AmericanRobin.png"
                     },
                     cardinal: {
                         title: "Crimson Cardinal",
@@ -344,7 +383,7 @@ His song rings clear in winter's chill,<br>
 A promise that spring will fulfill.<br>
 Crested head held proud and high,<br>
 Painting hope across the sky.`,
-                        image: "NorthernCardinal.png"
+                        image: "assets/images/sprites/NorthernCardinal.png"
                     },
                     bluejay: {
                         title: "The Bold Blue Jay",
@@ -355,7 +394,7 @@ Of ancient trees and morning mist,<br>
 A creature that cannot be missed.<br>
 Blue and white in perfect blend,<br>
 Nature's message he will send.`,
-                        image: "bird-spritesheet.png"
+                        image: "assets/images/sprites/bird-spritesheet.png"
                     },
                     sparrow: {
                         title: "Little Sparrow",
@@ -366,7 +405,7 @@ Quick and nimble, never still,<br>
 Fulfilling nature's perfect will.<br>
 Common beauty, often missed,<br>
 In morning's golden light she's kissed.`,
-                        image: "bird-spritesheet.png"
+                        image: "assets/images/sprites/bird-spritesheet.png"
                     },
                     chickadee: {
                         title: "Chickadee's Song",
@@ -377,7 +416,7 @@ Small but mighty, brave and true,<br>
 With a cap of midnight blue.<br>
 In the feeder they appear,<br>
 Bringing joy throughout the year.`,
-                        image: "bird-spritesheet.png"
+                        image: "assets/images/sprites/bird-spritesheet.png"
                     },
                     goldfinch: {
                         title: "Golden Flight",
@@ -388,7 +427,7 @@ Dancing through the summer air,<br>
 Bright and beautiful beyond compare.<br>
 On thistle seeds they love to dine,<br>
 These treasures of the bird divine.`,
-                        image: "bird-spritesheet.png"
+                        image: "assets/images/notebook/American-Goldfinch.png"
                     },
                     hawk: {
                         title: "Red-Tailed Hunter",
@@ -399,7 +438,7 @@ Majestic wings spread wide and strong,<br>
 A wild and ancient freedom song.<br>
 Red tail catches morning light,<br>
 A ruler of the endless flight.`,
-                        image: "bird-spritesheet.png"
+                        image: "assets/images/sprites/bird-spritesheet.png"
                     },
                     crow: {
                         title: "The Clever Crow",
@@ -410,7 +449,7 @@ With intelligence beyond compare,<br>
 They solve problems with cunning care.<br>
 In family groups they stick together,<br>
 Through every season, every weather.`,
-                        image: "bird-spritesheet.png"
+                        image: "assets/images/sprites/bird-spritesheet.png"
                     },
                     hummingbird: {
                         title: "Ruby Jewel",
@@ -421,7 +460,29 @@ Hovering at the flower's face,<br>
 Moving with impossible grace.<br>
 Ruby throat that catches light,<br>
 A miracle of nature's flight.`,
-                        image: "bird-spritesheet.png"
+                        image: "assets/images/sprites/bird-spritesheet.png"
+                    },
+                    woodpecker: {
+                        title: "The Downy Drummer",
+                        author: "by Thomas Wright",
+                        poem: `Tap-tap-tap on the old oak tree,<br>
+The downy woodpecker works so free.<br>
+Black and white with a touch of red,<br>
+Nature's carpenter, so well-bred.<br>
+Drilling holes with rhythmic beat,<br>
+Finding insects, a tasty treat.`,
+                        image: "assets/images/notebook/Downy-Woodpecker.png"
+                    },
+                    duck: {
+                        title: "Mallard's Journey",
+                        author: "by Catherine Lee",
+                        poem: `Green head gleaming in the sun,<br>
+The mallard's daily flight begun.<br>
+Across the pond with graceful glide,<br>
+Orange feet spread far and wide.<br>
+From water's edge to sky so blue,<br>
+A perfect sight to welcome you.`,
+                        image: "assets/images/notebook/Mallard.png"
                     }
                 };
             }
@@ -596,6 +657,8 @@ A miracle of nature's flight.`,
                         ? Math.floor(Math.random() * (this.robinSpriteTotalFrames || 1))
                         : selected.type === 'cardinal'
                         ? Math.floor(Math.random() * (this.cardinalSpriteTotalFrames || 1))
+                        : selected.type === 'woodpecker'
+                        ? Math.floor(Math.random() * (this.woodpeckerSpriteTotalFrames || 1))
                         : Math.floor(Math.random() * (this.spriteTotalFrames || 1))
                 };
                 
@@ -617,6 +680,9 @@ A miracle of nature's flight.`,
                     } else if (bird.type === 'cardinal' && this.cardinalSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.cardinalSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.cardinalSpriteTotalFrames;
+                    } else if (bird.type === 'woodpecker' && this.woodpeckerSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.woodpeckerSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.woodpeckerSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
@@ -1328,7 +1394,7 @@ A miracle of nature's flight.`,
                     // Apply wing flapping animation by scaling vertically
                     ctx.scale(1, 1 + wingFlap * 0.2);
                     
-                    // Use specific sprite sheets for flamingos, robins, and cardinals, regular sprite sheet for others
+                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, and goldfinch, regular sprite sheet for others
                     if (bird.type === 'flamingo' && this.isFlamingoSpriteSheetLoaded) {
                         const cols = this.flamingoSpriteSheetCols;
                         const rows = this.flamingoSpriteSheetRows;
@@ -1359,6 +1425,36 @@ A miracle of nature's flight.`,
                         const sy = Math.floor(frameIndex / cols) * frameH;
                         // Draw frame to a consistent destination box (60x40 pre-scale)
                         ctx.drawImage(this.cardinalSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'woodpecker' && this.isWoodpeckerSpriteSheetLoaded) {
+                        const cols = this.woodpeckerSpriteSheetCols;
+                        const rows = this.woodpeckerSpriteSheetRows;
+                        const frameW = this.woodpeckerSpriteSheet.width / cols;
+                        const frameH = this.woodpeckerSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.woodpeckerSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'duck' && this.isMallardSpriteSheetLoaded) {
+                        const cols = this.mallardSpriteSheetCols;
+                        const rows = this.mallardSpriteSheetRows;
+                        const frameW = this.mallardSpriteSheet.width / cols;
+                        const frameH = this.mallardSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.mallardSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'goldfinch' && this.isGoldfinchSpriteSheetLoaded) {
+                        const cols = this.goldfinchSpriteSheetCols;
+                        const rows = this.goldfinchSpriteSheetRows;
+                        const frameW = this.goldfinchSpriteSheet.width / cols;
+                        const frameH = this.goldfinchSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.goldfinchSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
@@ -1453,7 +1549,7 @@ A miracle of nature's flight.`,
                         img.onload = () => {
                             this.spriteImages[birdType] = img;
                         };
-                        img.src = 'flamingo.png'; // Your PNG sprite file
+                        img.src = 'assets/images/sprites/flamingo.png'; // Your PNG sprite file
                     } else {
                         // Load SVG sprites for other birds
                         const svgString = this.birdSprites[birdType];
