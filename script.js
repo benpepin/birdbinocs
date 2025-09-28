@@ -51,7 +51,7 @@
                     { type: 'heron',        name: 'Great Blue Heron',          weight: 1,  points: 70, minSize: 38, maxSize: 55, minSpeed: 35,  maxSpeed: 50,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
                     { type: 'duck',         name: 'Mallard',                    weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
                     { type: 'goose',        name: 'Canada Goose',              weight: 2,  points: 35, minSize: 34, maxSize: 50, minSpeed: 60,  maxSpeed: 90,  color: '#4B3F2F',  flightPattern: 'vGlide' },
-                    { type: 'pelican',      name: 'Brown Pelican',              weight: 1,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#A47C48',  flightPattern: 'seaGlide' },
+                    { type: 'pelican',      name: 'Brown Pelican',              weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#A47C48',  flightPattern: 'seaGlide' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' }
