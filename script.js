@@ -667,26 +667,26 @@ A murder dark against the cloud.`,
 
             showEmptyState() {
                 // Update left panel to match the exact design from the image
-                this.notebookElements.title.textContent = "TRAIN YOUR GAZE";
+                this.notebookElements.title.textContent = "HOW TO SPOT BIRDS";
                 this.notebookElements.author.textContent = "";
                 this.notebookElements.text.innerHTML = `
-                    <div style="text-align: left; color: #4A5A6B; font-family: 'Cormorant', serif; line-height: 1.4; font-size: 16px; margin-top: 10px; padding: 0 10px;">
-                        <div style="margin-bottom: 10px;">
-                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px; color: #4A5A6B;">Observe Silhouette</div>
-                            <div style="color: #7A8390; font-size: 14px;">size, shape, bill, tail, wings</div>
+                    <div style="text-align: left; color: #4A5A6B; font-family: 'Cormorant', serif; line-height: 1.4; margin-top: 0px;">
+                        <div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #d4d4d4;">
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 2px; color: #4A5A6B;">Observe Silhouette</div>
+                            <div style="color: #4A5A6B; font-size: 14px;">size, shape, bill, tail, wings</div>
                         </div>
-                        <div style="margin-bottom: 10px;">
-                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px; color: #4A5A6B;">Notice color pattern</div>
-                            <div style="color: #7A8390; font-size: 14px;">wingbars, eye rings, legs</div>
+                        <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #d4d4d4;">
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 2px; color: #4A5A6B;">Notice color pattern</div>
+                            <div style="color: #4A5A6B; font-size: 14px;">wingbars, eye rings, legs</div>
                         </div>
-                        <div style="margin-bottom: 10px;">
-                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px; color: #4A5A6B;">How did it behave?</div>
-                            <div style="color: #7A8390; font-size: 14px;">where & when did you see it?</div>
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 2px; color: #4A5A6B;">How did it behave?</div>
+                            <div style="color: #4A5A6B; font-size: 14px;">where and when did you see it?</div>
                         </div>
                     </div>
                 `;
 
-                // Hide the image area for empty state
+                // Hide the image for empty state
                 this.notebookElements.image.style.display = 'none';
 
                 // Clear right panel completely for empty state
