@@ -190,6 +190,45 @@
                 };
                 this.goldfinchSpriteSheet.src = 'assets/images/sprites/American-Goldfinch-Sprite.png';
 
+                // Pelican-specific sprite sheet
+                this.pelicanSpriteSheet = new Image();
+                this.isPelicanSpriteSheetLoaded = false;
+                // Configure pelican sprite sheet layout (4x4 grid)
+                this.pelicanSpriteSheetCols = 4;
+                this.pelicanSpriteSheetRows = 4;
+                this.pelicanSpriteTotalFrames = this.pelicanSpriteSheetCols * this.pelicanSpriteSheetRows;
+                this.pelicanSpriteAnimFps = 12; // animation speed in frames per second
+                this.pelicanSpriteSheet.onload = () => {
+                    this.isPelicanSpriteSheetLoaded = true;
+                };
+                this.pelicanSpriteSheet.src = 'assets/images/sprites/pelican-spritesheet.png';
+
+                // Blue Jay-specific sprite sheet
+                this.bluejaySpriteSheet = new Image();
+                this.isBluejayeSpriteSheetLoaded = false;
+                // Configure bluejay sprite sheet layout (4x4 grid)
+                this.bluejaySpriteSheetCols = 4;
+                this.bluejaySpriteSheetRows = 4;
+                this.bluejaySpriteTotalFrames = this.bluejaySpriteSheetCols * this.bluejaySpriteSheetRows;
+                this.bluejaySpriteAnimFps = 12; // animation speed in frames per second
+                this.bluejaySpriteSheet.onload = () => {
+                    this.isBluejayeSpriteSheetLoaded = true;
+                };
+                this.bluejaySpriteSheet.src = 'assets/images/sprites/Bluejay-spritesheet.png';
+
+                // Chickadee-specific sprite sheet
+                this.chickadeeSpriteSheet = new Image();
+                this.isChickadeeSpriteSheetLoaded = false;
+                // Configure chickadee sprite sheet layout (4x4 grid)
+                this.chickadeeSpriteSheetCols = 4;
+                this.chickadeeSpriteSheetRows = 4;
+                this.chickadeeSpriteTotalFrames = this.chickadeeSpriteSheetCols * this.chickadeeSpriteSheetRows;
+                this.chickadeeSpriteAnimFps = 12; // animation speed in frames per second
+                this.chickadeeSpriteSheet.onload = () => {
+                    this.isChickadeeSpriteSheetLoaded = true;
+                };
+                this.chickadeeSpriteSheet.src = 'assets/images/sprites/black-capped-chickadee-spritesheet.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
                 
@@ -394,7 +433,7 @@ Of ancient trees and morning mist,<br>
 A creature that cannot be missed.<br>
 Blue and white in perfect blend,<br>
 Nature's message he will send.`,
-                        image: "assets/images/sprites/bird-spritesheet.png"
+                        image: "assets/images/notebook/Bluejay.png"
                     },
                     sparrow: {
                         title: "Little Sparrow",
@@ -416,7 +455,7 @@ Small but mighty, brave and true,<br>
 With a cap of midnight blue.<br>
 In the feeder they appear,<br>
 Bringing joy throughout the year.`,
-                        image: "assets/images/sprites/bird-spritesheet.png"
+                        image: "assets/images/notebook/Black-capped-chickadee.png"
                     },
                     goldfinch: {
                         title: "Golden Flight",
@@ -483,6 +522,17 @@ Orange feet spread far and wide.<br>
 From water's edge to sky so blue,<br>
 A perfect sight to welcome you.`,
                         image: "assets/images/notebook/Mallard.png"
+                    },
+                    pelican: {
+                        title: "Coastal Voyager",
+                        author: "by Marina Rodriguez",
+                        poem: `Above the waves with wings spread wide,<br>
+The brown pelican takes its glide.<br>
+With pouch so large and bill so long,<br>
+It soars the coast where currents throng.<br>
+In graceful dives it claims its meal,<br>
+A coastal beauty, wild and real.`,
+                        image: "assets/images/notebook/Pelican.png"
                     }
                 };
             }
@@ -516,15 +566,18 @@ A perfect sight to welcome you.`,
             showNotebookForBird(birdType) {
                 const birdData = this.notebookData[birdType];
                 if (!birdData) return;
-                
+
                 this.currentNotebookBird = birdType;
-                
+
                 // Update poem content
                 this.notebookElements.title.textContent = birdData.title;
                 this.notebookElements.author.textContent = birdData.author;
                 this.notebookElements.text.innerHTML = birdData.poem;
                 this.notebookElements.image.src = birdData.image;
-                
+
+                // Show the image (in case it was hidden in empty state)
+                this.notebookElements.image.style.display = 'block';
+
                 // Update species list
                 this.updateNotebookSpeciesList();
             }
@@ -532,7 +585,13 @@ A perfect sight to welcome you.`,
             updateNotebookSpeciesList() {
                 const speciesList = this.notebookElements.speciesList;
                 speciesList.innerHTML = '';
-                
+
+                // Show empty state if no species discovered yet
+                if (this.todaysSpecies.length === 0) {
+                    this.showEmptyState();
+                    return;
+                }
+
                 // Add discovered species
                 this.todaysSpecies.forEach(species => {
                     const item = document.createElement('div');
@@ -543,9 +602,9 @@ A perfect sight to welcome you.`,
                     item.textContent = species.count > 1 ? `${species.name} (${species.count})` : species.name;
                     speciesList.appendChild(item);
                 });
-                
+
                 // Update species count
-                this.notebookElements.speciesCount.textContent = 
+                this.notebookElements.speciesCount.textContent =
                     `${this.todaysSpecies.length} species`;
                 
                 // Update date
@@ -554,11 +613,40 @@ A perfect sight to welcome you.`,
                     day: 'numeric', 
                     year: 'numeric'
                 };
-                this.notebookElements.date.textContent = 
+                this.notebookElements.date.textContent =
                     this.currentDate.toLocaleDateString('en-US', options);
             }
-            
-            
+
+            showEmptyState() {
+                // Update left panel to match the exact design from the image
+                this.notebookElements.title.textContent = "TRAIN YOUR GAZE";
+                this.notebookElements.author.textContent = "";
+                this.notebookElements.text.innerHTML = `
+                    <div style="text-align: left; color: #4A5A6B; font-family: 'Cormorant', serif; line-height: 1.4; font-size: 16px; margin-top: 10px; padding: 0 10px;">
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px; color: #4A5A6B;">Observe Silhouette</div>
+                            <div style="color: #7A8390; font-size: 14px;">size, shape, bill, tail, wings</div>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px; color: #4A5A6B;">Notice color pattern</div>
+                            <div style="color: #7A8390; font-size: 14px;">wingbars, eye rings, legs</div>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px; color: #4A5A6B;">How did it behave?</div>
+                            <div style="color: #7A8390; font-size: 14px;">where & when did you see it?</div>
+                        </div>
+                    </div>
+                `;
+
+                // Hide the image area for empty state
+                this.notebookElements.image.style.display = 'none';
+
+                // Clear right panel completely for empty state
+                this.notebookElements.speciesCount.textContent = "0 species";
+                const speciesList = this.notebookElements.speciesList;
+                speciesList.innerHTML = '';
+            }
+
             handleResize() {
                 // Update canvas size to match new viewport
                 this.updateCanvasSize();
@@ -1394,7 +1482,7 @@ A perfect sight to welcome you.`,
                     // Apply wing flapping animation by scaling vertically
                     ctx.scale(1, 1 + wingFlap * 0.2);
                     
-                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, and goldfinch, regular sprite sheet for others
+                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, goldfinch, pelican, bluejay, and chickadee, regular sprite sheet for others
                     if (bird.type === 'flamingo' && this.isFlamingoSpriteSheetLoaded) {
                         const cols = this.flamingoSpriteSheetCols;
                         const rows = this.flamingoSpriteSheetRows;
@@ -1455,6 +1543,36 @@ A perfect sight to welcome you.`,
                         const sy = Math.floor(frameIndex / cols) * frameH;
                         // Draw frame to a consistent destination box (60x40 pre-scale)
                         ctx.drawImage(this.goldfinchSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'pelican' && this.isPelicanSpriteSheetLoaded) {
+                        const cols = this.pelicanSpriteSheetCols;
+                        const rows = this.pelicanSpriteSheetRows;
+                        const frameW = this.pelicanSpriteSheet.width / cols;
+                        const frameH = this.pelicanSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.pelicanSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'bluejay' && this.isBluejayeSpriteSheetLoaded) {
+                        const cols = this.bluejaySpriteSheetCols;
+                        const rows = this.bluejaySpriteSheetRows;
+                        const frameW = this.bluejaySpriteSheet.width / cols;
+                        const frameH = this.bluejaySpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.bluejaySpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'chickadee' && this.isChickadeeSpriteSheetLoaded) {
+                        const cols = this.chickadeeSpriteSheetCols;
+                        const rows = this.chickadeeSpriteSheetRows;
+                        const frameW = this.chickadeeSpriteSheet.width / cols;
+                        const frameH = this.chickadeeSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.chickadeeSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
