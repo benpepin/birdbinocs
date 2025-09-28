@@ -229,6 +229,32 @@
                 };
                 this.chickadeeSpriteSheet.src = 'assets/images/sprites/black-capped-chickadee-spritesheet.png';
 
+                // Bald Eagle-specific sprite sheet
+                this.baldeagleSpriteSheet = new Image();
+                this.isBaldEagleSpriteSheetLoaded = false;
+                // Configure bald eagle sprite sheet layout (4x4 grid)
+                this.baldeagleSpriteSheetCols = 6;
+                this.baldeagleSpriteSheetRows = 6;
+                this.baldeagleSpriteTotalFrames = this.baldeagleSpriteSheetCols * this.baldeagleSpriteSheetRows;
+                this.baldeagleSpriteAnimFps = 12; // animation speed in frames per second
+                this.baldeagleSpriteSheet.onload = () => {
+                    this.isBaldEagleSpriteSheetLoaded = true;
+                };
+                this.baldeagleSpriteSheet.src = 'assets/images/sprites/baldeaglesprite.png';
+
+                // American Crow-specific sprite sheet
+                this.crowSpriteSheet = new Image();
+                this.isCrowSpriteSheetLoaded = false;
+                // Configure crow sprite sheet layout (4x4 grid)
+                this.crowSpriteSheetCols = 5;
+                this.crowSpriteSheetRows = 5;
+                this.crowSpriteTotalFrames = this.crowSpriteSheetCols * this.crowSpriteSheetRows;
+                this.crowSpriteAnimFps = 12; // animation speed in frames per second
+                this.crowSpriteSheet.onload = () => {
+                    this.isCrowSpriteSheetLoaded = true;
+                };
+                this.crowSpriteSheet.src = 'assets/images/sprites/American Crowsprite.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
                 
@@ -533,6 +559,28 @@ It soars the coast where currents throng.<br>
 In graceful dives it claims its meal,<br>
 A coastal beauty, wild and real.`,
                         image: "assets/images/notebook/Pelican.png"
+                    },
+                    baldeagle: {
+                        title: "Eagle's Majesty",
+                        author: "by Thomas Jefferson",
+                        poem: `High above the mountain peak,<br>
+The eagle soars with grace unique.<br>
+White head gleaming in the sun,<br>
+Symbol of the brave and strong.<br>
+With talons sharp and eyes so keen,<br>
+The noblest bird that's ever seen.`,
+                        image: "assets/images/notebook/Bald-Eagle.png"
+                    },
+                    crow: {
+                        title: "Black as Midnight",
+                        author: "by Edgar A. Poe",
+                        poem: `Black as midnight, smart as can be,<br>
+The crow calls out from the old oak tree.<br>
+With clever mind and watchful eye,<br>
+It sees all beneath the sky.<br>
+In groups they gather, bold and loud,<br>
+A murder dark against the cloud.`,
+                        image: "assets/images/notebook/American-Crow.png"
                     }
                 };
             }
@@ -1482,7 +1530,7 @@ A coastal beauty, wild and real.`,
                     // Apply wing flapping animation by scaling vertically
                     ctx.scale(1, 1 + wingFlap * 0.2);
                     
-                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, goldfinch, pelican, bluejay, and chickadee, regular sprite sheet for others
+                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, goldfinch, pelican, bluejay, chickadee, bald eagle, and crow, regular sprite sheet for others
                     if (bird.type === 'flamingo' && this.isFlamingoSpriteSheetLoaded) {
                         const cols = this.flamingoSpriteSheetCols;
                         const rows = this.flamingoSpriteSheetRows;
@@ -1573,6 +1621,26 @@ A coastal beauty, wild and real.`,
                         const sy = Math.floor(frameIndex / cols) * frameH;
                         // Draw frame to a consistent destination box (60x40 pre-scale)
                         ctx.drawImage(this.chickadeeSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'baldeagle' && this.isBaldEagleSpriteSheetLoaded) {
+                        const cols = this.baldeagleSpriteSheetCols;
+                        const rows = this.baldeagleSpriteSheetRows;
+                        const frameW = this.baldeagleSpriteSheet.width / cols;
+                        const frameH = this.baldeagleSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.baldeagleSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
+                    } else if (bird.type === 'crow' && this.isCrowSpriteSheetLoaded) {
+                        const cols = this.crowSpriteSheetCols;
+                        const rows = this.crowSpriteSheetRows;
+                        const frameW = this.crowSpriteSheet.width / cols;
+                        const frameH = this.crowSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame to a consistent destination box (60x40 pre-scale)
+                        ctx.drawImage(this.crowSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
