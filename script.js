@@ -34,11 +34,11 @@
                 // Species catalog (20 species total)
                 this.speciesCatalog = [
                     // Common backyard birds
-                    { type: 'robin',        name: 'American Robin',            weight: 14, points: 10, minSize: 15, maxSize: 25, minSpeed: 50,  maxSpeed: 100, color: '#CD853F',  flightPattern: 'steady' },
-                    { type: 'bluejay',      name: 'Blue Jay',                  weight: 10, points: 15, minSize: 18, maxSize: 28, minSpeed: 70,  maxSpeed: 120, color: '#4169E1',  flightPattern: 'sineFast' },
-                    { type: 'cardinal',     name: 'Northern Cardinal',         weight: 8,  points: 25, minSize: 16, maxSize: 24, minSpeed: 40,  maxSpeed: 80,  color: '#DC143C',  flightPattern: 'steady' },
-                    { type: 'sparrow',      name: 'House Sparrow',             weight: 12, points: 12, minSize: 12, maxSize: 18, minSpeed: 80,  maxSpeed: 130, color: '#8B7355',  flightPattern: 'dart' },
-                    { type: 'chickadee',    name: 'Black-capped Chickadee',    weight: 9,  points: 18, minSize: 12, maxSize: 18, minSpeed: 70,  maxSpeed: 110, color: '#3C3C3C',  flightPattern: 'flutter' },
+                    { type: 'robin',        name: 'American Robin',            scientificName: 'Turdus migratorius',     weight: 14, points: 10, minSize: 15, maxSize: 25, minSpeed: 50,  maxSpeed: 100, color: '#CD853F',  flightPattern: 'steady' },
+                    { type: 'bluejay',      name: 'Blue Jay',                  scientificName: 'Cyanocitta cristata',    weight: 10, points: 15, minSize: 18, maxSize: 28, minSpeed: 70,  maxSpeed: 120, color: '#4169E1',  flightPattern: 'sineFast' },
+                    { type: 'cardinal',     name: 'Northern Cardinal',         scientificName: 'Cardinalis cardinalis',  weight: 8,  points: 25, minSize: 16, maxSize: 24, minSpeed: 40,  maxSpeed: 80,  color: '#DC143C',  flightPattern: 'steady' },
+                    { type: 'sparrow',      name: 'House Sparrow',             scientificName: 'Passer domesticus',      weight: 12, points: 12, minSize: 12, maxSize: 18, minSpeed: 80,  maxSpeed: 130, color: '#8B7355',  flightPattern: 'dart' },
+                    { type: 'chickadee',    name: 'Black-capped Chickadee',    scientificName: 'Poecile atricapillus',   weight: 9,  points: 18, minSize: 12, maxSize: 18, minSpeed: 70,  maxSpeed: 110, color: '#3C3C3C',  flightPattern: 'flutter' },
                     { type: 'goldfinch',    name: 'American Goldfinch',        weight: 7,  points: 22, minSize: 12, maxSize: 16, minSpeed: 70,  maxSpeed: 120, color: '#FFD700',  flightPattern: 'bounce' },
                     { type: 'swallow',      name: 'Barn Swallow',              weight: 6,  points: 24, minSize: 12, maxSize: 18, minSpeed: 110, maxSpeed: 170, color: '#1E3A8A',  flightPattern: 'swoop' },
                     { type: 'oriole',       name: 'Baltimore Oriole',          weight: 4,  points: 28, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 130, color: '#FF8C00',  flightPattern: 'sineSlow' },
@@ -54,7 +54,7 @@
                     { type: 'pelican',      name: 'Brown Pelican',              weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#A47C48',  flightPattern: 'seaGlide' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
-                    { type: 'flamingo',     name: 'American Flamingo',          weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' }
+                    { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' }
                 ];
                 
                 // Bird journal system
@@ -377,10 +377,13 @@
                     title: document.getElementById('poemTitle'),
                     author: document.getElementById('poemAuthor'),
                     text: document.getElementById('poemText'),
-                    image: document.getElementById('poemImage'),
+                    birdImage: document.getElementById('birdImage'),
+                    birdName: document.getElementById('birdName'),
+                    birdScientificName: document.getElementById('birdScientificName'),
                     date: document.getElementById('notebookDate'),
                     speciesCount: document.getElementById('notebookSpeciesCount'),
-                    speciesList: document.getElementById('notebookSpeciesList')
+                    speciesList: document.getElementById('notebookSpeciesList'),
+                    poemHawkImage: document.getElementById('poemHawkImage')
                 };
 
                 // Track if mouse is over notebook
@@ -397,7 +400,7 @@
 
                 // Setup species list clicks
                 this.notebookElements.speciesList.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('species-item')) {
+                    if (e.target.classList.contains('species-item') || e.target.classList.contains('species-name')) {
                         const birdName = e.target.textContent.trim().replace(/\s*\(\d+\)$/, '');
                         // Find the bird type based on the name from discovered species
                         const matchingSpecies = this.todaysSpecies.find(species => species.name === birdName);
@@ -411,8 +414,29 @@
                     }
                 });
 
-                // Initialize with default content
-                this.updateNotebookSpeciesList();
+                // Setup scroll detection for right panel
+                this.setupScrollDetection();
+
+                // Initialize with empty state since no species are discovered yet
+                this.showEmptyState();
+            }
+            
+            setupScrollDetection() {
+                const rightPanel = document.querySelector('.notebook-right-panel');
+                let scrollTimeout;
+                
+                rightPanel.addEventListener('scroll', () => {
+                    // Add scrolling class when user scrolls
+                    rightPanel.classList.add('scrolling');
+                    
+                    // Clear existing timeout
+                    clearTimeout(scrollTimeout);
+                    
+                    // Remove scrolling class after 1 second of no scrolling
+                    scrollTimeout = setTimeout(() => {
+                        rightPanel.classList.remove('scrolling');
+                    }, 1000);
+                });
             }
             
             createNotebookData() {
@@ -617,14 +641,28 @@ A murder dark against the cloud.`,
 
                 this.currentNotebookBird = birdType;
 
-                // Update poem content
+                // Find the species data to get the common and scientific names
+                const speciesData = this.speciesCatalog.find(s => s.type === birdType);
+
+                // Show the bird image panel
+                const birdImagePanel = document.querySelector('.bird-image-panel');
+                if (birdImagePanel) birdImagePanel.style.display = 'inline-flex';
+
+                // Update bird info section (overlay panel)
+                if (speciesData) {
+                    this.notebookElements.birdName.textContent = speciesData.name.toUpperCase() + '.';
+                    this.notebookElements.birdScientificName.textContent = speciesData.scientificName || 'Scientific name not available';
+                }
+                this.notebookElements.birdImage.src = birdData.image;
+                this.notebookElements.birdImage.style.display = 'block';
+
+                // Update training section content
                 this.notebookElements.title.textContent = birdData.title;
                 this.notebookElements.author.textContent = birdData.author;
                 this.notebookElements.text.innerHTML = birdData.poem;
-                this.notebookElements.image.src = birdData.image;
 
-                // Show the image (in case it was hidden in empty state)
-                this.notebookElements.image.style.display = 'block';
+                // Hide the poem hawk image
+                this.notebookElements.poemHawkImage.style.display = 'none';
 
                 // Update species list
                 this.updateNotebookSpeciesList();
@@ -641,58 +679,70 @@ A murder dark against the cloud.`,
                 }
 
                 // Add discovered species
-                this.todaysSpecies.forEach(species => {
+                this.todaysSpecies.forEach((species, index) => {
                     const item = document.createElement('div');
                     item.className = 'species-item';
                     if (species.type === this.currentNotebookBird) {
                         item.classList.add('active');
                     }
-                    item.textContent = species.count > 1 ? `${species.name} (${species.count})` : species.name;
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'species-name';
+                    nameDiv.textContent = species.count > 1 ? `${species.name} (${species.count})` : species.name;
+                    item.appendChild(nameDiv);
                     speciesList.appendChild(item);
+                    
+                    // Add divider after each item except the last one
+                    if (index < this.todaysSpecies.length - 1) {
+                        const divider = document.createElement('div');
+                        divider.className = 'species-divider';
+                        speciesList.appendChild(divider);
+                    }
                 });
 
                 // Update species count
                 this.notebookElements.speciesCount.textContent =
                     `${this.todaysSpecies.length} species`;
                 
-                // Update date
-                const options = { 
-                    month: 'long', 
-                    day: 'numeric', 
-                    year: 'numeric'
-                };
-                this.notebookElements.date.textContent =
-                    this.currentDate.toLocaleDateString('en-US', options);
+                // Update date in short format (M/D/YY)
+                const month = this.currentDate.getMonth() + 1;
+                const day = this.currentDate.getDate();
+                const year = this.currentDate.getFullYear().toString().slice(-2);
+                this.notebookElements.date.textContent = `${month}/${day}/${year}`;
             }
 
             showEmptyState() {
-                // Update left panel to match the exact design from the image
-                this.notebookElements.title.textContent = "HOW TO SPOT BIRDS";
-                this.notebookElements.author.textContent = "";
-                this.notebookElements.text.innerHTML = `
-                    <div style="text-align: left; color: #4A5A6B; font-family: 'Cormorant', serif; line-height: 1.4; margin-top: 0px;">
-                        <div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #d4d4d4;">
-                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 2px; color: #4A5A6B;">Observe Silhouette</div>
-                            <div style="color: #4A5A6B; font-size: 14px;">size, shape, bill, tail, wings</div>
-                        </div>
-                        <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #d4d4d4;">
-                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 2px; color: #4A5A6B;">Notice color pattern</div>
-                            <div style="color: #4A5A6B; font-size: 14px;">wingbars, eye rings, legs</div>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 2px; color: #4A5A6B;">How did it behave?</div>
-                            <div style="color: #4A5A6B; font-size: 14px;">where and when did you see it?</div>
-                        </div>
-                    </div>
-                `;
+                // Switch to training section to show the guide content
+                this.showNotebookGuide();
+                
+                // Hide the bird image panel for empty state
+                const birdImagePanel = document.querySelector('.bird-image-panel');
+                if (birdImagePanel) birdImagePanel.style.display = 'none';
+                
+                // Show the hawk image for empty state
+                this.notebookElements.poemHawkImage.style.display = 'block';
 
-                // Hide the image for empty state
-                this.notebookElements.image.style.display = 'none';
+                // Hide the bird image for empty state
+                this.notebookElements.birdImage.style.display = 'none';
 
-                // Clear right panel completely for empty state
+                // Update right panel for empty state
                 this.notebookElements.speciesCount.textContent = "0 species";
+                
+                // Use today's date in short format (M/D/YY)
+                const month = this.currentDate.getMonth() + 1;
+                const day = this.currentDate.getDate();
+                const year = this.currentDate.getFullYear().toString().slice(-2);
+                this.notebookElements.date.textContent = `${month}/${day}/${year}`;
+                
                 const speciesList = this.notebookElements.speciesList;
                 speciesList.innerHTML = '';
+            }
+            
+            showNotebookGuide() {
+                // Update left panel to show the bird spotting guide
+                this.notebookElements.title.textContent = "How to spot birds";
+                this.notebookElements.author.textContent = "";
+                // The training content is now static in the HTML, so we don't need to update the text
             }
 
             handleResize() {

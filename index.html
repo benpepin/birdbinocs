@@ -6,9 +6,9 @@
     <title>Birdwatching Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=EB+Garamond:wght@400;500;600;700&display=swap');
     </style>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -19,35 +19,62 @@
         <!-- Right Panel for Bird Notebook -->
         <div id="birdNotebook">
             <div class="notebook-content">
+                <!-- Left Panel: Training Section -->
                 <div class="notebook-left-panel">
-                    <div class="poem-section">
-                        <div class="poem-image">
-                            <img id="poemImage" src="assets/images/notebook/Flamingoimage.png" alt="Bird illustration" />
+                    <div class="training-section">
+                        <div class="training-content">
+                            <div class="training-header">
+                                <div id="poemTitle" class="training-title">How to spot birds</div>
+                                <div class="training-divider"></div>
+                            </div>
+                            <div class="training-tips">
+                                <div class="tip-item">
+                                    <div class="tip-title">Observe Silhouette</div>
+                                    <div class="tip-description">size, shape, bill, tail, wings</div>
+                                </div>
+                                <div class="tip-divider"></div>
+                                <div class="tip-item">
+                                    <div class="tip-title">Notice color pattern</div>
+                                    <div class="tip-description">wingbars, eye rings, legs</div>
+                                </div>
+                                <div class="tip-divider"></div>
+                                <div class="tip-item">
+                                    <div class="tip-title">How did it behave?</div>
+                                    <div class="tip-description">where & when did you see it?</div>
+                                </div>
+                            </div>
                         </div>
-                        <h2 id="poemTitle" class="poem-title">Flying Flamingos</h2>
-                        <p id="poemAuthor" class="poem-author">by Lamar Cole</p>
-                        <div id="poemText" class="poem-text">
-                            It was the ending of a beautiful day.<br>
-                            And the flamingos were sailing away.<br>
-                            They looked so beautiful in flight<br>
-                            And the breezes were just right.<br>
-                            They had spent a day of fun.<br>
-                            Floating in the duck pond.
+                        <div class="training-hawk-image">
+                            <img id="poemHawkImage" src="hawk.png" alt="Hawk illustration" />
                         </div>
                     </div>
+                    
+                    <!-- Hidden elements for JavaScript compatibility -->
+                    <div id="poemAuthor" style="display: none;"></div>
+                    <div id="poemText" style="display: none;"></div>
                 </div>
+
+                <!-- Right Panel: Species List -->
                 <div class="notebook-right-panel">
                     <div class="species-info">
                         <div class="notebook-header">
-                            <div id="notebookSpeciesCount" class="species-count">10 species</div>
-                            <div id="notebookDate" class="notebook-date">September 26, 2025</div>
+                            <div class="header-row">
+                                <div id="notebookSpeciesCount" class="species-count">0 species</div>
+                                <div id="notebookDate" class="notebook-date">9/28/25</div>
+                            </div>
                         </div>
                         <div id="notebookSpeciesList" class="notebook-species-list">
-                            <div class="species-item active">American Flamingo</div>
-                            <div class="species-item">Downy Woodpecker</div>
-                            <div class="species-item">House Sparrow</div>
-                            <div class="species-item">Mallard</div>
-                            <div class="species-item">Belted Kingfisher</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bird Image Panel (overlay) -->
+                <div class="bird-image-panel" style="display: none;">
+                    <div class="bird-image-container">
+                        <img id="birdImage" src="assets/images/notebook/Flamingoimage.png" alt="Bird illustration" style="display: none;" />
+                        <div class="bird-label">
+                            <div id="birdName" class="bird-name">GLOSSY IBIS.</div>
+                            <div id="birdScientificName" class="bird-scientific-name">Ibis Falcinellus</div>
                         </div>
                     </div>
                 </div>
