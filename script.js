@@ -560,7 +560,7 @@ In graceful dives it claims its meal,<br>
 A coastal beauty, wild and real.`,
                         image: "assets/images/notebook/Pelican.png"
                     },
-                    baldeagle: {
+                    eagle: {
                         title: "Eagle's Majesty",
                         author: "by Thomas Jefferson",
                         poem: `High above the mountain peak,<br>
@@ -1621,7 +1621,7 @@ A murder dark against the cloud.`,
                         const sy = Math.floor(frameIndex / cols) * frameH;
                         // Draw frame to a consistent destination box (60x40 pre-scale)
                         ctx.drawImage(this.chickadeeSpriteSheet, sx, sy, frameW, frameH, -30, -20, 60, 40);
-                    } else if (bird.type === 'baldeagle' && this.isBaldEagleSpriteSheetLoaded) {
+                    } else if (bird.type === 'eagle' && this.isBaldEagleSpriteSheetLoaded) {
                         const cols = this.baldeagleSpriteSheetCols;
                         const rows = this.baldeagleSpriteSheetRows;
                         const frameW = this.baldeagleSpriteSheet.width / cols;
