@@ -19,46 +19,62 @@
         <!-- Right Panel for Bird Notebook -->
         <div id="birdNotebook">
             <div class="notebook-content">
-                <!-- Left Panel: Training Section / Poem Panel -->
+                <!-- Left Panel: Multi-page scrollable container -->
                 <div class="notebook-left-panel">
-                    <!-- Training Section (shown by default) -->
-                    <div class="training-section">
-                        <div class="training-content">
-                            <div class="training-header">
-                                <div id="poemTitle" class="training-title">How to spot birds</div>
-                                <div class="training-divider"></div>
+                    <!-- Scroll Container for Pages -->
+                    <div class="left-panel-scroll-container">
+                        <!-- Page 1: Training Section (default) -->
+                        <div class="left-panel-page training-page" data-page="1">
+                            <div class="training-content">
+                                <div class="training-header">
+                                    <div id="poemTitle" class="training-title">How to spot birds</div>
+                                    <div class="training-divider"></div>
+                                </div>
+                                <div class="training-tips">
+                                    <div class="tip-item">
+                                        <div class="tip-title">Observe Silhouette</div>
+                                        <div class="tip-description">size, shape, bill, tail, wings</div>
+                                    </div>
+                                    <div class="tip-divider"></div>
+                                    <div class="tip-item">
+                                        <div class="tip-title">Notice color pattern</div>
+                                        <div class="tip-description">wingbars, eye rings, legs</div>
+                                    </div>
+                                    <div class="tip-divider"></div>
+                                    <div class="tip-item">
+                                        <div class="tip-title">How did it behave?</div>
+                                        <div class="tip-description">where & when did you see it?</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="training-tips">
-                                <div class="tip-item">
-                                    <div class="tip-title">Observe Silhouette</div>
-                                    <div class="tip-description">size, shape, bill, tail, wings</div>
-                                </div>
-                                <div class="tip-divider"></div>
-                                <div class="tip-item">
-                                    <div class="tip-title">Notice color pattern</div>
-                                    <div class="tip-description">wingbars, eye rings, legs</div>
-                                </div>
-                                <div class="tip-divider"></div>
-                                <div class="tip-item">
-                                    <div class="tip-title">How did it behave?</div>
-                                    <div class="tip-description">where & when did you see it?</div>
+                            <div class="training-hawk-image">
+                                <img id="poemHawkImage" src="hawk.png" alt="Hawk illustration" />
+                            </div>
+                        </div>
+                        
+                        <!-- Page 2: Bird Info Page (shown when bird is selected) -->
+                        <div class="left-panel-page bird-info-page" data-page="2" style="display: none;">
+                            <div class="bird-info-content">
+                                <div class="bird-image-container">
+                                    <img id="birdImage" src="assets/images/notebook/Flamingoimage.png" alt="Bird illustration" style="display: none;" />
+                                    <div class="bird-label">
+                                        <div id="birdName" class="bird-name">GLOSSY IBIS.</div>
+                                        <div id="birdScientificName" class="bird-scientific-name">Ibis Falcinellus</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="training-hawk-image">
-                            <img id="poemHawkImage" src="hawk.png" alt="Hawk illustration" />
-                        </div>
-                    </div>
-                    
-                    <!-- Poem Panel (shown when bird is selected) -->
-                    <div class="poem-panel" style="display: none;">
-                        <div class="poem-content">
-                            <div class="poem-header">
-                                <div id="poemTitleDisplay" class="poem-title"></div>
-                                <div id="poemAuthorDisplay" class="poem-author"></div>
-                            </div>
-                            <div class="poem-text-container">
-                                <div id="poemTextDisplay" class="poem-text"></div>
+                        
+                        <!-- Page 3: Poem Page (shown when scrolling down) -->
+                        <div class="left-panel-page poem-page" data-page="3" style="display: none;">
+                            <div class="poem-content">
+                                <div class="poem-header">
+                                    <div id="poemTitleDisplay" class="poem-title"></div>
+                                    <div id="poemAuthorDisplay" class="poem-author"></div>
+                                </div>
+                                <div class="poem-text-container">
+                                    <div id="poemTextDisplay" class="poem-text"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -82,16 +98,6 @@
                     </div>
                 </div>
 
-                <!-- Bird Image Panel (overlay) -->
-                <div class="bird-image-panel" style="display: none;">
-                    <div class="bird-image-container">
-                        <img id="birdImage" src="assets/images/notebook/Flamingoimage.png" alt="Bird illustration" style="display: none;" />
-                        <div class="bird-label">
-                            <div id="birdName" class="bird-name">GLOSSY IBIS.</div>
-                            <div id="birdScientificName" class="bird-scientific-name">Ibis Falcinellus</div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 

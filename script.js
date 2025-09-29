@@ -383,7 +383,15 @@
                     date: document.getElementById('notebookDate'),
                     speciesCount: document.getElementById('notebookSpeciesCount'),
                     speciesList: document.getElementById('notebookSpeciesList'),
-                    poemHawkImage: document.getElementById('poemHawkImage')
+                    poemHawkImage: document.getElementById('poemHawkImage'),
+                    // New multi-page elements
+                    scrollContainer: document.querySelector('.left-panel-scroll-container'),
+                    trainingPage: document.querySelector('.training-page'),
+                    birdInfoPage: document.querySelector('.bird-info-page'),
+                    poemPage: document.querySelector('.poem-page'),
+                    poemTitleDisplay: document.getElementById('poemTitleDisplay'),
+                    poemAuthorDisplay: document.getElementById('poemAuthorDisplay'),
+                    poemTextDisplay: document.getElementById('poemTextDisplay')
                 };
 
                 // Track if mouse is over notebook
@@ -423,8 +431,7 @@
             
             setupScrollDetection() {
                 const rightPanel = document.querySelector('.notebook-right-panel');
-                const leftPanel = document.querySelector('.notebook-left-panel');
-                const poemPanel = document.querySelector('.poem-panel');
+                const leftScrollContainer = document.querySelector('.left-panel-scroll-container');
                 let rightScrollTimeout;
                 let leftScrollTimeout;
                 
@@ -442,33 +449,59 @@
                     }, 1000);
                 });
                 
-                // Left panel scroll detection (for training section)
-                leftPanel.addEventListener('scroll', () => {
+                // Left panel scroll detection with page switching
+                leftScrollContainer.addEventListener('scroll', () => {
                     // Add scrolling class when user scrolls
-                    leftPanel.classList.add('scrolling');
+                    leftScrollContainer.classList.add('scrolling');
                     
                     // Clear existing timeout
                     clearTimeout(leftScrollTimeout);
                     
                     // Remove scrolling class after 1 second of no scrolling
                     leftScrollTimeout = setTimeout(() => {
-                        leftPanel.classList.remove('scrolling');
+                        leftScrollContainer.classList.remove('scrolling');
                     }, 1000);
+                    
+                    // Handle page switching based on scroll position
+                    this.handleLeftPanelScroll();
                 });
+            }
+            
+            handleLeftPanelScroll() {
+                const scrollContainer = this.notebookElements.scrollContainer;
+                const scrollTop = scrollContainer.scrollTop;
+                const pageHeight = 320; // Height of each page
                 
-                // Poem panel scroll detection
-                poemPanel.addEventListener('scroll', () => {
-                    // Add scrolling class when user scrolls
-                    poemPanel.classList.add('scrolling');
-                    
-                    // Clear existing timeout
-                    clearTimeout(leftScrollTimeout);
-                    
-                    // Remove scrolling class after 1 second of no scrolling
-                    leftScrollTimeout = setTimeout(() => {
-                        poemPanel.classList.remove('scrolling');
-                    }, 1000);
-                });
+                // Calculate which page should be visible based on scroll position
+                const currentPage = Math.round(scrollTop / pageHeight) + 1;
+                
+                // Only update if we have a bird selected and are on pages 2 or 3
+                if (this.currentNotebookBird && (currentPage === 2 || currentPage === 3)) {
+                    this.showPage(currentPage);
+                } else if (!this.currentNotebookBird) {
+                    // Always show page 1 when no bird is selected
+                    this.showPage(1);
+                }
+            }
+            
+            showPage(pageNumber) {
+                const trainingPage = this.notebookElements.trainingPage;
+                const birdInfoPage = this.notebookElements.birdInfoPage;
+                const poemPage = this.notebookElements.poemPage;
+                
+                // If no bird is selected, only show training page
+                if (!this.currentNotebookBird) {
+                    trainingPage.style.display = 'flex';
+                    birdInfoPage.style.display = 'none';
+                    poemPage.style.display = 'none';
+                    return;
+                }
+                
+                // If bird is selected, hide training page and show bird pages
+                trainingPage.style.display = 'none';
+                birdInfoPage.style.display = 'flex';
+                poemPage.style.display = 'flex';
+                
             }
             
             createNotebookData() {
@@ -679,11 +712,7 @@ A murder dark against the cloud.`,
                 // Find the species data to get the common and scientific names
                 const speciesData = this.speciesCatalog.find(s => s.type === birdType);
 
-                // Show the bird image panel
-                const birdImagePanel = document.querySelector('.bird-image-panel');
-                if (birdImagePanel) birdImagePanel.style.display = 'inline-flex';
-
-                // Update bird info section (overlay panel)
+                // Update bird info in the bird info page
                 if (speciesData) {
                     this.notebookElements.birdName.textContent = speciesData.name.toUpperCase() + '.';
                     this.notebookElements.birdScientificName.textContent = speciesData.scientificName || 'Scientific name not available';
@@ -691,38 +720,32 @@ A murder dark against the cloud.`,
                 this.notebookElements.birdImage.src = birdData.image;
                 this.notebookElements.birdImage.style.display = 'block';
 
-                // Hide training section and show poem panel
-                const trainingSection = document.querySelector('.training-section');
-                const poemPanel = document.querySelector('.poem-panel');
-                
-                if (trainingSection) trainingSection.style.display = 'none';
-                if (poemPanel) poemPanel.style.display = 'flex';
-
                 // Update poem content
-                const poemTitleDisplay = document.getElementById('poemTitleDisplay');
-                const poemAuthorDisplay = document.getElementById('poemAuthorDisplay');
-                const poemTextDisplay = document.getElementById('poemTextDisplay');
-                
-                if (poemTitleDisplay) poemTitleDisplay.textContent = birdData.title;
-                if (poemAuthorDisplay) poemAuthorDisplay.textContent = birdData.author;
-                if (poemTextDisplay) {
-                    // Add extra content to ensure scrolling works
-                    const extraContent = '<br><br>--- Additional Content for Testing ---<br><br>' +
-                        'This is extra content to make sure the poem panel scrolls properly. ' +
-                        'We need enough content to exceed the height of the container so that ' +
-                        'scrolling is triggered. This should be plenty of text to test with.<br><br>' +
-                        'Here is even more content to ensure we have enough height to scroll. ' +
-                        'The poem panel should now definitely be scrollable with all this text.<br><br>' +
-                        'And here is yet more content to make absolutely sure that the scrolling ' +
-                        'functionality works as expected. This should be more than enough content.';
-                    poemTextDisplay.innerHTML = birdData.poem + extraContent;
+                if (this.notebookElements.poemTitleDisplay) this.notebookElements.poemTitleDisplay.textContent = birdData.title;
+                if (this.notebookElements.poemAuthorDisplay) this.notebookElements.poemAuthorDisplay.textContent = birdData.author;
+                if (this.notebookElements.poemTextDisplay) {
+                    this.notebookElements.poemTextDisplay.innerHTML = birdData.poem;
                 }
 
                 // Hide the poem hawk image
                 this.notebookElements.poemHawkImage.style.display = 'none';
 
+                // Show bird info page (page 2) without auto-scrolling
+                this.showPage(2);
+
                 // Update species list
                 this.updateNotebookSpeciesList();
+            }
+            
+            scrollToPage(pageNumber) {
+                const scrollContainer = this.notebookElements.scrollContainer;
+                const pageHeight = 320; // Height of each page
+                const targetScrollTop = (pageNumber - 1) * pageHeight;
+                
+                scrollContainer.scrollTo({
+                    top: targetScrollTop,
+                    behavior: 'smooth'
+                });
             }
             
             updateNotebookSpeciesList() {
@@ -772,16 +795,9 @@ A murder dark against the cloud.`,
                 // Switch to training section to show the guide content
                 this.showNotebookGuide();
                 
-                // Show training section and hide poem panel
-                const trainingSection = document.querySelector('.training-section');
-                const poemPanel = document.querySelector('.poem-panel');
-                
-                if (trainingSection) trainingSection.style.display = 'flex';
-                if (poemPanel) poemPanel.style.display = 'none';
-                
-                // Hide the bird image panel for empty state
-                const birdImagePanel = document.querySelector('.bird-image-panel');
-                if (birdImagePanel) birdImagePanel.style.display = 'none';
+                // Show training page (page 1) and scroll to it
+                this.showPage(1);
+                this.scrollToPage(1);
                 
                 // Show the hawk image for empty state
                 this.notebookElements.poemHawkImage.style.display = 'block';

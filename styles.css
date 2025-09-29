@@ -127,95 +127,101 @@ body {
   background: rgba(86, 130, 171, 0.5);
 }
 
-/* Left Panel: Training Section */
+/* Left Panel: Multi-page scrollable container */
 .notebook-left-panel {
   width: 230px;
   height: 320px;
-  padding-top: 16px;
-  padding-bottom: 16px;
   left: 0px;
   top: 0px;
   position: absolute;
   background: #F7E7D5;
   box-shadow: -2px 0px 3px rgba(114.27, 114.27, 114.27, 0.10) inset;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   display: inline-flex;
   box-sizing: border-box;
 }
 
-/* Custom scrollbar for left panel - hidden by default */
-.notebook-left-panel::-webkit-scrollbar {
+/* Scroll container for pages */
+.left-panel-scroll-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Individual pages */
+.left-panel-page {
+  width: 100%;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  position: relative;
+  flex-shrink: 0; /* Prevent pages from shrinking */
+}
+
+/* Page transitions */
+.left-panel-page {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.left-panel-page.slide-in {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.left-panel-page.slide-out {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+
+/* Custom scrollbar for left panel scroll container - hidden by default */
+.left-panel-scroll-container::-webkit-scrollbar {
   width: 0px;
   background: transparent;
 }
 
-.notebook-left-panel::-webkit-scrollbar-track {
+.left-panel-scroll-container::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.notebook-left-panel::-webkit-scrollbar-thumb {
+.left-panel-scroll-container::-webkit-scrollbar-thumb {
   background: transparent;
   border-radius: 3px;
   transition: background 0.3s ease;
 }
 
 /* Show scrollbar only when hovering over the panel or when scrolling */
-.notebook-left-panel:hover::-webkit-scrollbar,
-.notebook-left-panel.scrolling::-webkit-scrollbar {
+.left-panel-scroll-container:hover::-webkit-scrollbar,
+.left-panel-scroll-container.scrolling::-webkit-scrollbar {
   width: 6px;
 }
 
-.notebook-left-panel:hover::-webkit-scrollbar-thumb,
-.notebook-left-panel.scrolling::-webkit-scrollbar-thumb {
+.left-panel-scroll-container:hover::-webkit-scrollbar-thumb,
+.left-panel-scroll-container.scrolling::-webkit-scrollbar-thumb {
   background: rgba(86, 130, 171, 0.3);
 }
 
-.notebook-left-panel:hover::-webkit-scrollbar-thumb:hover,
-.notebook-left-panel.scrolling::-webkit-scrollbar-thumb:hover {
+.left-panel-scroll-container:hover::-webkit-scrollbar-thumb:hover,
+.left-panel-scroll-container.scrolling::-webkit-scrollbar-thumb:hover {
   background: rgba(86, 130, 171, 0.5);
 }
 
-/* Bird Image Panel (overlay) */
-.bird-image-panel {
-  width: 230px;
-  height: 320px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  left: 0px;
-  top: 0px;
-  position: absolute;
-  background: #F0E4D1;
-  box-shadow: 2px 0px 2px rgba(114.27, 114.27, 114.27, 0.10) inset;
-  overflow: hidden;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  display: inline-flex;
-  box-sizing: border-box;
-}
 
-/* Training Section */
-.training-section {
-  width: 230px;
-  height: 320px;
+/* Training Page */
+.training-page {
   padding: 16px 24px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  display: flex;
-  box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  left: 0;
+  background: #F7E7D5;
 }
 
 .training-content {
@@ -470,33 +476,45 @@ body {
   word-wrap: break-word;
 }
 
-/* Poem Panel Styles - SIMPLIFIED FOR SCROLLING */
-.poem-panel {
-  width: 230px;
-  height: 320px;
+/* Bird Info Page */
+.bird-info-page {
+  padding: 16px;
+  background: #F0E4D1;
+  justify-content: center;
+  align-items: center;
+}
+
+.bird-info-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Poem Page */
+.poem-page {
   padding: 16px;
   background: linear-gradient(138deg, #F0E4D1 0%, #F4E4D0 89%);
-  box-shadow: 2px 0px 2px rgba(114.27, 114.27, 114.27, 0.10) inset;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  box-sizing: border-box;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .poem-content {
   width: 100%;
-  min-height: 600px; /* Make it definitely tall enough to scroll */
+  min-height: 280px; /* Make it tall enough to fill the page */
   padding: 20px 0;
-  text-align: center;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .poem-header {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
 
 .poem-title {
@@ -515,13 +533,13 @@ body {
   font-family: EB Garamond;
   font-weight: 400;
   word-wrap: break-word;
-  margin-top: 4px;
+  margin-top: 0px;
   width: 100%;
 }
 
 .poem-text-container {
   width: 100%;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .poem-text {
@@ -532,36 +550,5 @@ body {
   word-wrap: break-word;
   line-height: 1.4;
   width: 100%;
-}
-
-/* Custom scrollbar for poem panel - hidden by default */
-.poem-panel::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
-}
-
-.poem-panel::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.poem-panel::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
-  transition: background 0.3s ease;
-}
-
-/* Show scrollbar only when hovering over the panel or when scrolling */
-.poem-panel:hover::-webkit-scrollbar,
-.poem-panel.scrolling::-webkit-scrollbar {
-  width: 6px;
-}
-
-.poem-panel:hover::-webkit-scrollbar-thumb,
-.poem-panel.scrolling::-webkit-scrollbar-thumb {
-  background: rgba(86, 130, 171, 0.3);
-}
-
-.poem-panel:hover::-webkit-scrollbar-thumb:hover,
-.poem-panel.scrolling::-webkit-scrollbar-thumb:hover {
-  background: rgba(86, 130, 171, 0.5);
+  text-align: left;
 }
