@@ -19,8 +19,9 @@
         <!-- Right Panel for Bird Notebook -->
         <div id="birdNotebook">
             <div class="notebook-content">
-                <!-- Left Panel: Training Section -->
+                <!-- Left Panel: Training Section / Poem Panel -->
                 <div class="notebook-left-panel">
+                    <!-- Training Section (shown by default) -->
                     <div class="training-section">
                         <div class="training-content">
                             <div class="training-header">
@@ -46,6 +47,19 @@
                         </div>
                         <div class="training-hawk-image">
                             <img id="poemHawkImage" src="hawk.png" alt="Hawk illustration" />
+                        </div>
+                    </div>
+                    
+                    <!-- Poem Panel (shown when bird is selected) -->
+                    <div class="poem-panel" style="display: none;">
+                        <div class="poem-content">
+                            <div class="poem-header">
+                                <div id="poemTitleDisplay" class="poem-title"></div>
+                                <div id="poemAuthorDisplay" class="poem-author"></div>
+                            </div>
+                            <div class="poem-text-container">
+                                <div id="poemTextDisplay" class="poem-text"></div>
+                            </div>
                         </div>
                     </div>
                     

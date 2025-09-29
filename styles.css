@@ -110,16 +110,19 @@ body {
   border-radius: 3px;
 }
 
-/* Show scrollbar only when actively scrolling */
+/* Show scrollbar only when hovering over the panel or when scrolling */
+.notebook-right-panel:hover::-webkit-scrollbar,
 .notebook-right-panel.scrolling::-webkit-scrollbar {
   width: 6px;
 }
 
+.notebook-right-panel:hover::-webkit-scrollbar-thumb,
 .notebook-right-panel.scrolling::-webkit-scrollbar-thumb {
   background: rgba(86, 130, 171, 0.3);
   border-radius: 3px;
 }
 
+.notebook-right-panel:hover::-webkit-scrollbar-thumb:hover,
 .notebook-right-panel.scrolling::-webkit-scrollbar-thumb:hover {
   background: rgba(86, 130, 171, 0.5);
 }
@@ -146,9 +149,10 @@ body {
   box-sizing: border-box;
 }
 
-/* Custom scrollbar for left panel */
+/* Custom scrollbar for left panel - hidden by default */
 .notebook-left-panel::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
+  background: transparent;
 }
 
 .notebook-left-panel::-webkit-scrollbar-track {
@@ -161,11 +165,19 @@ body {
   transition: background 0.3s ease;
 }
 
-.notebook-left-panel:hover::-webkit-scrollbar-thumb {
+/* Show scrollbar only when hovering over the panel or when scrolling */
+.notebook-left-panel:hover::-webkit-scrollbar,
+.notebook-left-panel.scrolling::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notebook-left-panel:hover::-webkit-scrollbar-thumb,
+.notebook-left-panel.scrolling::-webkit-scrollbar-thumb {
   background: rgba(86, 130, 171, 0.3);
 }
 
-.notebook-left-panel::-webkit-scrollbar-thumb:hover {
+.notebook-left-panel:hover::-webkit-scrollbar-thumb:hover,
+.notebook-left-panel.scrolling::-webkit-scrollbar-thumb:hover {
   background: rgba(86, 130, 171, 0.5);
 }
 
@@ -194,14 +206,16 @@ body {
 /* Training Section */
 .training-section {
   width: 230px;
-  padding-left: 24px;
-  padding-right: 24px;
+  height: 320px;
+  padding: 16px 24px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   display: flex;
   box-sizing: border-box;
-  min-height: 400px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .training-content {
@@ -454,4 +468,100 @@ body {
   font-family: Cormorant;
   font-weight: 400;
   word-wrap: break-word;
+}
+
+/* Poem Panel Styles - SIMPLIFIED FOR SCROLLING */
+.poem-panel {
+  width: 230px;
+  height: 320px;
+  padding: 16px;
+  background: linear-gradient(138deg, #F0E4D1 0%, #F4E4D0 89%);
+  box-shadow: 2px 0px 2px rgba(114.27, 114.27, 114.27, 0.10) inset;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+}
+
+.poem-content {
+  width: 100%;
+  min-height: 600px; /* Make it definitely tall enough to scroll */
+  padding: 20px 0;
+  text-align: center;
+}
+
+.poem-header {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.poem-title {
+  color: black;
+  font-size: 22px;
+  font-family: EB Garamond;
+  font-weight: 400;
+  word-wrap: break-word;
+  line-height: 1.2;
+  width: 100%;
+}
+
+.poem-author {
+  color: rgba(0, 0, 0, 0.50);
+  font-size: 12px;
+  font-family: EB Garamond;
+  font-weight: 400;
+  word-wrap: break-word;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.poem-text-container {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.poem-text {
+  color: black;
+  font-size: 12px;
+  font-family: EB Garamond;
+  font-weight: 400;
+  word-wrap: break-word;
+  line-height: 1.4;
+  width: 100%;
+}
+
+/* Custom scrollbar for poem panel - hidden by default */
+.poem-panel::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.poem-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.poem-panel::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+/* Show scrollbar only when hovering over the panel or when scrolling */
+.poem-panel:hover::-webkit-scrollbar,
+.poem-panel.scrolling::-webkit-scrollbar {
+  width: 6px;
+}
+
+.poem-panel:hover::-webkit-scrollbar-thumb,
+.poem-panel.scrolling::-webkit-scrollbar-thumb {
+  background: rgba(86, 130, 171, 0.3);
+}
+
+.poem-panel:hover::-webkit-scrollbar-thumb:hover,
+.poem-panel.scrolling::-webkit-scrollbar-thumb:hover {
+  background: rgba(86, 130, 171, 0.5);
 }

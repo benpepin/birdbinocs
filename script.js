@@ -39,21 +39,21 @@
                     { type: 'cardinal',     name: 'Northern Cardinal',         scientificName: 'Cardinalis cardinalis',  weight: 8,  points: 25, minSize: 16, maxSize: 24, minSpeed: 40,  maxSpeed: 80,  color: '#DC143C',  flightPattern: 'steady' },
                     { type: 'sparrow',      name: 'House Sparrow',             scientificName: 'Passer domesticus',      weight: 12, points: 12, minSize: 12, maxSize: 18, minSpeed: 80,  maxSpeed: 130, color: '#8B7355',  flightPattern: 'dart' },
                     { type: 'chickadee',    name: 'Black-capped Chickadee',    scientificName: 'Poecile atricapillus',   weight: 9,  points: 18, minSize: 12, maxSize: 18, minSpeed: 70,  maxSpeed: 110, color: '#3C3C3C',  flightPattern: 'flutter' },
-                    { type: 'goldfinch',    name: 'American Goldfinch',        weight: 7,  points: 22, minSize: 12, maxSize: 16, minSpeed: 70,  maxSpeed: 120, color: '#FFD700',  flightPattern: 'bounce' },
-                    { type: 'swallow',      name: 'Barn Swallow',              weight: 6,  points: 24, minSize: 12, maxSize: 18, minSpeed: 110, maxSpeed: 170, color: '#1E3A8A',  flightPattern: 'swoop' },
-                    { type: 'oriole',       name: 'Baltimore Oriole',          weight: 4,  points: 28, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 130, color: '#FF8C00',  flightPattern: 'sineSlow' },
-                    { type: 'woodpecker',   name: 'Downy Woodpecker',          weight: 5,  points: 26, minSize: 14, maxSize: 20, minSpeed: 60,  maxSpeed: 90,  color: '#2F4F4F',  flightPattern: 'zigzag' },
-                    { type: 'crow',         name: 'American Crow',             weight: 5,  points: 20, minSize: 22, maxSize: 30, minSpeed: 60,  maxSpeed: 100, color: '#111111',  flightPattern: 'glide' },
-                    { type: 'raven',        name: 'Common Raven',              weight: 3,  points: 30, minSize: 24, maxSize: 34, minSpeed: 60,  maxSpeed: 100, color: '#0B0B0B',  flightPattern: 'glide' },
-                    { type: 'owl',          name: 'Great Horned Owl',          weight: 2,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
-                    { type: 'hawk',         name: 'Red-tailed Hawk',           weight: 3,  points: 40, minSize: 35, maxSize: 50, minSpeed: 30,  maxSpeed: 60,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
-                    { type: 'eagle',        name: 'Bald Eagle',                 weight: 1,  points: 80, minSize: 40, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#5C4033',  flightPattern: 'majestic' },
-                    { type: 'heron',        name: 'Great Blue Heron',          weight: 1,  points: 70, minSize: 38, maxSize: 55, minSpeed: 35,  maxSpeed: 50,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
-                    { type: 'duck',         name: 'Mallard',                    weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
-                    { type: 'goose',        name: 'Canada Goose',              weight: 2,  points: 35, minSize: 34, maxSize: 50, minSpeed: 60,  maxSpeed: 90,  color: '#4B3F2F',  flightPattern: 'vGlide' },
-                    { type: 'pelican',      name: 'Brown Pelican',              weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#A47C48',  flightPattern: 'seaGlide' },
-                    { type: 'kingfisher',   name: 'Belted Kingfisher',          weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
-                    { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
+                    { type: 'goldfinch',    name: 'American Goldfinch',        scientificName: 'Spinus tristis', weight: 7,  points: 22, minSize: 12, maxSize: 16, minSpeed: 70,  maxSpeed: 120, color: '#FFD700',  flightPattern: 'bounce' },
+                    { type: 'swallow',      name: 'Barn Swallow',              scientificName: 'Hirundo rustica', weight: 6,  points: 24, minSize: 12, maxSize: 18, minSpeed: 110, maxSpeed: 170, color: '#1E3A8A',  flightPattern: 'swoop' },
+                    { type: 'oriole',       name: 'Baltimore Oriole',          scientificName: 'Icterus galbula', weight: 4,  points: 28, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 130, color: '#FF8C00',  flightPattern: 'sineSlow' },
+                    { type: 'woodpecker',   name: 'Downy Woodpecker',          scientificName: 'Picoides pubescens', weight: 5,  points: 26, minSize: 14, maxSize: 20, minSpeed: 60,  maxSpeed: 90,  color: '#2F4F4F',  flightPattern: 'zigzag' },
+                    { type: 'crow',         name: 'American Crow',             scientificName: 'Corvus brachyrhynchos', weight: 5,  points: 20, minSize: 22, maxSize: 30, minSpeed: 60,  maxSpeed: 100, color: '#111111',  flightPattern: 'glide' },
+                    { type: 'raven',        name: 'Common Raven',              scientificName: 'Corvus corax', weight: 3,  points: 30, minSize: 24, maxSize: 34, minSpeed: 60,  maxSpeed: 100, color: '#0B0B0B',  flightPattern: 'glide' },
+                    { type: 'owl',          name: 'Great Horned Owl',          scientificName: 'Bubo virginianus', weight: 2,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
+                    { type: 'hawk',         name: 'Red-tailed Hawk',           scientificName: 'Buteo jamaicensis', weight: 3,  points: 40, minSize: 35, maxSize: 50, minSpeed: 30,  maxSpeed: 60,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
+                    { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 1,  points: 80, minSize: 40, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#5C4033',  flightPattern: 'majestic' },
+                    { type: 'heron',        name: 'Great Blue Heron',          scientificName: 'Ardea herodias', weight: 1,  points: 70, minSize: 38, maxSize: 55, minSpeed: 35,  maxSpeed: 50,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
+                    { type: 'duck',         name: 'Mallard',                    scientificName: 'Anas platyrhynchos', weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
+                    { type: 'goose',        name: 'Canada Goose',              scientificName: 'Branta canadensis', weight: 2,  points: 35, minSize: 34, maxSize: 50, minSpeed: 60,  maxSpeed: 90,  color: '#4B3F2F',  flightPattern: 'vGlide' },
+                    { type: 'pelican',      name: 'White Pelican',              scientificName: 'Pelecanus erythrorhynchos', weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#F5F5F5',  flightPattern: 'seaGlide' },
+                    { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
+                    { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' }
                 ];
                 
@@ -423,18 +423,50 @@
             
             setupScrollDetection() {
                 const rightPanel = document.querySelector('.notebook-right-panel');
-                let scrollTimeout;
+                const leftPanel = document.querySelector('.notebook-left-panel');
+                const poemPanel = document.querySelector('.poem-panel');
+                let rightScrollTimeout;
+                let leftScrollTimeout;
                 
+                // Right panel scroll detection
                 rightPanel.addEventListener('scroll', () => {
                     // Add scrolling class when user scrolls
                     rightPanel.classList.add('scrolling');
                     
                     // Clear existing timeout
-                    clearTimeout(scrollTimeout);
+                    clearTimeout(rightScrollTimeout);
                     
                     // Remove scrolling class after 1 second of no scrolling
-                    scrollTimeout = setTimeout(() => {
+                    rightScrollTimeout = setTimeout(() => {
                         rightPanel.classList.remove('scrolling');
+                    }, 1000);
+                });
+                
+                // Left panel scroll detection (for training section)
+                leftPanel.addEventListener('scroll', () => {
+                    // Add scrolling class when user scrolls
+                    leftPanel.classList.add('scrolling');
+                    
+                    // Clear existing timeout
+                    clearTimeout(leftScrollTimeout);
+                    
+                    // Remove scrolling class after 1 second of no scrolling
+                    leftScrollTimeout = setTimeout(() => {
+                        leftPanel.classList.remove('scrolling');
+                    }, 1000);
+                });
+                
+                // Poem panel scroll detection
+                poemPanel.addEventListener('scroll', () => {
+                    // Add scrolling class when user scrolls
+                    poemPanel.classList.add('scrolling');
+                    
+                    // Clear existing timeout
+                    clearTimeout(leftScrollTimeout);
+                    
+                    // Remove scrolling class after 1 second of no scrolling
+                    leftScrollTimeout = setTimeout(() => {
+                        poemPanel.classList.remove('scrolling');
                     }, 1000);
                 });
             }
@@ -450,7 +482,7 @@ They looked so beautiful in flight<br>
 And the breezes were just right.<br>
 They had spent a day of fun.<br>
 Floating in the duck pond.`,
-                        image: "assets/images/notebook/Flamingoimage.png"
+                        image: "assets/images/notebook/Flamingo drawing.png"
                     },
                     robin: {
                         title: "The Early Robin",
@@ -494,7 +526,7 @@ Quick and nimble, never still,<br>
 Fulfilling nature's perfect will.<br>
 Common beauty, often missed,<br>
 In morning's golden light she's kissed.`,
-                        image: "assets/images/sprites/bird-spritesheet.png"
+                        image: "assets/images/notebook/Housesparrow.png"
                     },
                     chickadee: {
                         title: "Chickadee's Song",
@@ -577,12 +609,12 @@ A perfect sight to welcome you.`,
                         title: "Coastal Voyager",
                         author: "by Marina Rodriguez",
                         poem: `Above the waves with wings spread wide,<br>
-The brown pelican takes its glide.<br>
+The white pelican takes its glide.<br>
 With pouch so large and bill so long,<br>
 It soars the coast where currents throng.<br>
 In graceful dives it claims its meal,<br>
 A coastal beauty, wild and real.`,
-                        image: "assets/images/notebook/Pelican.png"
+                        image: "White pelican drawing.png"
                     },
                     eagle: {
                         title: "Eagle's Majesty",
@@ -637,7 +669,10 @@ A murder dark against the cloud.`,
             
             showNotebookForBird(birdType) {
                 const birdData = this.notebookData[birdType];
-                if (!birdData) return;
+                if (!birdData) {
+                    console.warn(`No poem data found for bird type: ${birdType}`);
+                    return;
+                }
 
                 this.currentNotebookBird = birdType;
 
@@ -656,10 +691,32 @@ A murder dark against the cloud.`,
                 this.notebookElements.birdImage.src = birdData.image;
                 this.notebookElements.birdImage.style.display = 'block';
 
-                // Update training section content
-                this.notebookElements.title.textContent = birdData.title;
-                this.notebookElements.author.textContent = birdData.author;
-                this.notebookElements.text.innerHTML = birdData.poem;
+                // Hide training section and show poem panel
+                const trainingSection = document.querySelector('.training-section');
+                const poemPanel = document.querySelector('.poem-panel');
+                
+                if (trainingSection) trainingSection.style.display = 'none';
+                if (poemPanel) poemPanel.style.display = 'flex';
+
+                // Update poem content
+                const poemTitleDisplay = document.getElementById('poemTitleDisplay');
+                const poemAuthorDisplay = document.getElementById('poemAuthorDisplay');
+                const poemTextDisplay = document.getElementById('poemTextDisplay');
+                
+                if (poemTitleDisplay) poemTitleDisplay.textContent = birdData.title;
+                if (poemAuthorDisplay) poemAuthorDisplay.textContent = birdData.author;
+                if (poemTextDisplay) {
+                    // Add extra content to ensure scrolling works
+                    const extraContent = '<br><br>--- Additional Content for Testing ---<br><br>' +
+                        'This is extra content to make sure the poem panel scrolls properly. ' +
+                        'We need enough content to exceed the height of the container so that ' +
+                        'scrolling is triggered. This should be plenty of text to test with.<br><br>' +
+                        'Here is even more content to ensure we have enough height to scroll. ' +
+                        'The poem panel should now definitely be scrollable with all this text.<br><br>' +
+                        'And here is yet more content to make absolutely sure that the scrolling ' +
+                        'functionality works as expected. This should be more than enough content.';
+                    poemTextDisplay.innerHTML = birdData.poem + extraContent;
+                }
 
                 // Hide the poem hawk image
                 this.notebookElements.poemHawkImage.style.display = 'none';
@@ -714,6 +771,13 @@ A murder dark against the cloud.`,
             showEmptyState() {
                 // Switch to training section to show the guide content
                 this.showNotebookGuide();
+                
+                // Show training section and hide poem panel
+                const trainingSection = document.querySelector('.training-section');
+                const poemPanel = document.querySelector('.poem-panel');
+                
+                if (trainingSection) trainingSection.style.display = 'flex';
+                if (poemPanel) poemPanel.style.display = 'none';
                 
                 // Hide the bird image panel for empty state
                 const birdImagePanel = document.querySelector('.bird-image-panel');
@@ -2069,9 +2133,9 @@ A murder dark against the cloud.`,
                 return `
                     <svg width="60" height="40" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
                         <g stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <ellipse cx="26" cy="22" rx="18" ry="11" fill="#A47C48"/>
-                            <circle cx="44" cy="18" r="6" fill="#A47C48"/>
-                            <path d="M44 19 L56 19 L48 22 Z" fill="#E0C060" stroke="#2d2d2d" stroke-width="1"/>
+                            <ellipse cx="26" cy="22" rx="18" ry="11" fill="#F5F5F5"/>
+                            <circle cx="44" cy="18" r="6" fill="#F5F5F5"/>
+                            <path d="M44 19 L56 19 L48 22 Z" fill="#FFD700" stroke="#2d2d2d" stroke-width="1"/>
                             <circle cx="45" cy="17" r="1.2" fill="#111"/>
                             <path d="M12 24 Q20 18 32 18 Q44 18 52 22" fill="none"/>
                         </g>
