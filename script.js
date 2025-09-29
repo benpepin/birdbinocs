@@ -526,7 +526,7 @@ She hops about with cheerful heart,<br>
 Nature's artist, playing her part.<br>
 Red breast bright against the green,<br>
 The most beautiful bird I've seen.`,
-                        image: "assets/images/sprites/AmericanRobin.png"
+                        image: "assets/images/notebook/American-Robin.png"
                     },
                     cardinal: {
                         title: "Crimson Cardinal",
@@ -537,7 +537,7 @@ His song rings clear in winter's chill,<br>
 A promise that spring will fulfill.<br>
 Crested head held proud and high,<br>
 Painting hope across the sky.`,
-                        image: "assets/images/sprites/NorthernCardinal.png"
+                        image: "assets/images/notebook/Northern-Cardinal.png"
                     },
                     bluejay: {
                         title: "The Bold Blue Jay",
@@ -592,7 +592,7 @@ Majestic wings spread wide and strong,<br>
 A wild and ancient freedom song.<br>
 Red tail catches morning light,<br>
 A ruler of the endless flight.`,
-                        image: "assets/images/sprites/bird-spritesheet.png"
+                        image: "assets/images/notebook/Red-Tailed-Hawk.png"
                     },
                     crow: {
                         title: "The Clever Crow",
@@ -614,7 +614,7 @@ Hovering at the flower's face,<br>
 Moving with impossible grace.<br>
 Ruby throat that catches light,<br>
 A miracle of nature's flight.`,
-                        image: "assets/images/sprites/bird-spritesheet.png"
+                        image: "assets/images/notebook/Ruby-Hummingbird.png"
                     },
                     woodpecker: {
                         title: "The Downy Drummer",
@@ -647,7 +647,7 @@ With pouch so large and bill so long,<br>
 It soars the coast where currents throng.<br>
 In graceful dives it claims its meal,<br>
 A coastal beauty, wild and real.`,
-                        image: "White pelican drawing.png"
+                        image: "assets/images/notebook/White-pelican-drawing.png"
                     },
                     eagle: {
                         title: "Eagle's Majesty",
@@ -670,6 +670,61 @@ It sees all beneath the sky.<br>
 In groups they gather, bold and loud,<br>
 A murder dark against the cloud.`,
                         image: "assets/images/notebook/American-Crow.png"
+                    },
+                    swallow: {
+                        title: "Swift Swallow",
+                        author: "by Anna Martinez",
+                        poem: `Forked tail cutting through the air,<br>
+The swallow darts with graceful flair.<br>
+Blue back gleaming in the sun,<br>
+Aerial acrobat, never done.<br>
+Building nests in barns so high,<br>
+Master of the summer sky.`,
+                        image: "assets/images/notebook/Barn-Swallow.png"
+                    },
+                    kingfisher: {
+                        title: "Riverside Hunter",
+                        author: "by Carlos Rivera",
+                        poem: `Perched above the flowing stream,<br>
+The kingfisher waits, a hunter's dream.<br>
+Blue and white with crest so bold,<br>
+Watching waters, patient and cold.<br>
+Diving down with lightning speed,<br>
+Nature's fisherman, indeed.`,
+                        image: "assets/images/notebook/Belted-Kingfisher.png"
+                    },
+                    goose: {
+                        title: "Honking V-Formation",
+                        author: "by Jennifer Walsh",
+                        poem: `In perfect V they cross the sky,<br>
+The Canada geese flying high.<br>
+Black head and neck, so proud and strong,<br>
+Their honking calls a wild song.<br>
+From north to south and back again,<br>
+Masters of the migration plan.`,
+                        image: "assets/images/notebook/Canada-Goose.png"
+                    },
+                    heron: {
+                        title: "Patient Fisher",
+                        author: "by Marcus Johnson",
+                        poem: `Standing still in shallow water,<br>
+The heron waits, a patient daughter.<br>
+Long legs wading, neck so long,<br>
+Waiting for the fish to come along.<br>
+Blue-gray feathers, graceful stance,<br>
+Nature's fisherman in a trance.`,
+                        image: "assets/images/notebook/Great-Blue-Heron.png"
+                    },
+                    owl: {
+                        title: "Night's Silent Hunter",
+                        author: "by Luna Nightshade",
+                        poem: `Eyes that pierce the darkest night,<br>
+The great horned owl takes its flight.<br>
+Silent wings and tufted ears,<br>
+Hunting through the midnight years.<br>
+Golden eyes that never blink,<br>
+Master of the shadows' brink.`,
+                        image: "assets/images/notebook/Great-Horned-Owl.png"
                     }
                 };
             }
