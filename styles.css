@@ -466,6 +466,7 @@ body {
   font-family: Cormorant Garamond;
   font-weight: 400;
   word-wrap: break-word;
+  text-align: center;
 }
 
 .bird-scientific-name {
@@ -474,6 +475,7 @@ body {
   font-family: Cormorant;
   font-weight: 400;
   word-wrap: break-word;
+  text-align: center;
 }
 
 /* Bird Info Page */
