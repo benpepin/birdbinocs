@@ -36,7 +36,7 @@
                     // Common backyard birds
                     { type: 'robin',        name: 'American Robin',            scientificName: 'Turdus migratorius',     weight: 14, points: 10, minSize: 15, maxSize: 25, minSpeed: 50,  maxSpeed: 100, color: '#CD853F',  flightPattern: 'steady' },
                     { type: 'bluejay',      name: 'Blue Jay',                  scientificName: 'Cyanocitta cristata',    weight: 10, points: 15, minSize: 18, maxSize: 28, minSpeed: 70,  maxSpeed: 120, color: '#4169E1',  flightPattern: 'sineFast' },
-                    { type: 'cardinal',     name: 'Northern Cardinal',         scientificName: 'Cardinalis cardinalis',  weight: 8,  points: 25, minSize: 16, maxSize: 24, minSpeed: 40,  maxSpeed: 80,  color: '#DC143C',  flightPattern: 'steady' },
+                    { type: 'cardinal',     name: 'Northern Cardinal',         scientificName: 'Cardinalis cardinalis',  weight: 8,  points: 25, minSize: 16, maxSize: 24, minSpeed: 120,  maxSpeed: 240,  color: '#DC143C',  flightPattern: 'steady' },
                     { type: 'sparrow',      name: 'House Sparrow',             scientificName: 'Passer domesticus',      weight: 12, points: 12, minSize: 12, maxSize: 18, minSpeed: 80,  maxSpeed: 130, color: '#8B7355',  flightPattern: 'dart' },
                     { type: 'chickadee',    name: 'Black-capped Chickadee',    scientificName: 'Poecile atricapillus',   weight: 9,  points: 18, minSize: 12, maxSize: 18, minSpeed: 70,  maxSpeed: 110, color: '#3C3C3C',  flightPattern: 'flutter' },
                     { type: 'goldfinch',    name: 'American Goldfinch',        scientificName: 'Spinus tristis', weight: 7,  points: 22, minSize: 12, maxSize: 16, minSpeed: 70,  maxSpeed: 120, color: '#FFD700',  flightPattern: 'bounce' },
@@ -47,8 +47,8 @@
                     { type: 'raven',        name: 'Common Raven',              scientificName: 'Corvus corax', weight: 3,  points: 30, minSize: 24, maxSize: 34, minSpeed: 60,  maxSpeed: 100, color: '#0B0B0B',  flightPattern: 'glide' },
                     { type: 'owl',          name: 'Great Horned Owl',          scientificName: 'Bubo virginianus', weight: 2,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
                     { type: 'hawk',         name: 'Red-tailed Hawk',           scientificName: 'Buteo jamaicensis', weight: 3,  points: 40, minSize: 35, maxSize: 50, minSpeed: 30,  maxSpeed: 60,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
-                    { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 1,  points: 80, minSize: 40, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#5C4033',  flightPattern: 'majestic' },
-                    { type: 'heron',        name: 'Great Blue Heron',          scientificName: 'Ardea herodias', weight: 1,  points: 70, minSize: 38, maxSize: 55, minSpeed: 35,  maxSpeed: 50,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
+                    { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 1,  points: 80, minSize: 40, maxSize: 60, minSpeed: 105,  maxSpeed: 165,  color: '#5C4033',  flightPattern: 'majestic' },
+                    { type: 'heron',        name: 'Great Blue Heron',          scientificName: 'Ardea herodias', weight: 1,  points: 70, minSize: 38, maxSize: 55, minSpeed: 60,  maxSpeed: 85,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
                     { type: 'duck',         name: 'Mallard',                    scientificName: 'Anas platyrhynchos', weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
                     { type: 'goose',        name: 'Canada Goose',              scientificName: 'Branta canadensis', weight: 6,  points: 35, minSize: 34, maxSize: 50, minSpeed: 60,  maxSpeed: 90,  color: '#4B3F2F',  flightPattern: 'vGlide' },
                     { type: 'pelican',      name: 'White Pelican',              scientificName: 'Pelecanus erythrorhynchos', weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#F5F5F5',  flightPattern: 'seaGlide' },
@@ -263,18 +263,10 @@
                 this.gooseSpriteSheetRows = 4;
                 this.gooseSpriteTotalFrames = this.gooseSpriteSheetCols * this.gooseSpriteSheetRows;
                 this.gooseSpriteAnimFps = 12; // animation speed in frames per second
-                // Create ping-pong frame sequence for smooth looping (0-15, then 14-1)
-                this.goosePingPongFrames = [];
-                for (let i = 0; i < this.gooseSpriteTotalFrames; i++) {
-                    this.goosePingPongFrames.push(i);
-                }
-                for (let i = this.gooseSpriteTotalFrames - 2; i >= 1; i--) {
-                    this.goosePingPongFrames.push(i);
-                }
                 this.gooseSpriteSheet.onload = () => {
                     this.isGooseSpriteSheetLoaded = true;
                 };
-                this.gooseSpriteSheet.src = 'assets/images/sprites/Canada-Goose-sprite.png';
+                this.gooseSpriteSheet.src = 'assets/images/sprites/cg-sprite-256px-16-2.png';
 
                 // Red-tailed Hawk-specific sprite sheet
                 this.hawkSpriteSheet = new Image();
@@ -1097,7 +1089,7 @@ Master of the shadows' brink.`,
 
                 const bird = {
                     id: Date.now() + Math.random(),
-                    x: this.frameBounds.left - 30,
+                    x: this.frameBounds.left - 50,
                     y: this.frameBounds.top + Math.random() * (this.frameBounds.bottom - this.frameBounds.top - 100),
                     velocityX: minSpeed + Math.random() * (maxSpeed - minSpeed),
                     velocityY: (Math.random() - 0.5) * 20,
@@ -1123,7 +1115,7 @@ Master of the shadows' brink.`,
                         : selected.type === 'hawk'
                         ? Math.floor(Math.random() * (this.hawkSpriteTotalFrames || 1))
                         : selected.type === 'goose'
-                        ? this.goosePingPongFrames[Math.floor(Math.random() * (this.goosePingPongFrames.length || 1))]
+                        ? Math.floor(Math.random() * (this.gooseSpriteTotalFrames || 1))
                         : selected.type === 'heron'
                         ? Math.floor(Math.random() * (this.heronSpriteTotalFrames || 1))
                         : Math.floor(Math.random() * (this.spriteTotalFrames || 1))
@@ -1153,9 +1145,9 @@ Master of the shadows' brink.`,
                     } else if (bird.type === 'hawk' && this.hawkSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.hawkSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.hawkSpriteTotalFrames;
-                    } else if (bird.type === 'goose' && this.goosePingPongFrames) {
+                    } else if (bird.type === 'goose' && this.gooseSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.gooseSpriteAnimFps * bird.animTime));
-                        bird.frameIndex = this.goosePingPongFrames[advance % this.goosePingPongFrames.length];
+                        bird.frameIndex = advance % this.gooseSpriteTotalFrames;
                     } else if (bird.type === 'heron' && this.heronSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.heronSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.heronSpriteTotalFrames;
@@ -1217,26 +1209,7 @@ Master of the shadows' brink.`,
                         bird.velocityY = -Math.abs(bird.velocityY); // Bounce off bottom
                     }
                     
-                    // Compute per-bird alpha for gentle fade in/out near edges
-                    const fadeDistance = 20; // pixels to fully fade
-                    const leftEdge = this.frameBounds.left;
-                    const rightEdge = this.frameBounds.right;
-
-                    // Fade in as the bird enters from the left
-                    let alphaIn = (bird.x - leftEdge) / fadeDistance;
-                    if (alphaIn < 0) alphaIn = 0;
-                    if (alphaIn > 1) alphaIn = 1;
-
-                    // Fade out as the bird approaches/exits the right edge
-                    let alphaOut = 1;
-                    if (bird.x > rightEdge - fadeDistance) {
-                        const denom = fadeDistance + 20; // include offscreen removal buffer
-                        alphaOut = (rightEdge + 20 - bird.x) / denom;
-                        if (alphaOut < 0) alphaOut = 0;
-                        if (alphaOut > 1) alphaOut = 1;
-                    }
-
-                    bird.alpha = Math.min(alphaIn, alphaOut);
+                    // Birds fly naturally without fade effects
 
                     bird.wingPhase += 10 * (this.deltaTime / 1000);
                 });
@@ -1854,10 +1827,6 @@ Master of the shadows' brink.`,
                 
                 this.birds.forEach(bird => {
                     ctx.save();
-                    // Apply per-bird alpha if present for smooth fade in/out
-                    if (bird.alpha !== undefined) {
-                        ctx.globalAlpha = bird.alpha;
-                    }
                     ctx.translate(bird.x, bird.y);
                     
                     const size = bird.size;
