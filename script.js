@@ -1398,7 +1398,9 @@ Master of the shadows' brink.`,
             updateUI() {
                 this.uiElements.binocularStatus.textContent = this.binoculars.isActive ? 'Active' : 'Ready';
                 this.uiElements.birdCount.textContent = this.birdsSpotted;
-                this.uiElements.mousePos.textContent = `Species: ${this.discoveredSpecies.size}/${this.speciesCatalog.length}`;
+                // Count only spawnable species (weight > 0)
+                const spawnableSpeciesCount = this.speciesCatalog.filter(s => s.weight > 0).length;
+                this.uiElements.mousePos.textContent = `Species: ${this.discoveredSpecies.size}/${spawnableSpeciesCount}`;
                 this.uiElements.scoreDisplay.textContent = this.totalScore.toLocaleString();
             }
             
