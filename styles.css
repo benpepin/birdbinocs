@@ -748,3 +748,43 @@ body {
   background: #DC143C;
   color: white;
 }
+/* Mobile Warning Overlay */
+#mobileWarning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f4f0e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.mobile-warning-content {
+  text-align: center;
+  padding: 40px;
+  max-width: 400px;
+}
+
+.mobile-warning-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+}
+
+.mobile-warning-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 48px;
+  font-weight: 600;
+  color: #3d3020;
+  margin: 0 0 20px 0;
+}
+
+.mobile-warning-text {
+  font-family: 'Cormorant', serif;
+  font-size: 24px;
+  color: #5d4d37;
+  margin: 0;
+  line-height: 1.6;
+}

@@ -1,3 +1,37 @@
+        // Mobile detection - block mobile devices
+        (function() {
+            function isMobileDevice() {
+                // Check for touch capability
+                const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+                // Check user agent for mobile/tablet devices
+                const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+                const isMobileUA = mobileRegex.test(navigator.userAgent);
+
+                // Check screen width (tablets and phones)
+                const isSmallScreen = window.innerWidth < 768;
+
+                return (hasTouch && isMobileUA) || (hasTouch && isSmallScreen);
+            }
+
+            if (isMobileDevice()) {
+                // Show mobile warning
+                document.addEventListener('DOMContentLoaded', function() {
+                    const mobileWarning = document.getElementById('mobileWarning');
+                    const gameContainer = document.getElementById('gameContainer');
+
+                    if (mobileWarning) {
+                        mobileWarning.style.display = 'flex';
+                    }
+                    if (gameContainer) {
+                        gameContainer.style.display = 'none';
+                    }
+                });
+
+                // Prevent game initialization
+                return;
+            }
+        })();
 
         class BirdwatchingGame {
             constructor() {
