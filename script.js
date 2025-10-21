@@ -1122,17 +1122,21 @@ Master of the shadows' brink.`,
                 const ctx = this.identificationCtx;
                 const canvas = this.quizElements.canvas;
 
-                // Clear canvas
+                // Comprehensive canvas clearing
+                ctx.save();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
+
+                // Fill with background color first to prevent artifacts
+                ctx.fillStyle = '#87CEEB';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 // Draw background (simplified)
                 if (this.isBackgroundLoaded) {
                     ctx.drawImage(this.backgroundImage,
                         bird.x - 200, bird.y - 200, 400, 400,
                         0, 0, 400, 400);
-                } else {
-                    ctx.fillStyle = '#87CEEB';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
                 }
 
                 // Draw bird centered
