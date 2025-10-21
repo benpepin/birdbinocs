@@ -79,6 +79,9 @@
                     isIdentifying: false,
                     attemptedGuesses: new Set()
                 };
+                
+                // Quiz animation loop ID
+                this.quizAnimationId = null;
 
 
 				// Unified text size for score and new-species banners
@@ -987,8 +990,8 @@ Master of the shadows' brink.`,
                 this.quizElements.feedback.innerHTML = '';
                 this.quizElements.feedback.className = 'feedback-message';
 
-                // Update identification canvas once when bird is locked
-                this.updateIdentificationCanvas();
+                // Start quiz animation loop
+                this.startQuizAnimation();
 
                 // Focus input
                 setTimeout(() => {
@@ -1100,6 +1103,9 @@ Master of the shadows' brink.`,
                 this.quizState.lockedBird = null;
                 this.quizState.isIdentifying = false;
                 this.quizState.attemptedGuesses.clear();
+                
+                // Stop quiz animation loop
+                this.stopQuizAnimation();
             }
 
             updateIdentificationCanvas() {
@@ -1203,6 +1209,28 @@ Master of the shadows' brink.`,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4
                 };
                 return colsMap[bird.type] || 4;
+            }
+
+            startQuizAnimation() {
+                if (this.quizAnimationId) {
+                    cancelAnimationFrame(this.quizAnimationId);
+                }
+                
+                const animate = () => {
+                    if (this.quizState.isIdentifying) {
+                        this.updateIdentificationCanvas();
+                        this.quizAnimationId = requestAnimationFrame(animate);
+                    }
+                };
+                
+                this.quizAnimationId = requestAnimationFrame(animate);
+            }
+
+            stopQuizAnimation() {
+                if (this.quizAnimationId) {
+                    cancelAnimationFrame(this.quizAnimationId);
+                    this.quizAnimationId = null;
+                }
             }
 
             // ===== END QUIZ MODE METHODS =====
