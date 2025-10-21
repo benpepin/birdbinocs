@@ -998,7 +998,8 @@ Master of the shadows' brink.`,
                 this.updateIdentificationCanvas();
 
                 // Start quiz animation loop (disabled for Safari compatibility)
-                this.startQuizAnimation();
+                // DISABLED: This was causing freezing after multiple identifications
+                // this.startQuizAnimation();
 
                 // Focus input
                 setTimeout(() => {
