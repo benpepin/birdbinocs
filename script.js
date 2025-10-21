@@ -1212,26 +1212,16 @@ Master of the shadows' brink.`,
             }
 
             startQuizAnimation() {
-                if (this.quizAnimationId) {
-                    cancelAnimationFrame(this.quizAnimationId);
-                }
-                
-                const animate = () => {
-                    if (this.quizState.isIdentifying) {
-                        this.updateIdentificationCanvas();
-                        this.quizAnimationId = requestAnimationFrame(animate);
-                    }
-                };
-                
-                this.quizAnimationId = requestAnimationFrame(animate);
+                // Disable animation loop to prevent Safari freezing
+                // The bird will be static in quiz mode for better performance
+                console.log('Quiz mode: Bird animation disabled for Safari compatibility');
             }
 
             stopQuizAnimation() {
-                if (this.quizAnimationId) {
-                    cancelAnimationFrame(this.quizAnimationId);
-                    this.quizAnimationId = null;
-                }
+                // No animation to stop since we disabled it for Safari compatibility
+                console.log('Quiz mode: Animation already disabled');
             }
+
 
             // ===== END QUIZ MODE METHODS =====
 
