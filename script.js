@@ -1122,15 +1122,13 @@ Master of the shadows' brink.`,
                 const ctx = this.identificationCtx;
                 const canvas = this.quizElements.canvas;
 
-                // Comprehensive canvas clearing
+                // Complete canvas reset - clear everything
                 ctx.save();
                 ctx.setTransform(1, 0, 0, 1, 0, 0);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.restore();
-
-                // Fill with background color first to prevent artifacts
                 ctx.fillStyle = '#87CEEB';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
 
                 // Draw background (simplified)
                 if (this.isBackgroundLoaded) {
@@ -1252,23 +1250,9 @@ Master of the shadows' brink.`,
             }
 
             updateQuizBirdAnimation() {
-                if (!this.quizState.lockedBird) return;
-                
-                const bird = this.quizState.lockedBird;
-                
-                // Update animation time (16ms = ~60fps)
-                this.quizAnimTime += 16;
-                
-                // Calculate current frame (12 fps animation speed)
-                const fps = 12;
-                const currentFrame = Math.floor((this.quizAnimTime / 1000) * fps) % 16;
-                
-                // Only redraw if frame actually changed
-                if (currentFrame !== this.quizLastFrame) {
-                    this.quizLastFrame = currentFrame;
-                    bird.frameIndex = currentFrame;
-                    this.updateIdentificationCanvas();
-                }
+                // Disable animation to prevent ghosting artifacts
+                // Static bird is better than ghosted animation
+                return;
             }
 
             // ===== END QUIZ MODE METHODS =====
