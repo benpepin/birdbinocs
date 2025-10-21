@@ -31,7 +31,7 @@
                 this.discoveredSpecies = new Set();
                 this.totalScore = 0;
 
-                // Species catalog (20 species total)
+                // Species catalog (21 species total)
                 this.speciesCatalog = [
                     // Common backyard birds
                     { type: 'robin',        name: 'American Robin',            scientificName: 'Turdus migratorius',     weight: 14, points: 10, minSize: 15, maxSize: 25, minSpeed: 50,  maxSpeed: 100, color: '#CD853F',  flightPattern: 'steady' },
