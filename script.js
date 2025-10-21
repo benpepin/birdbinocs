@@ -68,6 +68,19 @@
                 // Particle system for enhanced effects
                 this.particles = [];
 
+                // Quiz Mode Settings
+                this.gameSettings = {
+                    quizMode: false
+                };
+
+                // Quiz Mode State
+                this.quizState = {
+                    lockedBird: null,
+                    isIdentifying: false,
+                    attemptedGuesses: new Set()
+                };
+
+
 				// Unified text size for score and new-species banners
 				this.textPopupSize = 20;
 
@@ -448,6 +461,47 @@
                     mousePos: document.getElementById('mousePos'),
                     scoreDisplay: document.getElementById('scoreDisplay')
                 };
+
+                // Quiz Mode UI Elements
+                this.quizElements = {
+                    checkbox: document.getElementById('quizModeCheckbox'),
+                    status: document.getElementById('quizModeStatus'),
+                    modal: document.getElementById('identificationModal'),
+                    input: document.getElementById('birdNameInput'),
+                    submitBtn: document.getElementById('submitGuessBtn'),
+                    feedback: document.getElementById('feedbackMessage'),
+                    canvas: document.getElementById('identificationCanvas')
+                };
+
+                // Setup quiz mode toggle
+                this.quizElements.checkbox.addEventListener('change', async (e) => {
+                    this.gameSettings.quizMode = e.target.checked;
+                    this.quizElements.status.textContent = this.gameSettings.quizMode ? 'ON' : 'OFF';
+
+                });
+
+                // Setup identification input - DO NOT auto-check, only check when submitted
+                // (listener kept for potential future use)
+
+                // Handle Enter key to submit
+                this.quizElements.input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.submitGuess();
+                    }
+                });
+
+                // Handle submit button click
+                this.quizElements.submitBtn.addEventListener('click', () => {
+                    this.submitGuess();
+                });
+
+                // Setup identification canvas
+                const idCtx = this.quizElements.canvas.getContext('2d');
+                this.quizElements.canvas.width = 400;
+                this.quizElements.canvas.height = 400;
+                this.identificationCtx = idCtx;
+
             }
             
             addSpeciesToJournal(bird) {
@@ -613,60 +667,44 @@
                     flamingo: {
                         title: "Flamingo Observations",
                         author: "by Lamar Cole",
-                        poem: `The day was ending, soft light fading across the water.<br>
-A flock of flamingos began their departure,<br>
-long necks stretched forward, wings beating in rhythm.<br>
-They had spent hours wading in the shallows,<br>
-filtering the water with their curved bills.<br>
-Now they moved as one, painting the sky pink.`,
+                        poem: `Soft light fades across the water,<br>
+Flamingos depart, necks stretched, wings beating.<br>
+Hours spent filtering the shallows,<br>
+Now they move as one, painting the sky pink.`,
                         image: "assets/images/notebook/Flamingo drawing.png"
                     },
                     robin: {
                         title: "Morning Robin",
                         author: "by Sarah Williams",
-                        poem: `First light breaks over the garden,<br>
-and there she is—the robin.<br>
+                        poem: `First light breaks, there she is—the robin.<br>
 Her song cuts through the morning silence,<br>
-a declaration of territory and presence.<br>
-She moves with purpose across the lawn,<br>
-pausing to listen, then continuing her search.<br>
-That distinctive red breast catches the light,<br>
-impossible to ignore.`,
+Moving with purpose across the lawn,<br>
+Red breast catching light, impossible to ignore.`,
                         image: "assets/images/notebook/American-Robin.png"
                     },
                     cardinal: {
                         title: "Winter Cardinal",
                         author: "by Michael Chen",
-                        poem: `Against the stark white of winter snow,<br>
-the cardinal appears like a living flame.<br>
+                        poem: `Against winter snow, a living flame.<br>
 His song pierces the cold air,<br>
-each note carrying the weight of survival.<br>
-The crest on his head stands tall,<br>
-a crown of confidence in the bleak landscape.<br>
-He is winter's most vivid reminder<br>
-that life persists through the harshest seasons.`,
+Crest standing tall, a crown of confidence.<br>
+Life persists through the harshest seasons.`,
                         image: "assets/images/notebook/Northern-Cardinal.png"
                     },
                     bluejay: {
                         title: "Blue Jay Study",
                         author: "by Emma Rodriguez",
                         poem: `The blue jay announces itself with authority,<br>
-its voice cutting through the forest canopy.<br>
-There's something almost arrogant in its bearing,<br>
-as if it knows exactly how striking it appears.<br>
-The blue of its wings catches sunlight,<br>
-while the white markings create perfect contrast.<br>
-It moves with purpose, never hesitant,<br>
-a master of its woodland domain.`,
+Voice cutting through the forest canopy.<br>
+Blue wings catching sunlight, white markings contrasting,<br>
+A master of its woodland domain.`,
                         image: "assets/images/notebook/Bluejay.png"
                     },
                     sparrow: {
                         title: "Little Sparrow",
                         author: "by David Kim",
                         poem: `Small and brown, the sparrow flies,<br>
-Underneath the open skies.<br>
-Quick and nimble, never still,<br>
-Fulfilling nature's perfect will.<br>
+Quick and nimble, never still.<br>
 Common beauty, often missed,<br>
 In morning's golden light she's kissed.`,
                         image: "assets/images/notebook/Housesparrow.png"
@@ -675,10 +713,8 @@ In morning's golden light she's kissed.`,
                         title: "Chickadee's Song",
                         author: "by Alice Thompson",
                         poem: `Chick-a-dee-dee-dee they say,<br>
-Through the cold of winter's day.<br>
-Small but mighty, brave and true,<br>
-With a cap of midnight blue.<br>
-In the feeder they appear,<br>
+Small but mighty, brave and true.<br>
+With a cap of midnight blue,<br>
 Bringing joy throughout the year.`,
                         image: "assets/images/notebook/Black-capped-chickadee.png"
                     },
@@ -863,7 +899,7 @@ Master of the shadows' brink.`,
             
             handleCanvasClick(e) {
                 if (this.binoculars.isActive) return; // Don't open notebook when using binoculars
-                
+
                 const rect = this.canvas.getBoundingClientRect();
                 // Account for pixel ratio in mouse coordinate calculation
                 const pixelRatio = window.devicePixelRatio || 1;
@@ -872,16 +908,27 @@ Master of the shadows' brink.`,
 
                 const clickX = (e.clientX - rect.left) * scaleX;
                 const clickY = (e.clientY - rect.top) * scaleY;
-                
+
                 // Check if click is on a bird
                 for (let bird of this.birds) {
                     const distance = Math.sqrt(
-                        Math.pow(bird.x - clickX, 2) + 
+                        Math.pow(bird.x - clickX, 2) +
                         Math.pow(bird.y - clickY, 2)
                     );
-                    
+
                     if (distance < bird.size * 1.5) { // Click within bird area
-                        this.showNotebookForBird(bird.type);
+                        if (this.gameSettings.quizMode) {
+                            // Quiz mode: lock bird for identification
+                            if (!bird.spotted) {
+                                this.lockBirdForIdentification(bird);
+                            } else {
+                                // If already spotted, show notebook
+                                this.showNotebookForBird(bird.type);
+                            }
+                        } else {
+                            // Normal mode: open notebook
+                            this.showNotebookForBird(bird.type);
+                        }
                         break;
                     }
                 }
@@ -923,7 +970,240 @@ Master of the shadows' brink.`,
                 // Update species list
                 this.updateNotebookSpeciesList();
             }
-            
+
+            // ===== QUIZ MODE METHODS =====
+
+
+            lockBirdForIdentification(bird) {
+                this.quizState.lockedBird = bird;
+                this.quizState.isIdentifying = true;
+                this.quizState.attemptedGuesses.clear();
+
+                // Show modal
+                this.quizElements.modal.style.display = 'flex';
+
+                // Clear input and feedback
+                this.quizElements.input.value = '';
+                this.quizElements.feedback.innerHTML = '';
+                this.quizElements.feedback.className = 'feedback-message';
+
+                // Focus input
+                setTimeout(() => {
+                    this.quizElements.input.focus();
+                }, 100);
+
+            }
+
+
+            submitGuess() {
+                const guess = this.quizElements.input.value.trim();
+                if (!guess || !this.quizState.lockedBird) return;
+
+                const bird = this.quizState.lockedBird;
+                const speciesData = this.speciesCatalog.find(s => s.type === bird.type);
+                if (!speciesData) return;
+
+                const normalizedGuess = this.normalizeString(guess);
+                const normalizedCommonName = this.normalizeString(speciesData.name);
+                const normalizedScientificName = this.normalizeString(speciesData.scientificName);
+
+                // Split bird name into words for flexible matching
+                const birdWords = normalizedCommonName.split(' ');
+                const guessWords = normalizedGuess.split(' ');
+
+                // Match if:
+                // 1. Exact match of full name
+                // 2. Any significant word (4+ chars) in the bird name is in the guess
+                // 3. Any significant word in the guess matches a word in the bird name
+                const isMatch =
+                    normalizedGuess === normalizedCommonName ||  // Exact match
+                    normalizedGuess === normalizedScientificName ||  // Scientific name exact
+                    birdWords.some(word => word.length >= 4 && normalizedGuess.includes(word)) ||  // Bird word in guess
+                    guessWords.some(word => word.length >= 4 && normalizedCommonName.includes(word));  // Guess word in bird name
+
+                if (isMatch) {
+                    this.handleCorrectIdentification();
+                } else {
+                    this.handleIncorrectIdentification(guess);
+                }
+            }
+
+
+            normalizeString(str) {
+                return str.toLowerCase()
+                    .replace(/[^\w\s]/g, '') // Remove punctuation
+                    .replace(/\s+/g, ' ')     // Normalize whitespace
+                    .trim();
+            }
+
+            handleCorrectIdentification() {
+                const bird = this.quizState.lockedBird;
+
+
+                // Show correct feedback
+                this.quizElements.feedback.innerHTML = `
+                    <span class="feedback-icon correct">✓</span>
+                    <span>${bird.name}</span>
+                `;
+                this.quizElements.feedback.className = 'feedback-message correct';
+
+                // Mark bird as spotted and award points
+                bird.spotted = true;
+                this.birdsSpotted++;
+                this.totalScore += bird.points;
+
+                const isNewSpecies = !this.discoveredSpecies.has(bird.type);
+                this.discoveredSpecies.add(bird.type);
+
+                // Bonus points for new species
+                if (isNewSpecies) {
+                    this.totalScore += bird.points * 2;
+                }
+
+                // Add to journal
+                this.addSpeciesToJournal(bird);
+
+                // Create visual feedback
+                this.createSpottingParticles(bird.x, bird.y, isNewSpecies);
+                this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
+
+                // Close modal after delay
+                setTimeout(() => {
+                    this.closeIdentificationModal();
+                }, 1500);
+            }
+
+            handleIncorrectIdentification(guess) {
+                // Store the incorrect guess
+                this.quizState.attemptedGuesses.add(guess);
+
+                // Show incorrect feedback
+                this.quizElements.feedback.innerHTML = `
+                    <span class="feedback-icon incorrect">✕</span>
+                    <span>${guess}</span>
+                `;
+                this.quizElements.feedback.className = 'feedback-message incorrect';
+
+                // Clear input for next attempt
+                setTimeout(() => {
+                    this.quizElements.input.value = '';
+                    this.quizElements.feedback.innerHTML = '';
+                    this.quizElements.feedback.className = 'feedback-message';
+                }, 2000);
+            }
+
+            closeIdentificationModal() {
+                this.quizElements.modal.style.display = 'none';
+                this.quizState.lockedBird = null;
+                this.quizState.isIdentifying = false;
+                this.quizState.attemptedGuesses.clear();
+            }
+
+            updateIdentificationCanvas() {
+                if (!this.quizState.lockedBird || !this.identificationCtx) return;
+
+                const bird = this.quizState.lockedBird;
+                const ctx = this.identificationCtx;
+                const canvas = this.quizElements.canvas;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw background (simplified)
+                if (this.isBackgroundLoaded) {
+                    ctx.drawImage(this.backgroundImage,
+                        bird.x - 200, bird.y - 200, 400, 400,
+                        0, 0, 400, 400);
+                } else {
+                    ctx.fillStyle = '#87CEEB';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+
+                // Draw bird centered
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                // Use sprite if available
+                this.drawBirdOnCanvas(ctx, bird, centerX, centerY);
+            }
+
+            drawBirdOnCanvas(ctx, bird, x, y) {
+                // Simplified bird drawing for identification canvas
+                ctx.save();
+                ctx.translate(x, y);
+
+                if (bird.direction === 'left') {
+                    ctx.scale(-1, 1);
+                }
+
+                // Draw bird sprite or fallback
+                const spriteSheet = this.getSpriteSheetForBird(bird);
+                if (spriteSheet && spriteSheet.complete) {
+                    const frameIndex = Math.floor((Date.now() / 1000) * 12) % 16;
+                    const cols = this.getSpriteColsForBird(bird);
+                    const frameW = spriteSheet.width / cols;
+                    const frameH = spriteSheet.height / Math.ceil(16 / cols);
+                    const frameX = (frameIndex % cols) * frameW;
+                    const frameY = Math.floor(frameIndex / cols) * frameH;
+
+                    // Make all birds much bigger in identification modal
+                    const sizeMultiplier = bird.type === 'flamingo' ? 12 : 10;
+                    const renderedSize = bird.size * sizeMultiplier;
+                    const offset = renderedSize / 2;
+                    ctx.drawImage(spriteSheet,
+                        frameX, frameY, frameW, frameH,
+                        -offset, -offset, renderedSize, renderedSize);
+                } else {
+                    // Fallback circle - make it bigger too
+                    const fallbackSizeMultiplier = bird.type === 'flamingo' ? 12 : 10;
+                    const renderedRadius = bird.size * fallbackSizeMultiplier / 2;
+                    ctx.fillStyle = bird.color || '#8B4513';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, renderedRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            getSpriteSheetForBird(bird) {
+                const typeMap = {
+                    'flamingo': this.flamingoSpriteSheet,
+                    'robin': this.robinSpriteSheet,
+                    'cardinal': this.cardinalSpriteSheet,
+                    'woodpecker': this.woodpeckerSpriteSheet,
+                    'duck': this.mallardSpriteSheet,
+                    'goldfinch': this.goldfinchSpriteSheet,
+                    'pelican': this.pelicanSpriteSheet,
+                    'bluejay': this.bluejaySpriteSheet,
+                    'chickadee': this.chickadeeSpriteSheet,
+                    'eagle': this.baldeagleSpriteSheet,
+                    'crow': this.crowSpriteSheet,
+                    'goose': this.gooseSpriteSheet,
+                    'hawk': this.hawkSpriteSheet,
+                    'hummingbird': this.hummingbirdSpriteSheet,
+                    'heron': this.heronSpriteSheet,
+                    'owl': this.owlSpriteSheet,
+                    'oriole': this.oriolSpriteSheet,
+                    'raven': this.ravenSpriteSheet,
+                    'kingfisher': this.kingfisherSpriteSheet
+                };
+                return typeMap[bird.type] || this.spriteSheet;
+            }
+
+            getSpriteColsForBird(bird) {
+                const colsMap = {
+                    'flamingo': 4, 'robin': 4, 'cardinal': 3, 'woodpecker': 4,
+                    'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
+                    'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
+                    'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
+                    'oriole': 5, 'raven': 4, 'kingfisher': 4
+                };
+                return colsMap[bird.type] || 4;
+            }
+
+            // ===== END QUIZ MODE METHODS =====
+
             scrollToPage(pageNumber) {
                 const scrollContainer = this.notebookElements.scrollContainer;
                 const pageHeight = 320; // Height of each page
@@ -1056,6 +1336,11 @@ Master of the shadows' brink.`,
                 
                 this.checkBirdSpotting();
                 this.updateUI();
+
+                // Update identification canvas if in quiz mode
+                if (this.quizState.isIdentifying) {
+                    this.updateIdentificationCanvas();
+                }
             }
             
             updateUI() {
@@ -1215,7 +1500,16 @@ Master of the shadows' brink.`,
                 });
                 
                 // Remove birds that have flown past the right edge of the frame
-                this.birds = this.birds.filter(bird => bird.x < this.frameBounds.right + 50);
+                this.birds = this.birds.filter(bird => {
+                    const isOffscreen = bird.x >= this.frameBounds.right + 50;
+
+                    // If bird flies away while being identified, close the modal
+                    if (isOffscreen && this.quizState.lockedBird === bird) {
+                        this.closeIdentificationModal();
+                    }
+
+                    return !isOffscreen;
+                });
             }
             
             // Particle System
@@ -1361,8 +1655,9 @@ Master of the shadows' brink.`,
             }
             
             checkBirdSpotting() {
-                if (!this.binoculars.isActive) return;
-                
+                // In quiz mode, binoculars only zoom, they don't auto-spot
+                if (!this.binoculars.isActive || this.gameSettings.quizMode) return;
+
                 const detectionRadius = this.binoculars.viewRadius * 0.6;
                 
                 this.birds.forEach(bird => {
@@ -2525,6 +2820,11 @@ Master of the shadows' brink.`,
                 } else {
                     game.start();
                 }
+            }
+            
+            // ESC key to close identification modal
+            if (e.key === 'Escape' && game.quizState.isIdentifying) {
+                game.closeIdentificationModal();
             }
         });
 

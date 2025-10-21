@@ -6,7 +6,11 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(open /Users/benpepin/birdbinocs/index.html)",
+      "Bash(node -c script.js)",
+      "Bash(open http://localhost:8000/index.html)",
+      "Bash(node --check script.js)"
     ],
     "deny": [],
     "ask": []
