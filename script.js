@@ -990,7 +990,10 @@ Master of the shadows' brink.`,
                 this.quizElements.feedback.innerHTML = '';
                 this.quizElements.feedback.className = 'feedback-message';
 
-                // Start quiz animation loop
+                // Draw the bird on the identification canvas
+                this.updateIdentificationCanvas();
+
+                // Start quiz animation loop (disabled for Safari compatibility)
                 this.startQuizAnimation();
 
                 // Focus input
