@@ -82,6 +82,10 @@
                 
                 // Quiz animation loop ID
                 this.quizAnimationId = null;
+                
+                // Quiz animation state
+                this.quizAnimTime = 0;
+                this.quizLastFrame = -1;
 
 
 				// Unified text size for score and new-species banners
@@ -1151,7 +1155,7 @@ Master of the shadows' brink.`,
                 // Draw bird sprite or fallback
                 const spriteSheet = this.getSpriteSheetForBird(bird);
                 if (spriteSheet && spriteSheet.complete) {
-                    const frameIndex = Math.floor((Date.now() / 1000) * 12) % 16;
+                    const frameIndex = bird.frameIndex || 0;
                     const cols = this.getSpriteColsForBird(bird);
                     const frameW = spriteSheet.width / cols;
                     const frameH = spriteSheet.height / Math.ceil(16 / cols);
@@ -1215,16 +1219,53 @@ Master of the shadows' brink.`,
             }
 
             startQuizAnimation() {
-                // Disable animation loop to prevent Safari freezing
-                // The bird will be static in quiz mode for better performance
-                console.log('Quiz mode: Bird animation disabled for Safari compatibility');
+                if (this.quizAnimationId) {
+                    cancelAnimationFrame(this.quizAnimationId);
+                }
+                
+                // Initialize animation state
+                this.quizAnimTime = 0;
+                this.quizLastFrame = -1;
+                
+                // Start efficient frame-based animation
+                const animate = () => {
+                    if (this.quizState.isIdentifying && this.quizState.lockedBird) {
+                        this.updateQuizBirdAnimation();
+                        this.quizAnimationId = requestAnimationFrame(animate);
+                    }
+                };
+                
+                this.quizAnimationId = requestAnimationFrame(animate);
+                console.log('Quiz mode: Frame-based animation started');
             }
 
             stopQuizAnimation() {
-                // No animation to stop since we disabled it for Safari compatibility
-                console.log('Quiz mode: Animation already disabled');
+                if (this.quizAnimationId) {
+                    cancelAnimationFrame(this.quizAnimationId);
+                    this.quizAnimationId = null;
+                }
+                console.log('Quiz mode: Animation stopped');
             }
 
+            updateQuizBirdAnimation() {
+                if (!this.quizState.lockedBird) return;
+                
+                const bird = this.quizState.lockedBird;
+                
+                // Update animation time (16ms = ~60fps)
+                this.quizAnimTime += 16;
+                
+                // Calculate current frame (12 fps animation speed)
+                const fps = 12;
+                const currentFrame = Math.floor((this.quizAnimTime / 1000) * fps) % 16;
+                
+                // Only redraw if frame actually changed
+                if (currentFrame !== this.quizLastFrame) {
+                    this.quizLastFrame = currentFrame;
+                    bird.frameIndex = currentFrame;
+                    this.updateIdentificationCanvas();
+                }
+            }
 
             // ===== END QUIZ MODE METHODS =====
 
