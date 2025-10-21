@@ -987,6 +987,9 @@ Master of the shadows' brink.`,
                 this.quizElements.feedback.innerHTML = '';
                 this.quizElements.feedback.className = 'feedback-message';
 
+                // Update identification canvas once when bird is locked
+                this.updateIdentificationCanvas();
+
                 // Focus input
                 setTimeout(() => {
                     this.quizElements.input.focus();
@@ -1337,10 +1340,8 @@ Master of the shadows' brink.`,
                 this.checkBirdSpotting();
                 this.updateUI();
 
-                // Update identification canvas if in quiz mode
-                if (this.quizState.isIdentifying) {
-                    this.updateIdentificationCanvas();
-                }
+                // Note: updateIdentificationCanvas is now only called when needed
+                // (when bird is locked, not every frame) - this fixes Safari freezing
             }
             
             updateUI() {
