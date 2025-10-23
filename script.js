@@ -89,7 +89,8 @@
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
-                    { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' }
+                    { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
+                    { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' }
                 ];
                 
                 // Bird journal system
@@ -417,15 +418,28 @@
                 // Black-necked Stilt-specific sprite sheet
                 this.stiltSpriteSheet = new Image();
                 this.isStiltSpriteSheetLoaded = false;
-                // Configure stilt sprite sheet layout (5x5 grid - 25 frames)
-                this.stiltSpriteSheetCols = 5;
-                this.stiltSpriteSheetRows = 5;
+                // Configure stilt sprite sheet layout (4x4 grid - 16 frames)
+                this.stiltSpriteSheetCols = 4;
+                this.stiltSpriteSheetRows = 4;
                 this.stiltSpriteTotalFrames = this.stiltSpriteSheetCols * this.stiltSpriteSheetRows;
                 this.stiltSpriteAnimFps = 12; // animation speed in frames per second
                 this.stiltSpriteSheet.onload = () => {
                     this.isStiltSpriteSheetLoaded = true;
                 };
-                this.stiltSpriteSheet.src = 'assets/images/sprites/blackneckedstiltsprite-128px-25.png';
+                this.stiltSpriteSheet.src = 'assets/images/sprites/blackneckedstiltsprite-256px-16.png';
+
+                // Western Grebe-specific sprite sheet
+                this.grebeSpriteSheet = new Image();
+                this.isGrebeSpriteSheetLoaded = false;
+                // Configure grebe sprite sheet layout (4x4 grid - 16 frames)
+                this.grebeSpriteSheetCols = 4;
+                this.grebeSpriteSheetRows = 4;
+                this.grebeSpriteTotalFrames = this.grebeSpriteSheetCols * this.grebeSpriteSheetRows;
+                this.grebeSpriteAnimFps = 12; // animation speed in frames per second
+                this.grebeSpriteSheet.onload = () => {
+                    this.isGrebeSpriteSheetLoaded = true;
+                };
+                this.grebeSpriteSheet.src = 'assets/images/sprites/westerngrebe-sprite-128px-16-4.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -926,6 +940,17 @@ A study in contrasts, bold and light.<br>
 With needle bill it sweeps the tide,<br>
 Grace and purpose unified.`,
                         image: "assets/images/notebook/Black-necked-Stilt.png"
+                    },
+                    grebe: {
+                        title: "Dance of the Grebe",
+                        author: "by Elena Martinez",
+                        poem: `Sleek and striking, neck stretched tall,<br>
+The grebe performs its courtship call.<br>
+Racing across the water's sheen,<br>
+Most elegant dance I've ever seen.<br>
+Black and white in perfect dress,<br>
+A master of the lake's finesse.`,
+                        image: "assets/images/illustrations/westerngrebe-illo.png"
                     },
                     goose: {
                         title: "Honking V-Formation",
@@ -1554,6 +1579,9 @@ Master of the shadows' brink.`,
                     } else if (bird.type === 'stilt' && this.stiltSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.stiltSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.stiltSpriteTotalFrames;
+                    } else if (bird.type === 'grebe' && this.grebeSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.grebeSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.grebeSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
@@ -2513,6 +2541,19 @@ Master of the shadows' brink.`,
                         const destHeight = 80;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.stiltSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'grebe' && this.isGrebeSpriteSheetLoaded) {
+                        const cols = this.grebeSpriteSheetCols;
+                        const rows = this.grebeSpriteSheetRows;
+                        const frameW = this.grebeSpriteSheet.width / cols;
+                        const frameH = this.grebeSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 80;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.grebeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
