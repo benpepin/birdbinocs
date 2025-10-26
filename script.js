@@ -80,6 +80,7 @@
                     { type: 'crow',         name: 'American Crow',             scientificName: 'Corvus brachyrhynchos', weight: 5,  points: 20, minSize: 22, maxSize: 30, minSpeed: 60,  maxSpeed: 100, color: '#111111',  flightPattern: 'glide' },
                     { type: 'raven',        name: 'Common Raven',              scientificName: 'Corvus corax', weight: 3,  points: 30, minSize: 24, maxSize: 34, minSpeed: 60,  maxSpeed: 100, color: '#0B0B0B',  flightPattern: 'glide' },
                     { type: 'owl',          name: 'Great Horned Owl',          scientificName: 'Bubo virginianus', weight: 0,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
+                    { type: 'vulture',      name: 'Turkey Vulture',            scientificName: 'Cathartes aura', weight: 6,  points: 50, minSize: 32, maxSize: 46, minSpeed: 35,  maxSpeed: 65,  color: '#3D2817',  flightPattern: 'sineVerySlow' },
                     { type: 'hawk',         name: 'Red-tailed Hawk',           scientificName: 'Buteo jamaicensis', weight: 0,  points: 40, minSize: 35, maxSize: 50, minSpeed: 30,  maxSpeed: 60,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
                     { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 0,  points: 80, minSize: 40, maxSize: 60, minSpeed: 105,  maxSpeed: 165,  color: '#5C4033',  flightPattern: 'majestic' },
                     { type: 'heron',        name: 'Great Blue Heron',          scientificName: 'Ardea herodias', weight: 0,  points: 70, minSize: 38, maxSize: 55, minSpeed: 60,  maxSpeed: 85,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
@@ -375,6 +376,19 @@
                     this.isOwlSpriteSheetLoaded = true;
                 };
                 this.owlSpriteSheet.src = 'assets/images/sprites/GHO-Sprite.png';
+
+                // Turkey Vulture-specific sprite sheet
+                this.vultureSpriteSheet = new Image();
+                this.isVultureSpriteSheetLoaded = false;
+                // Configure vulture sprite sheet layout (4x4 grid - 16 frames)
+                this.vultureSpriteSheetCols = 4;
+                this.vultureSpriteSheetRows = 4;
+                this.vultureSpriteTotalFrames = this.vultureSpriteSheetCols * this.vultureSpriteSheetRows;
+                this.vultureSpriteAnimFps = 8; // slower animation for soaring
+                this.vultureSpriteSheet.onload = () => {
+                    this.isVultureSpriteSheetLoaded = true;
+                };
+                this.vultureSpriteSheet.src = 'assets/images/sprites/Turkey-Vulture-Sprite.png';
 
                 // Baltimore Oriole-specific sprite sheet
                 this.oriolSpriteSheet = new Image();
@@ -984,6 +998,17 @@ Hunting through the midnight years.<br>
 Golden eyes that never blink,<br>
 Master of the shadows' brink.`,
                         image: "assets/images/notebook/Great-Horned-Owl.png"
+                    },
+                    vulture: {
+                        title: "Sky's Circling Cleaner",
+                        author: "by Maya Windrider",
+                        poem: `Wings spread wide in circles high,<br>
+The turkey vulture owns the sky.<br>
+Dark silhouette on thermal's rise,<br>
+Red head bare beneath blue skies.<br>
+Patient glider, nature's way,<br>
+Cleaning earth from decay.`,
+                        image: "assets/images/notebook/Turkey-Vulture.png"
                     }
                 };
             }
@@ -2489,6 +2514,19 @@ Master of the shadows' brink.`,
                         const destHeight = 80;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.owlSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'vulture' && this.isVultureSpriteSheetLoaded) {
+                        const cols = this.vultureSpriteSheetCols;
+                        const rows = this.vultureSpriteSheetRows;
+                        const frameW = this.vultureSpriteSheet.width / cols;
+                        const frameH = this.vultureSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 90; // slightly larger for vulture
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.vultureSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (bird.type === 'oriole' && this.isOriolSpriteSheetLoaded) {
                         const cols = this.oriolSpriteSheetCols;
                         const rows = this.oriolSpriteSheetRows;
