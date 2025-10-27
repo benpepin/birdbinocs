@@ -91,7 +91,8 @@
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
-                    { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' }
+                    { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
+                    { type: 'grackle',      name: 'Great-tailed Grackle',       scientificName: 'Quiscalus mexicanus', weight: 6,  points: 24, minSize: 18, maxSize: 26, minSpeed: 75,  maxSpeed: 120, color: '#1A1A2E',  flightPattern: 'steady' }
                 ];
                 
                 // Bird journal system
@@ -454,6 +455,19 @@
                     this.isGrebeSpriteSheetLoaded = true;
                 };
                 this.grebeSpriteSheet.src = 'assets/images/sprites/westerngrebe-sprite-128px-16-4.png';
+
+                // Great-tailed Grackle-specific sprite sheet
+                this.grackleSpriteSheet = new Image();
+                this.isGrackleSpriteSheetLoaded = false;
+                // Configure grackle sprite sheet layout (4x4 grid - 16 frames)
+                this.grackleSpriteSheetCols = 4;
+                this.grackleSpriteSheetRows = 4;
+                this.grackleSpriteTotalFrames = this.grackleSpriteSheetCols * this.grackleSpriteSheetRows;
+                this.grackleSpriteAnimFps = 12; // animation speed in frames per second
+                this.grackleSpriteSheet.onload = () => {
+                    this.isGrackleSpriteSheetLoaded = true;
+                };
+                this.grackleSpriteSheet.src = 'assets/images/sprites/great tailed grackle sprite-256px-16-2.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1009,6 +1023,15 @@ Red head bare beneath blue skies.<br>
 Patient glider, nature's way,<br>
 Cleaning earth from decay.`,
                         image: "assets/images/notebook/Turkey-Vulture.png"
+                    },
+                    grackle: {
+                        title: "Iridescent Wanderer",
+                        author: "by Carlos Ramirez",
+                        poem: `With tail spread long and eyes of gold,<br>
+The grackle's swagger, brave and bold.<br>
+Purple sheen on feathers black,<br>
+A raucous call to call you back.`,
+                        image: "assets/images/notebook/great tailed grackle notebook.png"
                     }
                 };
             }
@@ -1607,6 +1630,9 @@ Cleaning earth from decay.`,
                     } else if (bird.type === 'grebe' && this.grebeSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.grebeSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.grebeSpriteTotalFrames;
+                    } else if (bird.type === 'grackle' && this.grackleSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.grackleSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.grackleSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
@@ -2592,6 +2618,19 @@ Cleaning earth from decay.`,
                         const destHeight = 80;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.grebeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'grackle' && this.isGrackleSpriteSheetLoaded) {
+                        const cols = this.grackleSpriteSheetCols;
+                        const rows = this.grackleSpriteSheetRows;
+                        const frameW = this.grackleSpriteSheet.width / cols;
+                        const frameH = this.grackleSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 75;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.grackleSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
