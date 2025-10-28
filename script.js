@@ -1127,6 +1127,13 @@ A raucous call to call you back.`,
                 this.quizState.isIdentifying = true;
                 this.quizState.attemptedGuesses.clear();
 
+                // Reset mouse and binocular state to prevent freeze
+                // (modal blocks mouseup events, leaving binoculars stuck active)
+                this.mouse.isDown = false;
+                this.binoculars.isActive = false;
+                this.binoculars.zoomLevel = 1.0;
+                this.canvas.classList.remove('zoomed');
+
                 // Show modal
                 this.quizElements.modal.style.display = 'flex';
 
@@ -1144,7 +1151,9 @@ A raucous call to call you back.`,
 
                 // Focus input with tracked timeout
                 this.quizState.focusTimeoutId = setTimeout(() => {
-                    this.quizElements.input.focus();
+                    if (this.quizElements.input) {
+                        this.quizElements.input.focus();
+                    }
                     this.quizState.focusTimeoutId = null;
                 }, 100);
 
@@ -1270,6 +1279,12 @@ A raucous call to call you back.`,
                     clearTimeout(this.quizState.feedbackTimeoutId);
                     this.quizState.feedbackTimeoutId = null;
                 }
+
+                // Reset mouse and binocular state to ensure clean state
+                this.mouse.isDown = false;
+                this.binoculars.isActive = false;
+                this.binoculars.zoomLevel = 1.0;
+                this.canvas.classList.remove('zoomed');
 
                 this.quizElements.modal.style.display = 'none';
                 this.quizState.lockedBird = null;
@@ -3097,14 +3112,15 @@ A raucous call to call you back.`,
         });
         
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'p' || e.key === 'P') {
+            // Don't trigger pause if typing in quiz mode input
+            if ((e.key === 'p' || e.key === 'P') && !game.quizState.isIdentifying) {
                 if (game.isRunning) {
                     game.stop();
                 } else {
                     game.start();
                 }
             }
-            
+
             // ESC key to close identification modal
             if (e.key === 'Escape' && game.quizState.isIdentifying) {
                 game.closeIdentificationModal();
