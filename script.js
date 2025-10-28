@@ -115,7 +115,10 @@
                 this.quizState = {
                     lockedBird: null,
                     isIdentifying: false,
-                    attemptedGuesses: new Set()
+                    attemptedGuesses: new Set(),
+                    focusTimeoutId: null,
+                    closeTimeoutId: null,
+                    feedbackTimeoutId: null
                 };
                 
                 // Quiz animation loop ID
@@ -1114,6 +1117,12 @@ A raucous call to call you back.`,
 
 
             lockBirdForIdentification(bird) {
+                // Clear any pending timeouts from previous identification
+                if (this.quizState.focusTimeoutId) {
+                    clearTimeout(this.quizState.focusTimeoutId);
+                    this.quizState.focusTimeoutId = null;
+                }
+
                 this.quizState.lockedBird = bird;
                 this.quizState.isIdentifying = true;
                 this.quizState.attemptedGuesses.clear();
@@ -1133,9 +1142,10 @@ A raucous call to call you back.`,
                 // DISABLED: This was causing freezing after multiple identifications
                 // this.startQuizAnimation();
 
-                // Focus input
-                setTimeout(() => {
+                // Focus input with tracked timeout
+                this.quizState.focusTimeoutId = setTimeout(() => {
                     this.quizElements.input.focus();
+                    this.quizState.focusTimeoutId = null;
                 }, 100);
 
             }
@@ -1213,9 +1223,13 @@ A raucous call to call you back.`,
                 this.createSpottingParticles(bird.x, bird.y, isNewSpecies);
                 this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
 
-                // Close modal after delay
-                setTimeout(() => {
+                // Close modal after delay with tracked timeout
+                if (this.quizState.closeTimeoutId) {
+                    clearTimeout(this.quizState.closeTimeoutId);
+                }
+                this.quizState.closeTimeoutId = setTimeout(() => {
                     this.closeIdentificationModal();
+                    this.quizState.closeTimeoutId = null;
                 }, 1500);
             }
 
@@ -1230,20 +1244,38 @@ A raucous call to call you back.`,
                 `;
                 this.quizElements.feedback.className = 'feedback-message incorrect';
 
-                // Clear input for next attempt
-                setTimeout(() => {
+                // Clear input for next attempt with tracked timeout
+                if (this.quizState.feedbackTimeoutId) {
+                    clearTimeout(this.quizState.feedbackTimeoutId);
+                }
+                this.quizState.feedbackTimeoutId = setTimeout(() => {
                     this.quizElements.input.value = '';
                     this.quizElements.feedback.innerHTML = '';
                     this.quizElements.feedback.className = 'feedback-message';
+                    this.quizState.feedbackTimeoutId = null;
                 }, 2000);
             }
 
             closeIdentificationModal() {
+                // Clear all pending timeouts to prevent memory leaks and stale callbacks
+                if (this.quizState.focusTimeoutId) {
+                    clearTimeout(this.quizState.focusTimeoutId);
+                    this.quizState.focusTimeoutId = null;
+                }
+                if (this.quizState.closeTimeoutId) {
+                    clearTimeout(this.quizState.closeTimeoutId);
+                    this.quizState.closeTimeoutId = null;
+                }
+                if (this.quizState.feedbackTimeoutId) {
+                    clearTimeout(this.quizState.feedbackTimeoutId);
+                    this.quizState.feedbackTimeoutId = null;
+                }
+
                 this.quizElements.modal.style.display = 'none';
                 this.quizState.lockedBird = null;
                 this.quizState.isIdentifying = false;
                 this.quizState.attemptedGuesses.clear();
-                
+
                 // Stop quiz animation loop
                 this.stopQuizAnimation();
             }
@@ -1528,11 +1560,13 @@ A raucous call to call you back.`,
             }
             
             updateUI() {
-                this.uiElements.binocularStatus.textContent = this.binoculars.isActive ? 'Active' : 'Ready';
+                if (this.uiElements.binocularStatus) {
+                    this.uiElements.binocularStatus.textContent = this.binoculars.isActive ? 'Active' : 'Ready';
+                }
                 this.uiElements.birdCount.textContent = this.birdsSpotted;
                 // Count only spawnable species (weight > 0)
                 const spawnableSpeciesCount = this.speciesCatalog.filter(s => s.weight > 0).length;
-                this.uiElements.mousePos.textContent = `Species: ${this.discoveredSpecies.size}/${spawnableSpeciesCount}`;
+                this.uiElements.mousePos.textContent = `${this.discoveredSpecies.size}/${spawnableSpeciesCount}`;
                 this.uiElements.scoreDisplay.textContent = this.totalScore.toLocaleString();
             }
             
