@@ -1604,8 +1604,9 @@ A raucous call to call you back.`,
                 if (spriteSheet && spriteSheet.complete) {
                     const frameIndex = bird.frameIndex || 0;
                     const cols = this.getSpriteColsForBird(bird);
+                    const rows = this.getSpriteRowsForBird(bird);
                     const frameW = spriteSheet.width / cols;
-                    const frameH = spriteSheet.height / Math.ceil(16 / cols);
+                    const frameH = spriteSheet.height / rows;
                     const frameX = (frameIndex % cols) * frameW;
                     const frameY = Math.floor(frameIndex / cols) * frameH;
 
@@ -1656,7 +1657,9 @@ A raucous call to call you back.`,
                     'raven': this.ravenSpriteSheet,
                     'kingfisher': this.kingfisherSpriteSheet,
                     'vulture': this.vultureSpriteSheet,
-                    'stilt': this.stiltSpriteSheet
+                    'stilt': this.stiltSpriteSheet,
+                    'grebe': this.grebeSpriteSheet,
+                    'grackle': this.grackleSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -1667,9 +1670,22 @@ A raucous call to call you back.`,
                     'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
                     'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
-                    'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4
+                    'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
+                    'grebe': 4, 'grackle': 4
                 };
                 return colsMap[bird.type] || 4;
+            }
+
+            getSpriteRowsForBird(bird) {
+                const rowsMap = {
+                    'flamingo': 4, 'robin': 4, 'cardinal': 3, 'woodpecker': 4,
+                    'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
+                    'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
+                    'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
+                    'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
+                    'grebe': 4, 'grackle': 4
+                };
+                return rowsMap[bird.type] || 4;
             }
 
             startQuizAnimation() {
