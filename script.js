@@ -626,11 +626,14 @@
                     this.submitTrackingGuess();
                 });
 
-                // Setup tracking canvas
+                // Setup tracking canvas with pixel ratio
                 const trackingCtx = this.quizElements.trackingCanvas.getContext('2d');
-                this.quizElements.trackingCanvas.width = window.innerWidth;
-                this.quizElements.trackingCanvas.height = window.innerHeight;
+                const pixelRatio = window.devicePixelRatio || 1;
+                this.quizElements.trackingCanvas.width = this.canvasWidth * pixelRatio;
+                this.quizElements.trackingCanvas.height = this.canvasHeight * pixelRatio;
                 this.trackingCtx = trackingCtx;
+                this.trackingCtx.scale(pixelRatio, pixelRatio);
+                this.trackingCtx.imageSmoothingEnabled = true;
 
                 // Handle ESC key globally to cancel tracking
                 document.addEventListener('keydown', (e) => {
@@ -1608,11 +1611,16 @@ A raucous call to call you back.`,
 
                     // Make all birds much bigger in identification modal
                     const sizeMultiplier = bird.type === 'flamingo' ? 12 : 10;
-                    const renderedSize = bird.size * sizeMultiplier;
-                    const offset = renderedSize / 2;
+                    const baseSize = bird.size * sizeMultiplier;
+
+                    // Maintain aspect ratio of the sprite frame
+                    const aspectRatio = frameW / frameH;
+                    const renderedWidth = aspectRatio >= 1 ? baseSize : baseSize * aspectRatio;
+                    const renderedHeight = aspectRatio >= 1 ? baseSize / aspectRatio : baseSize;
+
                     ctx.drawImage(spriteSheet,
                         frameX, frameY, frameW, frameH,
-                        -offset, -offset, renderedSize, renderedSize);
+                        -renderedWidth/2, -renderedHeight/2, renderedWidth, renderedHeight);
                 } else {
                     // Fallback circle - make it bigger too
                     const fallbackSizeMultiplier = bird.type === 'flamingo' ? 12 : 10;
@@ -1646,7 +1654,9 @@ A raucous call to call you back.`,
                     'owl': this.owlSpriteSheet,
                     'oriole': this.oriolSpriteSheet,
                     'raven': this.ravenSpriteSheet,
-                    'kingfisher': this.kingfisherSpriteSheet
+                    'kingfisher': this.kingfisherSpriteSheet,
+                    'vulture': this.vultureSpriteSheet,
+                    'stilt': this.stiltSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -1657,7 +1667,7 @@ A raucous call to call you back.`,
                     'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
                     'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
-                    'oriole': 5, 'raven': 4, 'kingfisher': 4
+                    'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -1807,6 +1817,14 @@ A raucous call to call you back.`,
                 // Update canvas style to fill the entire viewport
                 this.canvas.style.width = '100vw';
                 this.canvas.style.height = '100vh';
+
+                // Update tracking canvas size to match viewport
+                if (this.quizElements.trackingCanvas) {
+                    this.quizElements.trackingCanvas.width = this.canvasWidth * pixelRatio;
+                    this.quizElements.trackingCanvas.height = this.canvasHeight * pixelRatio;
+                    this.trackingCtx.scale(pixelRatio, pixelRatio);
+                    this.trackingCtx.imageSmoothingEnabled = true;
+                }
             }
             
             update(currentTime) {
