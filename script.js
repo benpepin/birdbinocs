@@ -1495,15 +1495,28 @@ A raucous call to call you back.`,
                 const centerY = bird.y;
                 const radius = 200; // 400px diameter circle
 
+                // Calculate dynamic zoom based on bird size
+                // Small birds (8-15): 2.5x zoom
+                // Medium birds (15-30): 1.8x zoom
+                // Large birds (30+): 1.3x zoom
+                let zoomLevel;
+                if (bird.size < 15) {
+                    zoomLevel = 2.5;
+                } else if (bird.size < 30) {
+                    zoomLevel = 1.8;
+                } else {
+                    zoomLevel = 1.3;
+                }
+
                 // 1) Draw background section in the circle
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
                 ctx.clip();
 
-                // Draw background zoomed 2.5x
+                // Draw background zoomed dynamically based on bird size
                 ctx.translate(centerX, centerY);
-                ctx.scale(2.5, 2.5);
+                ctx.scale(zoomLevel, zoomLevel);
                 ctx.translate(-centerX, -centerY);
 
                 // Draw background image section
