@@ -143,14 +143,16 @@
         </div>
 
         <!-- Quiz Mode Toggle -->
-        <div id="quizModeToggle">
-            <label class="toggle-container">
+        <div id="quizModeToggle" class="quiz-tab">
+            <span class="quiz-label">Quiz</span>
+            <label class="quiz-switch">
                 <input type="checkbox" id="quizModeCheckbox">
-                <span class="toggle-label">Quiz Mode: <span id="quizModeStatus">OFF</span></span>
+                <span class="quiz-slider"></span>
+                <span class="quiz-status-text" id="quizModeStatus">ON</span>
             </label>
         </div>
 
-        <!-- Bird Identification Modal -->
+        <!-- Bird Identification Modal (OLD - HIDDEN) -->
         <div id="identificationModal" class="modal-overlay" style="display: none;">
             <div class="identification-container">
                 <div class="binocular-circle">
@@ -162,6 +164,22 @@
                     <button id="submitGuessBtn" class="submit-btn">Submit Guess</button>
                     <div class="feedback-message" id="feedbackMessage"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Quiz Tracking Circle (NEW) -->
+        <canvas id="trackingCircleCanvas" style="display: none;"></canvas>
+
+        <!-- Bottom Identification Input (NEW) -->
+        <div id="bottomIdentificationInput" class="bottom-id-input" style="display: none;">
+            <div class="bottom-id-content">
+                <div class="bottom-id-prompt">What bird is this?</div>
+                <div class="bottom-id-controls">
+                    <input type="text" id="bottomBirdNameInput" placeholder="Use full bird name" autocomplete="off">
+                    <button id="bottomSubmitBtn" class="bottom-submit-btn">↑</button>
+                </div>
+                <div class="bottom-id-hint">esc. to close</div>
+                <div class="bottom-feedback-message" id="bottomFeedbackMessage"></div>
             </div>
         </div>
 

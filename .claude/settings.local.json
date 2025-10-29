@@ -10,7 +10,11 @@
       "Bash(open /Users/benpepin/birdbinocs/index.html)",
       "Bash(node -c script.js)",
       "Bash(open http://localhost:8000/index.html)",
-      "Bash(node --check script.js)"
+      "Bash(node --check script.js)",
+      "Bash(node --check:*)",
+      "Bash(mkdir:*)",
+      "Bash(open index.html)",
+      "Bash(open:*)"
     ],
     "deny": [],
     "ask": []

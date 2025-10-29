@@ -115,6 +115,7 @@
                 this.quizState = {
                     lockedBird: null,
                     isIdentifying: false,
+                    isTracking: false,  // NEW: for live bird tracking
                     attemptedGuesses: new Set(),
                     focusTimeoutId: null,
                     closeTimeoutId: null,
@@ -570,7 +571,13 @@
                     input: document.getElementById('birdNameInput'),
                     submitBtn: document.getElementById('submitGuessBtn'),
                     feedback: document.getElementById('feedbackMessage'),
-                    canvas: document.getElementById('identificationCanvas')
+                    canvas: document.getElementById('identificationCanvas'),
+                    // NEW: Tracking mode elements
+                    trackingCanvas: document.getElementById('trackingCircleCanvas'),
+                    bottomInput: document.getElementById('bottomIdentificationInput'),
+                    bottomBirdNameInput: document.getElementById('bottomBirdNameInput'),
+                    bottomSubmitBtn: document.getElementById('bottomSubmitBtn'),
+                    bottomFeedback: document.getElementById('bottomFeedbackMessage')
                 };
 
                 // Setup quiz mode toggle
@@ -601,6 +608,36 @@
                 this.quizElements.canvas.width = 400;
                 this.quizElements.canvas.height = 400;
                 this.identificationCtx = idCtx;
+
+                // NEW: Setup tracking mode elements
+                // Handle Enter key in bottom input
+                this.quizElements.bottomBirdNameInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.submitTrackingGuess();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        this.cancelTracking();
+                    }
+                });
+
+                // Handle bottom submit button click
+                this.quizElements.bottomSubmitBtn.addEventListener('click', () => {
+                    this.submitTrackingGuess();
+                });
+
+                // Setup tracking canvas
+                const trackingCtx = this.quizElements.trackingCanvas.getContext('2d');
+                this.quizElements.trackingCanvas.width = window.innerWidth;
+                this.quizElements.trackingCanvas.height = window.innerHeight;
+                this.trackingCtx = trackingCtx;
+
+                // Handle ESC key globally to cancel tracking
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.quizState.isTracking) {
+                        this.cancelTracking();
+                    }
+                });
 
             }
             
@@ -1051,6 +1088,24 @@ A raucous call to call you back.`,
                 const clickX = (e.clientX - rect.left) * scaleX;
                 const clickY = (e.clientY - rect.top) * scaleY;
 
+                // NEW: If in tracking mode, check if click is outside tracking circle
+                if (this.quizState.isTracking && this.quizState.lockedBird) {
+                    const bird = this.quizState.lockedBird;
+                    const distanceFromBird = Math.sqrt(
+                        Math.pow(bird.x - clickX, 2) +
+                        Math.pow(bird.y - clickY, 2)
+                    );
+                    const trackingRadius = 200; // Same as in renderTrackingCircle
+
+                    // If click is outside the tracking circle, cancel tracking
+                    if (distanceFromBird > trackingRadius) {
+                        this.cancelTracking();
+                        return;
+                    }
+                    // If inside circle, don't process other clicks
+                    return;
+                }
+
                 // Check if click is on a bird
                 for (let bird of this.birds) {
                     const distance = Math.sqrt(
@@ -1125,34 +1180,22 @@ A raucous call to call you back.`,
 
                 this.quizState.lockedBird = bird;
                 this.quizState.isIdentifying = true;
+                this.quizState.isTracking = true;  // NEW: Enable tracking mode
                 this.quizState.attemptedGuesses.clear();
 
-                // Reset mouse and binocular state to prevent freeze
-                // (modal blocks mouseup events, leaving binoculars stuck active)
-                this.mouse.isDown = false;
-                this.binoculars.isActive = false;
-                this.binoculars.zoomLevel = 1.0;
-                this.canvas.classList.remove('zoomed');
-
-                // Show modal
-                this.quizElements.modal.style.display = 'flex';
+                // Show tracking canvas and bottom input
+                this.quizElements.trackingCanvas.style.display = 'block';
+                this.quizElements.bottomInput.style.display = 'block';
 
                 // Clear input and feedback
-                this.quizElements.input.value = '';
-                this.quizElements.feedback.innerHTML = '';
-                this.quizElements.feedback.className = 'feedback-message';
-
-                // Draw the bird on the identification canvas
-                this.updateIdentificationCanvas();
-
-                // Start quiz animation loop (disabled for Safari compatibility)
-                // DISABLED: This was causing freezing after multiple identifications
-                // this.startQuizAnimation();
+                this.quizElements.bottomBirdNameInput.value = '';
+                this.quizElements.bottomFeedback.innerHTML = '';
+                this.quizElements.bottomFeedback.className = 'bottom-feedback-message';
 
                 // Focus input with tracked timeout
                 this.quizState.focusTimeoutId = setTimeout(() => {
-                    if (this.quizElements.input) {
-                        this.quizElements.input.focus();
+                    if (this.quizElements.bottomBirdNameInput) {
+                        this.quizElements.bottomBirdNameInput.focus();
                     }
                     this.quizState.focusTimeoutId = null;
                 }, 100);
@@ -1293,6 +1336,212 @@ A raucous call to call you back.`,
 
                 // Stop quiz animation loop
                 this.stopQuizAnimation();
+            }
+
+            // NEW: Submit guess from tracking mode
+            submitTrackingGuess() {
+                const guess = this.quizElements.bottomBirdNameInput.value.trim();
+                if (!guess || !this.quizState.lockedBird) return;
+
+                const bird = this.quizState.lockedBird;
+                const speciesData = this.speciesCatalog.find(s => s.type === bird.type);
+                if (!speciesData) return;
+
+                const normalizedGuess = this.normalizeString(guess);
+                const normalizedCommonName = this.normalizeString(speciesData.name);
+                const normalizedScientificName = this.normalizeString(speciesData.scientificName);
+
+                // Split bird name into words for flexible matching
+                const birdWords = normalizedCommonName.split(' ');
+                const guessWords = normalizedGuess.split(' ');
+
+                // Match if:
+                // 1. Exact match of full name
+                // 2. Any significant word (4+ chars) in the bird name is in the guess
+                // 3. Any significant word in the guess matches a word in the bird name
+                const isMatch =
+                    normalizedGuess === normalizedCommonName ||  // Exact match
+                    normalizedGuess === normalizedScientificName ||  // Scientific name exact
+                    birdWords.some(word => word.length >= 4 && normalizedGuess.includes(word)) ||  // Bird word in guess
+                    guessWords.some(word => word.length >= 4 && normalizedCommonName.includes(word));  // Guess word in bird name
+
+                if (isMatch) {
+                    this.handleCorrectTrackingIdentification();
+                } else {
+                    this.handleIncorrectTrackingIdentification(guess);
+                }
+            }
+
+            // NEW: Handle correct identification in tracking mode
+            handleCorrectTrackingIdentification() {
+                const bird = this.quizState.lockedBird;
+
+                // Show correct feedback
+                this.quizElements.bottomFeedback.innerHTML = `
+                    <span class="feedback-icon correct">✓</span>
+                    <span>${bird.name}</span>
+                `;
+                this.quizElements.bottomFeedback.className = 'bottom-feedback-message correct';
+
+                // Mark bird as spotted and award points
+                bird.spotted = true;
+                this.birdsSpotted++;
+                this.totalScore += bird.points;
+
+                const isNewSpecies = !this.discoveredSpecies.has(bird.type);
+                this.discoveredSpecies.add(bird.type);
+
+                // Bonus points for new species
+                if (isNewSpecies) {
+                    this.totalScore += bird.points * 2;
+                }
+
+                // Add to journal
+                this.addSpeciesToJournal(bird);
+
+                // Create visual feedback
+                this.createSpottingParticles(bird.x, bird.y, isNewSpecies);
+                this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
+
+                // Close tracking mode after delay with tracked timeout
+                if (this.quizState.closeTimeoutId) {
+                    clearTimeout(this.quizState.closeTimeoutId);
+                }
+                this.quizState.closeTimeoutId = setTimeout(() => {
+                    this.cancelTracking();
+                    this.quizState.closeTimeoutId = null;
+                }, 1500);
+            }
+
+            // NEW: Handle incorrect identification in tracking mode
+            handleIncorrectTrackingIdentification(guess) {
+                // Store the incorrect guess
+                this.quizState.attemptedGuesses.add(guess);
+
+                // Show incorrect feedback
+                this.quizElements.bottomFeedback.innerHTML = `
+                    <span class="feedback-icon incorrect">✕</span>
+                    <span>${guess}</span>
+                `;
+                this.quizElements.bottomFeedback.className = 'bottom-feedback-message incorrect';
+
+                // Clear input for next attempt with tracked timeout
+                if (this.quizState.feedbackTimeoutId) {
+                    clearTimeout(this.quizState.feedbackTimeoutId);
+                }
+                this.quizState.feedbackTimeoutId = setTimeout(() => {
+                    this.quizElements.bottomBirdNameInput.value = '';
+                    this.quizElements.bottomFeedback.innerHTML = '';
+                    this.quizElements.bottomFeedback.className = 'bottom-feedback-message';
+                    this.quizState.feedbackTimeoutId = null;
+                }, 2000);
+            }
+
+            // NEW: Cancel tracking mode
+            cancelTracking() {
+                // Clear all pending timeouts
+                if (this.quizState.focusTimeoutId) {
+                    clearTimeout(this.quizState.focusTimeoutId);
+                    this.quizState.focusTimeoutId = null;
+                }
+                if (this.quizState.closeTimeoutId) {
+                    clearTimeout(this.quizState.closeTimeoutId);
+                    this.quizState.closeTimeoutId = null;
+                }
+                if (this.quizState.feedbackTimeoutId) {
+                    clearTimeout(this.quizState.feedbackTimeoutId);
+                    this.quizState.feedbackTimeoutId = null;
+                }
+
+                // Hide tracking UI
+                this.quizElements.trackingCanvas.style.display = 'none';
+                this.quizElements.bottomInput.style.display = 'none';
+
+                // Clear tracking canvas
+                this.trackingCtx.clearRect(0, 0, this.quizElements.trackingCanvas.width, this.quizElements.trackingCanvas.height);
+
+                // Reset state
+                this.quizState.lockedBird = null;
+                this.quizState.isIdentifying = false;
+                this.quizState.isTracking = false;
+                this.quizState.attemptedGuesses.clear();
+            }
+
+            // NEW: Update tracking state (check if bird flew away)
+            updateQuizTracking() {
+                if (!this.quizState.isTracking || !this.quizState.lockedBird) return;
+
+                const bird = this.quizState.lockedBird;
+
+                // Check if bird has flown off-screen (removed from birds array)
+                if (!this.birds.includes(bird)) {
+                    // Bird flew away - cancel tracking
+                    this.cancelTracking();
+                }
+            }
+
+            // NEW: Render tracking circle following the bird
+            renderTrackingCircle() {
+                if (!this.quizState.lockedBird || !this.trackingCtx) return;
+
+                const bird = this.quizState.lockedBird;
+                const ctx = this.trackingCtx;
+                const canvas = this.quizElements.trackingCanvas;
+
+                // Clear previous frame
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const centerX = bird.x;
+                const centerY = bird.y;
+                const radius = 200; // 400px diameter circle
+
+                // 1) Draw background section in the circle
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.clip();
+
+                // Draw background zoomed 2.5x
+                ctx.translate(centerX, centerY);
+                ctx.scale(2.5, 2.5);
+                ctx.translate(-centerX, -centerY);
+
+                // Draw background image section
+                if (this.isBackgroundLoaded) {
+                    const imgW = this.backgroundImage.naturalWidth || this.backgroundImage.width;
+                    const imgH = this.backgroundImage.naturalHeight || this.backgroundImage.height;
+                    const scaleX = this.canvasWidth / imgW;
+                    const scaleY = this.canvasHeight / imgH;
+                    const scale = Math.max(scaleX, scaleY);
+                    const scaledW = imgW * scale;
+                    const scaledH = imgH * scale;
+                    const offsetX = (this.canvasWidth - scaledW) / 2;
+                    const offsetY = (this.canvasHeight - scaledH) / 2;
+                    ctx.drawImage(this.backgroundImage, offsetX, offsetY, scaledW, scaledH);
+                }
+
+                // 2) Draw the bird zoomed at its current position
+                this.drawBirdOnCanvas(ctx, bird, bird.x, bird.y);
+
+                ctx.restore();
+
+                // 3) Draw circle border/mask
+                const ringGradient = ctx.createRadialGradient(centerX, centerY, radius - 6, centerX, centerY, radius + 1);
+                ringGradient.addColorStop(0, 'rgba(139, 69, 19, 0.9)'); // Brown like binoculars
+                ringGradient.addColorStop(1, 'rgba(101, 50, 15, 0.95)');
+
+                ctx.strokeStyle = ringGradient;
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Inner highlight ring
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius - 8, 0, Math.PI * 2);
+                ctx.stroke();
             }
 
             updateIdentificationCanvas() {
@@ -1551,22 +1800,23 @@ A raucous call to call you back.`,
                 this.deltaTime = currentTime - this.lastTime;
                 this.lastTime = currentTime;
                 this.frameCount++;
-                
+
                 if (this.frameCount % 60 === 0) {
                     this.fps = Math.round(1000 / this.deltaTime);
                 }
-                
+
                 this.updateBinoculars();
                 this.updateBirds();
                 this.updateParticles();
-                
+                this.updateQuizTracking();  // NEW: Update tracking circle
+
                 this.birdSpawnTimer += this.deltaTime;
                 if (this.birdSpawnTimer >= this.birdSpawnInterval) {
                     this.spawnBird();
                     this.birdSpawnTimer = 0;
                     this.birdSpawnInterval = 2000 + Math.random() * 3000;
                 }
-                
+
                 this.checkBirdSpotting();
                 this.updateUI();
 
@@ -1959,11 +2209,16 @@ A raucous call to call you back.`,
             render() {
                 // Clear canvas with transparent background to show CSS background
                 this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-                
+
                 if (this.binoculars.isActive) {
                     this.renderBinocularView();
                 } else {
                     this.renderNormalView();
+                }
+
+                // NEW: Render tracking circle if in tracking mode
+                if (this.quizState.isTracking) {
+                    this.renderTrackingCircle();
                 }
             }
             
