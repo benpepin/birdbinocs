@@ -621,6 +621,12 @@
                     }
                 });
 
+                // Handle input changes to enable/disable submit button
+                this.quizElements.bottomBirdNameInput.addEventListener('input', (e) => {
+                    const hasText = e.target.value.trim().length > 0;
+                    this.quizElements.bottomSubmitBtn.disabled = !hasText;
+                });
+
                 // Handle bottom submit button click
                 this.quizElements.bottomSubmitBtn.addEventListener('click', () => {
                     this.submitTrackingGuess();
@@ -1189,11 +1195,13 @@ A raucous call to call you back.`,
                 // Show tracking canvas and bottom input
                 this.quizElements.trackingCanvas.style.display = 'block';
                 this.quizElements.bottomInput.style.display = 'block';
+                document.body.classList.add('quiz-input-active');
 
                 // Clear input and feedback
                 this.quizElements.bottomBirdNameInput.value = '';
                 this.quizElements.bottomFeedback.innerHTML = '';
                 this.quizElements.bottomFeedback.className = 'bottom-feedback-message';
+                this.quizElements.bottomSubmitBtn.disabled = true;
 
                 // Focus input with tracked timeout
                 this.quizState.focusTimeoutId = setTimeout(() => {
@@ -1380,10 +1388,8 @@ A raucous call to call you back.`,
                 const bird = this.quizState.lockedBird;
 
                 // Show correct feedback
-                this.quizElements.bottomFeedback.innerHTML = `
-                    <span class="feedback-icon correct">✓</span>
-                    <span>${bird.name}</span>
-                `;
+                this.quizElements.bottomInput.classList.add('success');
+                this.quizElements.bottomFeedback.innerHTML = `${bird.name}`;
                 this.quizElements.bottomFeedback.className = 'bottom-feedback-message correct';
 
                 // Mark bird as spotted and award points
@@ -1422,10 +1428,8 @@ A raucous call to call you back.`,
                 this.quizState.attemptedGuesses.add(guess);
 
                 // Show incorrect feedback
-                this.quizElements.bottomFeedback.innerHTML = `
-                    <span class="feedback-icon incorrect">✕</span>
-                    <span>${guess}</span>
-                `;
+                this.quizElements.bottomInput.classList.add('fail');
+                this.quizElements.bottomFeedback.innerHTML = `${guess}`;
                 this.quizElements.bottomFeedback.className = 'bottom-feedback-message incorrect';
 
                 // Clear input for next attempt with tracked timeout
@@ -1433,6 +1437,7 @@ A raucous call to call you back.`,
                     clearTimeout(this.quizState.feedbackTimeoutId);
                 }
                 this.quizState.feedbackTimeoutId = setTimeout(() => {
+                    this.quizElements.bottomInput.classList.remove('fail');
                     this.quizElements.bottomBirdNameInput.value = '';
                     this.quizElements.bottomFeedback.innerHTML = '';
                     this.quizElements.bottomFeedback.className = 'bottom-feedback-message';
@@ -1459,6 +1464,8 @@ A raucous call to call you back.`,
                 // Hide tracking UI
                 this.quizElements.trackingCanvas.style.display = 'none';
                 this.quizElements.bottomInput.style.display = 'none';
+                this.quizElements.bottomInput.classList.remove('success', 'fail');
+                document.body.classList.remove('quiz-input-active');
 
                 // Clear tracking canvas
                 this.trackingCtx.clearRect(0, 0, this.quizElements.trackingCanvas.width, this.quizElements.trackingCanvas.height);

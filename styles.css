@@ -661,36 +661,48 @@ body {
   cursor: none !important;
 }
 
+/* Fade out UI when quiz input is active */
+body.quiz-input-active #ui,
+body.quiz-input-active #birdNotebook,
+body.quiz-input-active #quizModeToggle {
+  opacity: 0.2;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#ui, #birdNotebook, #quizModeToggle {
+  transition: opacity 0.3s ease;
+}
+
 /* Bottom Identification Input */
 .bottom-id-input {
   position: fixed;
-  bottom: 0;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(247, 231, 213, 0.95);
-  padding: 16px 24px 20px 24px;
-  border-radius: 12px 12px 0 0;
-  border: 2px solid rgba(86, 130, 171, 0.3);
-  border-bottom: none;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+  background: #303030;
+  padding: 20px 16px 20px 16px;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   z-index: 1600;
   cursor: auto !important;
-  min-width: 400px;
+  width: 344px;
 }
 
 .bottom-id-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   cursor: auto !important;
 }
 
 .bottom-id-prompt {
-  color: #2C3F51;
+  color: #EAE8D2;
   font-size: 18px;
-  font-family: 'EB Garamond', serif;
-  font-weight: 500;
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;
   text-align: center;
 }
 
@@ -703,62 +715,73 @@ body {
 
 #bottomBirdNameInput {
   flex: 1;
-  padding: 10px 14px;
+  padding: 12px 16px;
   font-size: 16px;
-  font-family: 'EB Garamond', serif;
-  color: #2C3F51;
-  background: white;
-  border: 2px solid rgba(86, 130, 171, 0.3);
-  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  color: #EAE8D2;
+  background: rgba(254, 254, 233, 0.10);
+  border: none;
+  border-radius: 20px;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: background 0.3s ease;
   cursor: text !important;
 }
 
 #bottomBirdNameInput:focus {
-  border-color: #4A7C59;
-  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+  background: rgba(254, 254, 233, 0.15);
 }
 
 #bottomBirdNameInput::placeholder {
-  color: rgba(44, 63, 81, 0.5);
+  color: rgba(234, 232, 210, 0.50);
 }
 
 .bottom-submit-btn {
-  width: 40px;
-  height: 40px;
+  width: 43px;
+  height: 43px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  color: white;
-  background: #4A7C59;
+  color: rgba(254, 254, 233, 0.6);
+  background: rgba(254, 254, 233, 0.10);
   border: none;
-  border-radius: 6px;
+  border-radius: 20px;
   cursor: pointer !important;
-  transition: background 0.3s ease, transform 0.1s ease;
+  transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
   flex-shrink: 0;
 }
 
-.bottom-submit-btn:hover {
-  background: #3d6849;
-  transform: translateY(-1px);
+.bottom-submit-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed !important;
+  pointer-events: none;
 }
 
-.bottom-submit-btn:active {
-  transform: translateY(0);
+.bottom-submit-btn:not(:disabled) {
+  background: #EAE8D2;
+  color: #303030;
+}
+
+.bottom-submit-btn:not(:disabled) svg path {
+  stroke: #303030;
+  stroke-opacity: 1;
+}
+
+.bottom-submit-btn:not(:disabled):hover {
+  background: #F5F3E0;
+}
+
+.bottom-submit-btn:not(:disabled):active {
+  background: #D8D6C4;
 }
 
 .bottom-id-hint {
-  color: rgba(44, 63, 81, 0.6);
-  font-size: 12px;
-  font-family: 'EB Garamond', serif;
-  text-align: center;
+  display: none;
 }
 
 .bottom-feedback-message {
   min-height: 24px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -768,12 +791,93 @@ body {
   text-align: center;
 }
 
+.bottom-feedback-message:not(:empty) {
+  display: flex;
+}
+
 .bottom-feedback-message.correct {
   color: #4A7C59;
 }
 
 .bottom-feedback-message.incorrect {
   color: #8B4513;
+}
+
+/* Success and Fail States */
+.bottom-id-input.success {
+  background: #303030;
+  padding: 24px 19px 32px 19px;
+}
+
+.bottom-id-input.success .bottom-id-content {
+  gap: 24px;
+}
+
+.bottom-id-input.success .bottom-id-prompt {
+  display: none;
+}
+
+.bottom-id-input.success .bottom-id-controls {
+  display: none;
+}
+
+.bottom-id-input.success .bottom-feedback-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  color: #EAE8D2;
+  font-size: 18px;
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;
+}
+
+.bottom-id-input.success .bottom-feedback-message::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  background-image: url('data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.7808 14.2962C28.9238 14.439 29.0373 14.6087 29.1147 14.7955C29.1922 14.9823 29.232 15.1825 29.232 15.3846C29.232 15.5868 29.1922 15.787 29.1147 15.9738C29.0373 16.1605 28.9238 16.3302 28.7808 16.4731L18.0116 27.2423C17.8687 27.3854 17.699 27.4989 17.5122 27.5763C17.3255 27.6537 17.1253 27.6935 16.9231 27.6935C16.7209 27.6935 16.5207 27.6537 16.334 27.5763C16.1472 27.4989 15.9775 27.3854 15.8346 27.2423L11.2193 22.6269C10.9306 22.3383 10.7684 21.9467 10.7684 21.5385C10.7684 21.1302 10.9306 20.7387 11.2193 20.45C11.5079 20.1613 11.8995 19.9992 12.3077 19.9992C12.716 19.9992 13.1075 20.1613 13.3962 20.45L16.9231 23.9789L26.6039 14.2962C26.7468 14.1531 26.9164 14.0397 27.1032 13.9622C27.29 13.8848 27.4902 13.845 27.6923 13.845C27.8945 13.845 28.0947 13.8848 28.2815 13.9622C28.4683 14.0397 28.6379 14.1531 28.7808 14.2962ZM40 20C40 23.9557 38.8271 27.8224 36.6294 31.1114C34.4318 34.4004 31.3082 36.9639 27.6537 38.4776C23.9992 39.9914 19.9778 40.3875 16.0982 39.6157C12.2186 38.844 8.65493 36.9392 5.85788 34.1422C3.06083 31.3451 1.15601 27.7815 0.384304 23.9018C-0.387401 20.0222 0.0086657 16.0009 1.52242 12.3463C3.03617 8.69182 5.59963 5.56824 8.88861 3.37061C12.1776 1.17298 16.0444 0 20 0C25.3026 0.00559966 30.3865 2.11454 34.136 5.86405C37.8855 9.61357 39.9945 14.6974 40 20ZM36.9231 20C36.9231 16.6529 35.9306 13.381 34.0711 10.5981C32.2115 7.81506 29.5685 5.64599 26.4762 4.36512C23.3839 3.08425 19.9813 2.74912 16.6985 3.4021C13.4157 4.05508 10.4003 5.66685 8.03359 8.03359C5.66686 10.4003 4.05509 13.4157 3.40211 16.6985C2.74913 19.9812 3.08426 23.3839 4.36513 26.4762C5.646 29.5685 7.81507 32.2115 10.5981 34.0711C13.381 35.9306 16.653 36.9231 20 36.9231C24.4868 36.918 28.7882 35.1334 31.9608 31.9608C35.1334 28.7882 36.918 24.4867 36.9231 20Z" fill="%2381EE90"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.bottom-id-input.fail {
+  background: #303030;
+  padding: 24px 19px 32px 19px;
+}
+
+.bottom-id-input.fail .bottom-id-content {
+  gap: 24px;
+}
+
+.bottom-id-input.fail .bottom-id-prompt {
+  display: none;
+}
+
+.bottom-id-input.fail .bottom-id-controls {
+  display: none;
+}
+
+.bottom-id-input.fail .bottom-feedback-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  color: #EAE8D2;
+  font-size: 18px;
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;
+}
+
+.bottom-id-input.fail .bottom-feedback-message::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  background-image: url('data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="19" stroke="%23E07A5F" stroke-width="2"/><path d="M15 15L25 25M25 15L15 25" stroke="%23E07A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* Identification Modal (OLD - Keep for backwards compatibility) */
