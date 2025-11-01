@@ -65,7 +65,7 @@
                 this.discoveredSpecies = new Set();
                 this.totalScore = 0;
 
-                // Species catalog (22 species total)
+                // Species catalog (23 species total)
                 this.speciesCatalog = [
                     // Common backyard birds
                     { type: 'robin',        name: 'American Robin',            scientificName: 'Turdus migratorius',     weight: 14, points: 10, minSize: 15, maxSize: 25, minSpeed: 50,  maxSpeed: 100, color: '#CD853F',  flightPattern: 'steady' },
@@ -92,7 +92,8 @@
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
-                    { type: 'grackle',      name: 'Great-tailed Grackle',       scientificName: 'Quiscalus mexicanus', weight: 6,  points: 24, minSize: 18, maxSize: 26, minSpeed: 75,  maxSpeed: 120, color: '#1A1A2E',  flightPattern: 'steady' }
+                    { type: 'grackle',      name: 'Great-tailed Grackle',       scientificName: 'Quiscalus mexicanus', weight: 6,  points: 24, minSize: 18, maxSize: 26, minSpeed: 75,  maxSpeed: 120, color: '#1A1A2E',  flightPattern: 'steady' },
+                    { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' }
                 ];
                 
                 // Bird journal system
@@ -472,6 +473,19 @@
                     this.isGrackleSpriteSheetLoaded = true;
                 };
                 this.grackleSpriteSheet.src = 'assets/images/sprites/great tailed grackle sprite-256px-16-2.png';
+
+                // House Finch-specific sprite sheet
+                this.housefinchSpriteSheet = new Image();
+                this.isHousefinchSpriteSheetLoaded = false;
+                // Configure house finch sprite sheet layout (4x4 grid - 16 frames)
+                this.housefinchSpriteSheetCols = 4;
+                this.housefinchSpriteSheetRows = 4;
+                this.housefinchSpriteTotalFrames = this.housefinchSpriteSheetCols * this.housefinchSpriteSheetRows;
+                this.housefinchSpriteAnimFps = 12; // animation speed in frames per second
+                this.housefinchSpriteSheet.onload = () => {
+                    this.isHousefinchSpriteSheetLoaded = true;
+                };
+                this.housefinchSpriteSheet.src = 'assets/images/sprites/housefinch-sprite-128px-16-4.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1081,6 +1095,17 @@ The grackle's swagger, brave and bold.<br>
 Purple sheen on feathers black,<br>
 A raucous call to call you back.`,
                         image: "assets/images/notebook/great tailed grackle notebook.png"
+                    },
+                    housefinch: {
+                        title: "Backyard Visitor",
+                        author: "by Emily Foster",
+                        poem: `Cheerful song from the garden tree,<br>
+The house finch brings such joy to me.<br>
+Red head on the male so bright,<br>
+Brown streaked female, subtle light.<br>
+At feeders they come every day,<br>
+A common beauty in its own way.`,
+                        image: "assets/images/notebook/housefinchnotebook.png"
                     }
                 };
             }
@@ -1666,7 +1691,8 @@ A raucous call to call you back.`,
                     'vulture': this.vultureSpriteSheet,
                     'stilt': this.stiltSpriteSheet,
                     'grebe': this.grebeSpriteSheet,
-                    'grackle': this.grackleSpriteSheet
+                    'grackle': this.grackleSpriteSheet,
+                    'housefinch': this.housefinchSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -1678,7 +1704,7 @@ A raucous call to call you back.`,
                     'chickadee': 4, 'eagle': 4, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
-                    'grebe': 4, 'grackle': 4
+                    'grebe': 4, 'grackle': 4, 'housefinch': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -1690,7 +1716,7 @@ A raucous call to call you back.`,
                     'chickadee': 4, 'eagle': 4, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
-                    'grebe': 4, 'grackle': 4
+                    'grebe': 4, 'grackle': 4, 'housefinch': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -1948,6 +1974,8 @@ A raucous call to call you back.`,
                         ? Math.floor(Math.random() * (this.baldeagleSpriteTotalFrames || 1))
                         : selected.type === 'stilt'
                         ? Math.floor(Math.random() * (this.stiltSpriteTotalFrames || 1))
+                        : selected.type === 'housefinch'
+                        ? Math.floor(Math.random() * (this.housefinchSpriteTotalFrames || 1))
                         : Math.floor(Math.random() * (this.spriteTotalFrames || 1))
                 };
                 
@@ -1990,6 +2018,9 @@ A raucous call to call you back.`,
                     } else if (bird.type === 'grackle' && this.grackleSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.grackleSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.grackleSpriteTotalFrames;
+                    } else if (bird.type === 'housefinch' && this.housefinchSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.housefinchSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.housefinchSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
@@ -2693,7 +2724,7 @@ A raucous call to call you back.`,
                     // Apply wing flapping animation by scaling vertically
                     ctx.scale(1, 1 + wingFlap * 0.2);
                     
-                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, goldfinch, pelican, bluejay, chickadee, bald eagle, and crow, regular sprite sheet for others
+                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, goldfinch, pelican, bluejay, chickadee, bald eagle, crow, and house finch, regular sprite sheet for others
                     if (bird.type === 'flamingo' && this.isFlamingoSpriteSheetLoaded) {
                         const cols = this.flamingoSpriteSheetCols;
                         const rows = this.flamingoSpriteSheetRows;
@@ -2993,6 +3024,19 @@ A raucous call to call you back.`,
                         const destHeight = 75;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.grackleSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'housefinch' && this.isHousefinchSpriteSheetLoaded) {
+                        const cols = this.housefinchSpriteSheetCols;
+                        const rows = this.housefinchSpriteSheetRows;
+                        const frameW = this.housefinchSpriteSheet.width / cols;
+                        const frameH = this.housefinchSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 80;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.housefinchSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
