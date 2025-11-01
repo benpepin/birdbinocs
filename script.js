@@ -69,7 +69,7 @@
                 this.speciesCatalog = [
                     // Common backyard birds
                     { type: 'robin',        name: 'American Robin',            scientificName: 'Turdus migratorius',     weight: 14, points: 10, minSize: 15, maxSize: 25, minSpeed: 50,  maxSpeed: 100, color: '#CD853F',  flightPattern: 'steady' },
-                    { type: 'bluejay',      name: 'Blue Jay',                  scientificName: 'Cyanocitta cristata',    weight: 0, points: 15, minSize: 18, maxSize: 28, minSpeed: 70,  maxSpeed: 120, color: '#4169E1',  flightPattern: 'sineFast' },
+                    { type: 'bluejay',      name: 'Blue Jay',                  scientificName: 'Cyanocitta cristata',    weight: 6, points: 15, minSize: 18, maxSize: 28, minSpeed: 70,  maxSpeed: 120, color: '#4169E1',  flightPattern: 'sineFast' },
                     { type: 'cardinal',     name: 'Northern Cardinal',         scientificName: 'Cardinalis cardinalis',  weight: 8,  points: 25, minSize: 16, maxSize: 24, minSpeed: 120,  maxSpeed: 240,  color: '#DC143C',  flightPattern: 'steady' },
                     { type: 'sparrow',      name: 'House Sparrow',             scientificName: 'Passer domesticus',      weight: 0, points: 12, minSize: 12, maxSize: 18, minSpeed: 80,  maxSpeed: 130, color: '#8B7355',  flightPattern: 'dart' },
                     { type: 'chickadee',    name: 'Black-capped Chickadee',    scientificName: 'Poecile atricapillus',   weight: 9,  points: 18, minSize: 12, maxSize: 18, minSpeed: 70,  maxSpeed: 110, color: '#3C3C3C',  flightPattern: 'flutter' },
@@ -82,7 +82,7 @@
                     { type: 'owl',          name: 'Great Horned Owl',          scientificName: 'Bubo virginianus', weight: 0,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
                     { type: 'vulture',      name: 'Turkey Vulture',            scientificName: 'Cathartes aura', weight: 6,  points: 50, minSize: 32, maxSize: 46, minSpeed: 35,  maxSpeed: 65,  color: '#3D2817',  flightPattern: 'sineVerySlow' },
                     { type: 'hawk',         name: 'Red-tailed Hawk',           scientificName: 'Buteo jamaicensis', weight: 0,  points: 40, minSize: 35, maxSize: 50, minSpeed: 30,  maxSpeed: 60,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
-                    { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 0,  points: 80, minSize: 40, maxSize: 60, minSpeed: 105,  maxSpeed: 165,  color: '#5C4033',  flightPattern: 'majestic' },
+                    { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 3,  points: 80, minSize: 40, maxSize: 60, minSpeed: 105,  maxSpeed: 165,  color: '#5C4033',  flightPattern: 'majestic' },
                     { type: 'heron',        name: 'Great Blue Heron',          scientificName: 'Ardea herodias', weight: 0,  points: 70, minSize: 38, maxSize: 55, minSpeed: 60,  maxSpeed: 85,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
                     { type: 'duck',         name: 'Mallard',                    scientificName: 'Anas platyrhynchos', weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
                     { type: 'goose',        name: 'Canada Goose',              scientificName: 'Branta canadensis', weight: 6,  points: 35, minSize: 34, maxSize: 50, minSpeed: 60,  maxSpeed: 90,  color: '#4B3F2F',  flightPattern: 'vGlide' },
@@ -276,7 +276,7 @@
                 this.bluejaySpriteSheet.onload = () => {
                     this.isBluejayeSpriteSheetLoaded = true;
                 };
-                this.bluejaySpriteSheet.src = 'assets/images/sprites/bjsprite-128px-16-4.png';
+                this.bluejaySpriteSheet.src = 'assets/images/sprites/bluejay-sprite-128px-16-4.png';
 
                 // Chickadee-specific sprite sheet
                 this.chickadeeSpriteSheet = new Image();
@@ -295,14 +295,14 @@
                 this.baldeagleSpriteSheet = new Image();
                 this.isBaldEagleSpriteSheetLoaded = false;
                 // Configure bald eagle sprite sheet layout (4x4 grid)
-                this.baldeagleSpriteSheetCols = 6;
-                this.baldeagleSpriteSheetRows = 6;
+                this.baldeagleSpriteSheetCols = 4;
+                this.baldeagleSpriteSheetRows = 4;
                 this.baldeagleSpriteTotalFrames = this.baldeagleSpriteSheetCols * this.baldeagleSpriteSheetRows;
                 this.baldeagleSpriteAnimFps = 12; // animation speed in frames per second
                 this.baldeagleSpriteSheet.onload = () => {
                     this.isBaldEagleSpriteSheetLoaded = true;
                 };
-                this.baldeagleSpriteSheet.src = 'assets/images/sprites/baldeaglesprite.png';
+                this.baldeagleSpriteSheet.src = 'assets/images/sprites/baldeaglesprite-128px-16.png';
 
                 // American Crow-specific sprite sheet
                 this.crowSpriteSheet = new Image();
@@ -1675,7 +1675,7 @@ A raucous call to call you back.`,
                 const colsMap = {
                     'flamingo': 4, 'robin': 4, 'cardinal': 3, 'woodpecker': 4,
                     'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
-                    'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
+                    'chickadee': 4, 'eagle': 4, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4
@@ -1687,7 +1687,7 @@ A raucous call to call you back.`,
                 const rowsMap = {
                     'flamingo': 4, 'robin': 4, 'cardinal': 3, 'woodpecker': 4,
                     'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
-                    'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
+                    'chickadee': 4, 'eagle': 4, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4
@@ -1936,12 +1936,16 @@ A raucous call to call you back.`,
                         ? Math.floor(Math.random() * (this.cardinalSpriteTotalFrames || 1))
                         : selected.type === 'woodpecker'
                         ? Math.floor(Math.random() * (this.woodpeckerSpriteTotalFrames || 1))
+                        : selected.type === 'bluejay'
+                        ? Math.floor(Math.random() * (this.bluejaySpriteTotalFrames || 1))
                         : selected.type === 'hawk'
                         ? Math.floor(Math.random() * (this.hawkSpriteTotalFrames || 1))
                         : selected.type === 'goose'
                         ? Math.floor(Math.random() * (this.gooseSpriteTotalFrames || 1))
                         : selected.type === 'heron'
                         ? Math.floor(Math.random() * (this.heronSpriteTotalFrames || 1))
+                        : selected.type === 'eagle'
+                        ? Math.floor(Math.random() * (this.baldeagleSpriteTotalFrames || 1))
                         : selected.type === 'stilt'
                         ? Math.floor(Math.random() * (this.stiltSpriteTotalFrames || 1))
                         : Math.floor(Math.random() * (this.spriteTotalFrames || 1))
