@@ -52,7 +52,7 @@
                 this.binoculars = {
                     isActive: false,
                     zoomLevel: 1.0,
-                    viewRadius: 120,
+                    viewRadius: 160, // 20% smaller than quiz mode (200 * 0.8 = 160)
                     x: 0,
                     y: 0
                 };
@@ -1310,6 +1310,9 @@ A common beauty in its own way.`,
                 // Create visual feedback
                 this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
 
+                // Switch notebook to show the newly identified bird
+                this.showNotebookForBird(bird.type);
+
                 // Close modal after delay with tracked timeout
                 if (this.quizState.closeTimeoutId) {
                     clearTimeout(this.quizState.closeTimeoutId);
@@ -1434,6 +1437,9 @@ A common beauty in its own way.`,
 
                 // Create visual feedback
                 this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
+
+                // Switch notebook to show the newly identified bird
+                this.showNotebookForBird(bird.type);
 
                 // Close tracking mode after delay with tracked timeout
                 if (this.quizState.closeTimeoutId) {
