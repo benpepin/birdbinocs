@@ -40,6 +40,8 @@
         <canvas id="gameCanvas"></canvas>
         
         <!-- Right Panel for Bird Notebook -->
+        <button id="closedNotebook" class="closed-notebook" aria-label="Open bird journal" style="display: none;">
+        </button>
         <div id="birdNotebook">
             <div class="notebook-content">
                 <!-- Left Panel: Multi-page scrollable container -->
@@ -112,8 +114,8 @@
                     <div class="species-info">
                         <div class="notebook-header">
                             <div class="header-row">
-                                <div id="notebookSpeciesCount" class="species-count">0 species</div>
                                 <div id="notebookDate" class="notebook-date">9/28/25</div>
+                                <button id="notebookCloseBtn" class="notebook-close-btn" aria-label="Close notebook">×</button>
                             </div>
                         </div>
                         <div id="notebookSpeciesList" class="notebook-species-list">

@@ -493,6 +493,7 @@
                 // Notebook system
                 this.notebookData = this.createNotebookData();
                 this.currentNotebookBird = null;
+                this.notebookOpen = true;
                 
                 // Game settings - now dynamic based on viewport
                 this.updateCanvasSize();
@@ -692,6 +693,8 @@
             setupNotebook() {
                 this.notebookElements = {
                     container: document.getElementById('birdNotebook'),
+                    closedNotebook: document.getElementById('closedNotebook'),
+                    closeBtn: document.getElementById('notebookCloseBtn'),
                     title: document.getElementById('poemTitle'),
                     author: document.getElementById('poemAuthor'),
                     text: document.getElementById('poemText'),
@@ -699,7 +702,6 @@
                     birdName: document.getElementById('birdName'),
                     birdScientificName: document.getElementById('birdScientificName'),
                     date: document.getElementById('notebookDate'),
-                    speciesCount: document.getElementById('notebookSpeciesCount'),
                     speciesList: document.getElementById('notebookSpeciesList'),
                     poemHawkImage: document.getElementById('poemHawkImage'),
                     // New multi-page elements
@@ -722,6 +724,25 @@
 
                 this.notebookElements.container.addEventListener('mouseleave', () => {
                     this.isMouseOverNotebookElement = false;
+                });
+
+                this.notebookElements.closedNotebook.addEventListener('mouseenter', () => {
+                    this.isMouseOverNotebookElement = true;
+                });
+
+                this.notebookElements.closedNotebook.addEventListener('mouseleave', () => {
+                    this.isMouseOverNotebookElement = false;
+                });
+
+                // Close button click handler
+                this.notebookElements.closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleNotebook();
+                });
+
+                // Closed notebook click handler
+                this.notebookElements.closedNotebook.addEventListener('click', () => {
+                    this.toggleNotebook();
                 });
 
                 // Setup species list clicks
@@ -784,7 +805,21 @@
                     this.handleLeftPanelScroll();
                 });
             }
-            
+
+            toggleNotebook() {
+                this.notebookOpen = !this.notebookOpen;
+
+                if (this.notebookOpen) {
+                    // Show open notebook, hide closed
+                    this.notebookElements.container.style.display = 'block';
+                    this.notebookElements.closedNotebook.style.display = 'none';
+                } else {
+                    // Show closed notebook, hide open
+                    this.notebookElements.container.style.display = 'none';
+                    this.notebookElements.closedNotebook.style.display = 'block';
+                }
+            }
+
             handleLeftPanelScroll() {
                 const scrollContainer = this.notebookElements.scrollContainer;
                 const scrollTop = scrollContainer.scrollTop;
@@ -1805,9 +1840,9 @@ A common beauty in its own way.`,
                     }
                 });
 
-                // Update species count
-                this.notebookElements.speciesCount.textContent =
-                    `${this.todaysSpecies.length} species`;
+                // Species count removed from UI
+                // this.notebookElements.speciesCount.textContent =
+                //     `${this.todaysSpecies.length} species`;
                 
                 // Update date in short format (M/D/YY)
                 const month = this.currentDate.getMonth() + 1;
@@ -1830,8 +1865,8 @@ A common beauty in its own way.`,
                 // Hide the bird image for empty state
                 this.notebookElements.birdImage.style.display = 'none';
 
-                // Update right panel for empty state
-                this.notebookElements.speciesCount.textContent = "0 species";
+                // Species count removed from UI
+                // this.notebookElements.speciesCount.textContent = "0 species";
                 
                 // Use today's date in short format (M/D/YY)
                 const month = this.currentDate.getMonth() + 1;

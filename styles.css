@@ -51,7 +51,30 @@ body {
   outline-offset: -1px;
   z-index: 1000;
   cursor: auto !important;
-  display: block !important;
+  display: block;
+}
+
+/* Closed Notebook State */
+.closed-notebook {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 160px;
+  height: auto;
+  aspect-ratio: 1;
+  background-image: url('assets/images/illustrations/birdjournal.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+
+.closed-notebook:hover {
+  transform: scale(1.05) rotate(-2deg);
 }
 
 .notebook-content {
@@ -345,13 +368,37 @@ body {
 }
 
 .notebook-date {
-  color: #11497E;
-  font-size: 16px;
+  color: #334155;
+  font-size: 18px;
   font-family: Caveat;
-  font-weight: 400;
+  font-weight: 700;
   word-wrap: break-word;
-  text-align: right;
-  padding-right: 8px;
+  text-align: left;
+  padding-left: 0px;
+  margin-left: -10px;
+}
+
+.notebook-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: rgba(44, 63, 81, 0.90);
+  cursor: pointer !important;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin-right: 8px;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.notebook-close-btn:hover {
+  color: rgba(44, 63, 81, 1);
 }
 
 .notebook-species-list {
