@@ -2088,9 +2088,9 @@ A common beauty in its own way.`,
                 this.birds = this.birds.filter(bird => {
                     const isOffscreen = bird.x >= this.frameBounds.right + 50;
 
-                    // If bird flies away while being identified, close the modal
-                    if (isOffscreen && this.quizState.lockedBird === bird) {
-                        this.closeIdentificationModal();
+                    // Don't remove locked birds in quiz mode - let them continue flying
+                    if (this.quizState.lockedBird === bird) {
+                        return true;  // Keep the bird in the array
                     }
 
                     return !isOffscreen;
