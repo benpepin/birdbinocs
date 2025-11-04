@@ -132,7 +132,7 @@
 
 
 				// Unified text size for score and new-species banners
-				this.textPopupSize = 20;
+				this.textPopupSize = 24;
 
 				// Cohesive hand-drawn palette
 				this.palette = {
@@ -295,15 +295,15 @@
                 // Bald Eagle-specific sprite sheet
                 this.baldeagleSpriteSheet = new Image();
                 this.isBaldEagleSpriteSheetLoaded = false;
-                // Configure bald eagle sprite sheet layout (4x4 grid)
-                this.baldeagleSpriteSheetCols = 4;
-                this.baldeagleSpriteSheetRows = 4;
+                // Configure bald eagle sprite sheet layout (6x6 grid = 36 frames)
+                this.baldeagleSpriteSheetCols = 6;
+                this.baldeagleSpriteSheetRows = 6;
                 this.baldeagleSpriteTotalFrames = this.baldeagleSpriteSheetCols * this.baldeagleSpriteSheetRows;
                 this.baldeagleSpriteAnimFps = 12; // animation speed in frames per second
                 this.baldeagleSpriteSheet.onload = () => {
                     this.isBaldEagleSpriteSheetLoaded = true;
                 };
-                this.baldeagleSpriteSheet.src = 'assets/images/sprites/baldeaglesprite-128px-16.png';
+                this.baldeagleSpriteSheet.src = 'assets/images/sprites/baldeaglesprite.png';
 
                 // American Crow-specific sprite sheet
                 this.crowSpriteSheet = new Image();
@@ -1308,7 +1308,6 @@ A common beauty in its own way.`,
                 this.addSpeciesToJournal(bird);
 
                 // Create visual feedback
-                this.createSpottingParticles(bird.x, bird.y, isNewSpecies);
                 this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
 
                 // Close modal after delay with tracked timeout
@@ -1434,7 +1433,6 @@ A common beauty in its own way.`,
                 this.addSpeciesToJournal(bird);
 
                 // Create visual feedback
-                this.createSpottingParticles(bird.x, bird.y, isNewSpecies);
                 this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
 
                 // Close tracking mode after delay with tracked timeout
@@ -1701,7 +1699,7 @@ A common beauty in its own way.`,
                 const colsMap = {
                     'flamingo': 4, 'robin': 4, 'cardinal': 3, 'woodpecker': 4,
                     'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
-                    'chickadee': 4, 'eagle': 4, 'crow': 5, 'goose': 4,
+                    'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4
@@ -1713,7 +1711,7 @@ A common beauty in its own way.`,
                 const rowsMap = {
                     'flamingo': 4, 'robin': 4, 'cardinal': 3, 'woodpecker': 4,
                     'duck': 4, 'goldfinch': 4, 'pelican': 4, 'bluejay': 4,
-                    'chickadee': 4, 'eagle': 4, 'crow': 5, 'goose': 4,
+                    'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4
@@ -2273,24 +2271,9 @@ A common beauty in its own way.`,
                         if (isNewSpecies) {
                             console.log(`🎉 NEW SPECIES DISCOVERED: ${bird.name}! (+${bird.points * 2} bonus points)`);
                         }
-                        
-                        // Create particles and subtle feedback
-                        this.createSpottingParticles(bird.x, bird.y, isNewSpecies);
+
+                        // Show score popup
                         this.showScorePopup(bird.x, bird.y, bird.points, isNewSpecies);
-                        // Remove flashing effect; we will instead add a single expanding ring particle
-                        this.particles.push({
-                            x: bird.x,
-                            y: bird.y,
-                            velocityX: 0,
-                            velocityY: 0,
-                            size: 0,
-                            ring: true,
-                            maxRingRadius: bird.size + 15,
-                            stroke: isNewSpecies ? this.palette.gold : this.palette.leaf,
-                            life: 0.5,
-                            maxLife: 0.6,
-                            alpha: 1
-                        });
                     }
                 });
             }
