@@ -2166,7 +2166,7 @@ A common beauty in its own way.`,
 
 				this.particles.push({
                     x: x,
-                    y: y - 20,
+                    y: y - 60,
                     velocityX: 0,
                     velocityY: -22,
 					size: this.textPopupSize,
@@ -2181,7 +2181,7 @@ A common beauty in its own way.`,
                 if (isNewSpecies) {
 					this.particles.push({
                         x: x,
-                        y: y - 48,
+                        y: y - 88,
                         velocityX: 0,
                         velocityY: -18,
 						size: this.textPopupSize,
