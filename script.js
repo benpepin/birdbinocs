@@ -875,7 +875,7 @@ Now they move as one, painting the sky pink.`,
 Her song cuts through the morning silence,<br>
 Moving with purpose across the lawn,<br>
 Red breast catching light, impossible to ignore.`,
-                        image: "assets/images/notebook/American-Robin.png"
+                        image: "assets/images/notebook/American Robin.png"
                     },
                     cardinal: {
                         title: "Winter Cardinal",
@@ -884,7 +884,7 @@ Red breast catching light, impossible to ignore.`,
 His song pierces the cold air,<br>
 Crest standing tall, a crown of confidence.<br>
 Life persists through the harshest seasons.`,
-                        image: "assets/images/notebook/Northern-Cardinal.png"
+                        image: "assets/images/notebook/Northern Cardinal.png"
                     },
                     bluejay: {
                         title: "Blue Jay Study",
@@ -1087,7 +1087,7 @@ Black head and neck, so proud and strong,<br>
 Their honking calls a wild song.<br>
 From north to south and back again,<br>
 Masters of the migration plan.`,
-                        image: "assets/images/notebook/Canada-Goose.png"
+                        image: "assets/images/notebook/Canada Goose.png"
                     },
                     heron: {
                         title: "Patient Fisher",
@@ -1682,7 +1682,7 @@ A common beauty in its own way.`,
                     const frameY = Math.floor(frameIndex / cols) * frameH;
 
                     // Make all birds much bigger in identification modal
-                    const sizeMultiplier = bird.type === 'flamingo' ? 12 : 10;
+                    const sizeMultiplier = (bird.type === 'flamingo' || bird.type === 'grebe') ? 9 : 10;
                     const baseSize = bird.size * sizeMultiplier;
 
                     // Maintain aspect ratio of the sprite frame
@@ -1695,7 +1695,7 @@ A common beauty in its own way.`,
                         -renderedWidth/2, -renderedHeight/2, renderedWidth, renderedHeight);
                 } else {
                     // Fallback circle - make it bigger too
-                    const fallbackSizeMultiplier = bird.type === 'flamingo' ? 12 : 10;
+                    const fallbackSizeMultiplier = (bird.type === 'flamingo' || bird.type === 'grebe') ? 9 : 10;
                     const renderedRadius = bird.size * fallbackSizeMultiplier / 2;
                     ctx.fillStyle = bird.color || '#8B4513';
                     ctx.beginPath();
