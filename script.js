@@ -830,9 +830,11 @@
                 const pageHeight = 320; // Height of each page
 
                 // Calculate which page should be visible based on scroll position
-                const currentPage = Math.round(scrollTop / pageHeight) + 1;
+                // When a bird is selected, page 0 = bird info (page 2), page 1 = poem (page 3)
+                const scrollPage = Math.round(scrollTop / pageHeight);
+                const currentPage = this.currentNotebookBird ? scrollPage + 2 : 1;
 
-                console.log('Scroll detected:', { scrollTop, currentPage, hasBird: !!this.currentNotebookBird });
+                console.log('Scroll detected:', { scrollTop, scrollPage, currentPage, hasBird: !!this.currentNotebookBird });
 
                 // Only update if we have a bird selected and are on pages 2 or 3
                 if (this.currentNotebookBird && (currentPage === 2 || currentPage === 3)) {
