@@ -142,7 +142,8 @@
 					accent: '#8B4513',
 					gold: '#C8A34B',
 					sky: '#6A7FA0',
-					cream: '#F5F0E6'
+					cream: '#F5F0E6',
+					date: '#334155'
 				};
 
                 // Background image (drawn on canvas so it zooms)
@@ -1682,7 +1683,7 @@ A common beauty in its own way.`,
                     const frameY = Math.floor(frameIndex / cols) * frameH;
 
                     // Make all birds much bigger in identification modal
-                    const sizeMultiplier = (bird.type === 'flamingo' || bird.type === 'grebe') ? 9 : 10;
+                    const sizeMultiplier = (bird.type === 'flamingo' || bird.type === 'grebe' || bird.type === 'goose') ? 8 : 10;
                     const baseSize = bird.size * sizeMultiplier;
 
                     // Maintain aspect ratio of the sprite frame
@@ -1695,7 +1696,7 @@ A common beauty in its own way.`,
                         -renderedWidth/2, -renderedHeight/2, renderedWidth, renderedHeight);
                 } else {
                     // Fallback circle - make it bigger too
-                    const fallbackSizeMultiplier = (bird.type === 'flamingo' || bird.type === 'grebe') ? 9 : 10;
+                    const fallbackSizeMultiplier = (bird.type === 'flamingo' || bird.type === 'grebe' || bird.type === 'goose') ? 8 : 10;
                     const renderedRadius = bird.size * fallbackSizeMultiplier / 2;
                     ctx.fillStyle = bird.color || '#8B4513';
                     ctx.beginPath();
@@ -2205,7 +2206,7 @@ A common beauty in its own way.`,
                     velocityX: 0,
                     velocityY: -22,
 					size: this.textPopupSize,
-                    color: isNewSpecies ? this.palette.gold : this.palette.leaf,
+                    color: this.palette.date,
                     life: 2.0,
                     maxLife: 2.0,
                     alpha: 1,
@@ -2220,9 +2221,9 @@ A common beauty in its own way.`,
                         velocityX: 0,
                         velocityY: -18,
 						size: this.textPopupSize,
-                        color: this.palette.accent,
-                        life: 3.0,
-                        maxLife: 3.4,
+                        color: this.palette.date,
+                        life: 1.5,
+                        maxLife: 1.5,
                         alpha: 1,
                         isText: true,
                     	text: 'New species!'
@@ -2239,7 +2240,7 @@ A common beauty in its own way.`,
 
                     if (particle.isText) {
                         ctx.fillStyle = particle.color;
-                        ctx.font = `600 ${particle.size}px "Cormorant", serif`;
+                        ctx.font = `600 ${particle.size}px "Caveat", cursive`;
                         ctx.textAlign = 'center';
                         ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
                         ctx.lineWidth = 2;
