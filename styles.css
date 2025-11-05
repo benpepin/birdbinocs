@@ -235,6 +235,29 @@ body {
   background: rgba(86, 130, 171, 0.5);
 }
 
+/* Scroll indicator dots */
+.scroll-indicator-dots {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.scroll-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(86, 130, 171, 0.4);
+  transition: all 0.3s ease;
+}
+
+.scroll-dot.active {
+  background: rgba(86, 130, 171, 0.9);
+}
 
 /* Training Page */
 .training-page {

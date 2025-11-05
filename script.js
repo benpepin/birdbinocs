@@ -712,7 +712,10 @@
                     poemPage: document.querySelector('.poem-page'),
                     poemTitleDisplay: document.getElementById('poemTitleDisplay'),
                     poemAuthorDisplay: document.getElementById('poemAuthorDisplay'),
-                    poemTextDisplay: document.getElementById('poemTextDisplay')
+                    poemTextDisplay: document.getElementById('poemTextDisplay'),
+                    // Scroll indicator dots
+                    scrollDotsContainer: document.querySelector('.scroll-indicator-dots'),
+                    scrollDots: document.querySelectorAll('.scroll-dot')
                 };
 
                 // Track if mouse is over notebook
@@ -842,27 +845,41 @@
                 const trainingPage = this.notebookElements.trainingPage;
                 const birdInfoPage = this.notebookElements.birdInfoPage;
                 const poemPage = this.notebookElements.poemPage;
-                
-                // If no bird is selected, only show training page
+
+                // If no bird is selected, hide dots and only show training page
                 if (!this.currentNotebookBird) {
+                    this.notebookElements.scrollDotsContainer.style.display = 'none';
                     trainingPage.style.display = 'flex';
                     birdInfoPage.style.display = 'none';
                     poemPage.style.display = 'none';
                     return;
                 }
-                
-                // If bird is selected, hide training page and show bird pages
+
+                // If bird is selected, show dots and update them
+                this.notebookElements.scrollDotsContainer.style.display = 'flex';
+
+                // Update scroll indicator dots (only for pages 2 and 3)
+                this.notebookElements.scrollDots.forEach((dot, index) => {
+                    const dotPage = parseInt(dot.getAttribute('data-page'));
+                    if (dotPage === pageNumber) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+
+                // Hide training page and show bird pages
                 trainingPage.style.display = 'none';
                 birdInfoPage.style.display = 'flex';
                 poemPage.style.display = 'flex';
-                
+
             }
             
             createNotebookData() {
                 return {
                     flamingo: {
                         title: "Flamingo Observations",
-                        author: "by Lamar Cole",
+                        author: "by Iris Martinez",
                         poem: `Soft light fades across the water,<br>
 Flamingos depart, necks stretched, wings beating.<br>
 Hours spent filtering the shallows,<br>
@@ -1015,7 +1032,7 @@ The noblest bird that's ever seen.`,
                     },
                     crow: {
                         title: "Black as Midnight",
-                        author: "by Edgar A. Poe",
+                        author: "by Thomas Fletcher",
                         poem: `Black as midnight, smart as can be,<br>
 The crow calls out from the old oak tree.<br>
 With clever mind and watchful eye,<br>
@@ -1026,7 +1043,7 @@ A murder dark against the cloud.`,
                     },
                     raven: {
                         title: "Nevermore",
-                        author: "by Edgar Allan Poe",
+                        author: "by Samuel Blackwood",
                         poem: `Once upon a midnight dreary,<br>
 While I pondered, weak and weary,<br>
 Over many a quaint and curious volume of forgotten lore,<br>
