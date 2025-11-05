@@ -1252,8 +1252,15 @@ A common beauty in its own way.`,
                 // Hide the poem hawk image
                 this.notebookElements.poemHawkImage.style.display = 'none';
 
-                // Show bird info page (page 2) without auto-scrolling
-                this.showPage(2);
+                // Detect current page from scroll position to preserve it when switching birds
+                const scrollContainer = this.notebookElements.scrollContainer;
+                const scrollTop = scrollContainer.scrollTop;
+                const pageHeight = 320;
+                const scrollPage = Math.round(scrollTop / pageHeight);
+                const currentPage = scrollPage + 2; // Convert to page 2 or 3
+
+                // Show the current page (2 or 3) to preserve scroll position
+                this.showPage(currentPage >= 2 && currentPage <= 3 ? currentPage : 2);
 
                 // Update species list
                 this.updateNotebookSpeciesList();

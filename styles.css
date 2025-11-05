@@ -248,8 +248,8 @@ body {
 }
 
 .scroll-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: rgba(86, 130, 171, 0.4);
   transition: all 0.3s ease;
