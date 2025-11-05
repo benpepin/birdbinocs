@@ -828,10 +828,12 @@
                 const scrollContainer = this.notebookElements.scrollContainer;
                 const scrollTop = scrollContainer.scrollTop;
                 const pageHeight = 320; // Height of each page
-                
+
                 // Calculate which page should be visible based on scroll position
                 const currentPage = Math.round(scrollTop / pageHeight) + 1;
-                
+
+                console.log('Scroll detected:', { scrollTop, currentPage, hasBird: !!this.currentNotebookBird });
+
                 // Only update if we have a bird selected and are on pages 2 or 3
                 if (this.currentNotebookBird && (currentPage === 2 || currentPage === 3)) {
                     this.showPage(currentPage);
