@@ -1820,19 +1820,21 @@ A common beauty in its own way.`,
                 }
 
                 // Add discovered species
+                let activeItem = null;
                 this.todaysSpecies.forEach((species, index) => {
                     const item = document.createElement('div');
                     item.className = 'species-item';
                     if (species.type === this.currentNotebookBird) {
                         item.classList.add('active');
+                        activeItem = item;
                     }
-                    
+
                     const nameDiv = document.createElement('div');
                     nameDiv.className = 'species-name';
                     nameDiv.textContent = species.count > 1 ? `${species.name} (${species.count})` : species.name;
                     item.appendChild(nameDiv);
                     speciesList.appendChild(item);
-                    
+
                     // Add divider after each item except the last one
                     if (index < this.todaysSpecies.length - 1) {
                         const divider = document.createElement('div');
@@ -1840,6 +1842,18 @@ A common beauty in its own way.`,
                         speciesList.appendChild(divider);
                     }
                 });
+
+                // Auto-scroll to show the active item in the species list
+                if (activeItem) {
+                    // Use setTimeout to ensure the DOM has been updated
+                    setTimeout(() => {
+                        activeItem.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                            inline: 'nearest'
+                        });
+                    }, 100);
+                }
 
                 // Species count removed from UI
                 // this.notebookElements.speciesCount.textContent =
@@ -2308,7 +2322,10 @@ A common beauty in its own way.`,
                         
                         // Add to bird journal
                         this.addSpeciesToJournal(bird);
-                        
+
+                        // Show the bird in the notebook
+                        this.showNotebookForBird(bird.type);
+
                         console.log(`✅ ${bird.name} spotted! (+${bird.points} points)`);
                         if (isNewSpecies) {
                             console.log(`🎉 NEW SPECIES DISCOVERED: ${bird.name}! (+${bird.points * 2} bonus points)`);
