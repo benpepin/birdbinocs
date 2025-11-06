@@ -92,6 +92,7 @@
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
+                    { type: 'plover',       name: 'Snowy Plover',               scientificName: 'Charadrius nivosus', weight: 6,  points: 35, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 120, color: '#D3D3D3',  flightPattern: 'flutter' },
                     { type: 'grackle',      name: 'Great-tailed Grackle',       scientificName: 'Quiscalus mexicanus', weight: 6,  points: 24, minSize: 18, maxSize: 26, minSpeed: 75,  maxSpeed: 120, color: '#1A1A2E',  flightPattern: 'steady' },
                     { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' },
                     { type: 'rockdove',     name: 'Rock Dove',                  scientificName: 'Columba livia', weight: 7,  points: 14, minSize: 16, maxSize: 22, minSpeed: 80,  maxSpeed: 130, color: '#6E7C8E',  flightPattern: 'steady' },
@@ -515,6 +516,19 @@
                     this.isWhitecrownedsparrowSpriteSheetLoaded = true;
                 };
                 this.whitecrownedsparrowSpriteSheet.src = 'assets/images/sprites/whitecrownedsparrow-sprite-128px-16.png';
+
+                // Snowy Plover-specific sprite sheet
+                this.ploverSpriteSheet = new Image();
+                this.isPloverSpriteSheetLoaded = false;
+                // Configure snowy plover sprite sheet layout (4x4 grid - 16 frames)
+                this.ploverSpriteSheetCols = 4;
+                this.ploverSpriteSheetRows = 4;
+                this.ploverSpriteTotalFrames = this.ploverSpriteSheetCols * this.ploverSpriteSheetRows;
+                this.ploverSpriteAnimFps = 12; // animation speed in frames per second
+                this.ploverSpriteSheet.onload = () => {
+                    this.isPloverSpriteSheetLoaded = true;
+                };
+                this.ploverSpriteSheet.src = 'assets/images/sprites/snowyplover-sprite-128px-16-4.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1218,6 +1232,17 @@ Singing sweetly at break of day.<br>
 A traveler from the northern lands,<br>
 Gracing us with its striking bands.`,
                         image: "assets/images/notebook/White Crowned Sparrow.png"
+                    },
+                    plover: {
+                        title: "Shore Runner",
+                        author: "by Maya Sandstone",
+                        poem: `Along the sandy shore so bright,<br>
+The snowy plover, pure and white.<br>
+Quick feet dancing on the sand,<br>
+A tiny jewel of the land.<br>
+Between the waves and dunes it runs,<br>
+Beneath the warmth of coastal suns.`,
+                        image: "assets/images/notebook/Snowy Plover.png"
                     }
                 };
             }
@@ -1817,7 +1842,8 @@ Gracing us with its striking bands.`,
                     'grackle': this.grackleSpriteSheet,
                     'housefinch': this.housefinchSpriteSheet,
                     'rockdove': this.rockdoveSpriteSheet,
-                    'whitecrownedsparrow': this.whitecrownedsparrowSpriteSheet
+                    'whitecrownedsparrow': this.whitecrownedsparrowSpriteSheet,
+                    'plover': this.ploverSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -1829,7 +1855,8 @@ Gracing us with its striking bands.`,
                     'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
-                    'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4
+                    'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
+                    'plover': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -1841,7 +1868,8 @@ Gracing us with its striking bands.`,
                     'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
-                    'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4
+                    'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
+                    'plover': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -2170,6 +2198,9 @@ Gracing us with its striking bands.`,
                     } else if (bird.type === 'whitecrownedsparrow' && this.whitecrownedsparrowSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.whitecrownedsparrowSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.whitecrownedsparrowSpriteTotalFrames;
+                    } else if (bird.type === 'plover' && this.ploverSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.ploverSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.ploverSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
@@ -3200,6 +3231,19 @@ Gracing us with its striking bands.`,
                         const destHeight = 80;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.whitecrownedsparrowSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'plover' && this.isPloverSpriteSheetLoaded) {
+                        const cols = this.ploverSpriteSheetCols;
+                        const rows = this.ploverSpriteSheetRows;
+                        const frameW = this.ploverSpriteSheet.width / cols;
+                        const frameH = this.ploverSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 75;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.ploverSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
