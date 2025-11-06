@@ -298,15 +298,15 @@
                 // Bald Eagle-specific sprite sheet
                 this.baldeagleSpriteSheet = new Image();
                 this.isBaldEagleSpriteSheetLoaded = false;
-                // Configure bald eagle sprite sheet layout (6x6 grid = 36 frames)
-                this.baldeagleSpriteSheetCols = 6;
-                this.baldeagleSpriteSheetRows = 6;
+                // Configure bald eagle sprite sheet layout (4x4 grid = 16 frames)
+                this.baldeagleSpriteSheetCols = 4;
+                this.baldeagleSpriteSheetRows = 4;
                 this.baldeagleSpriteTotalFrames = this.baldeagleSpriteSheetCols * this.baldeagleSpriteSheetRows;
                 this.baldeagleSpriteAnimFps = 12; // animation speed in frames per second
                 this.baldeagleSpriteSheet.onload = () => {
                     this.isBaldEagleSpriteSheetLoaded = true;
                 };
-                this.baldeagleSpriteSheet.src = 'assets/images/sprites/baldeaglesprite.png';
+                this.baldeagleSpriteSheet.src = 'assets/be-sprite-256px-16-2.png';
 
                 // American Crow-specific sprite sheet
                 this.crowSpriteSheet = new Image();
