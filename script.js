@@ -1079,8 +1079,8 @@ A murder dark against the cloud.`,
                         image: "assets/images/notebook/American-Crow.png"
                     },
                     raven: {
-                        title: "Nevermore",
-                        author: "by Samuel Blackwood",
+                        title: "The Raven",
+                        author: "by Edgar Allan Poe",
                         poem: `Once upon a midnight dreary,<br>
 While I pondered, weak and weary,<br>
 Over many a quaint and curious volume of forgotten lore,<br>
