@@ -93,7 +93,9 @@
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
                     { type: 'grackle',      name: 'Great-tailed Grackle',       scientificName: 'Quiscalus mexicanus', weight: 6,  points: 24, minSize: 18, maxSize: 26, minSpeed: 75,  maxSpeed: 120, color: '#1A1A2E',  flightPattern: 'steady' },
-                    { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' }
+                    { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' },
+                    { type: 'rockdove',     name: 'Rock Dove',                  scientificName: 'Columba livia', weight: 7,  points: 14, minSize: 16, maxSize: 22, minSpeed: 80,  maxSpeed: 130, color: '#6E7C8E',  flightPattern: 'steady' },
+                    { type: 'whitecrownedsparrow', name: 'White-crowned Sparrow', scientificName: 'Zonotrichia leucophrys', weight: 6,  points: 20, minSize: 13, maxSize: 19, minSpeed: 90,  maxSpeed: 140, color: '#8B7D6B',  flightPattern: 'bounce' }
                 ];
                 
                 // Bird journal system
@@ -487,6 +489,32 @@
                     this.isHousefinchSpriteSheetLoaded = true;
                 };
                 this.housefinchSpriteSheet.src = 'assets/images/sprites/housefinch-sprite-128px-16-4.png';
+
+                // Rock Dove-specific sprite sheet
+                this.rockdoveSpriteSheet = new Image();
+                this.isRockdoveSpriteSheetLoaded = false;
+                // Configure rock dove sprite sheet layout (4x4 grid - 16 frames)
+                this.rockdoveSpriteSheetCols = 4;
+                this.rockdoveSpriteSheetRows = 4;
+                this.rockdoveSpriteTotalFrames = this.rockdoveSpriteSheetCols * this.rockdoveSpriteSheetRows;
+                this.rockdoveSpriteAnimFps = 10; // animation speed in frames per second
+                this.rockdoveSpriteSheet.onload = () => {
+                    this.isRockdoveSpriteSheetLoaded = true;
+                };
+                this.rockdoveSpriteSheet.src = 'assets/images/sprites/rockdove-sprite-128px-16.png';
+
+                // White-crowned Sparrow-specific sprite sheet
+                this.whitecrownedsparrowSpriteSheet = new Image();
+                this.isWhitecrownedsparrowSpriteSheetLoaded = false;
+                // Configure white-crowned sparrow sprite sheet layout (4x4 grid - 16 frames)
+                this.whitecrownedsparrowSpriteSheetCols = 4;
+                this.whitecrownedsparrowSpriteSheetRows = 4;
+                this.whitecrownedsparrowSpriteTotalFrames = this.whitecrownedsparrowSpriteSheetCols * this.whitecrownedsparrowSpriteSheetRows;
+                this.whitecrownedsparrowSpriteAnimFps = 12; // animation speed in frames per second
+                this.whitecrownedsparrowSpriteSheet.onload = () => {
+                    this.isWhitecrownedsparrowSpriteSheetLoaded = true;
+                };
+                this.whitecrownedsparrowSpriteSheet.src = 'assets/images/sprites/whitecrownedsparrow-sprite-128px-16.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1163,6 +1191,28 @@ Brown streaked female, subtle light.<br>
 At feeders they come every day,<br>
 A common beauty in its own way.`,
                         image: "assets/images/notebook/housefinchnotebook.png"
+                    },
+                    rockdove: {
+                        title: "City Companion",
+                        author: "by Marcus Thompson",
+                        poem: `Gray and blue with iridescent sheen,<br>
+The rock dove thrives in urban scene.<br>
+On city streets and park benches near,<br>
+A familiar friend throughout the year.<br>
+Cooing softly in the morning light,<br>
+Faithful companion, morning to night.`,
+                        image: "assets/images/notebook/RockDove.png"
+                    },
+                    whitecrownedsparrow: {
+                        title: "Crowned Wanderer",
+                        author: "by Rachel Winters",
+                        poem: `Bold black and white stripes upon its head,<br>
+The white-crowned sparrow, proudly bred.<br>
+Through brush and bramble it makes its way,<br>
+Singing sweetly at break of day.<br>
+A traveler from the northern lands,<br>
+Gracing us with its striking bands.`,
+                        image: "assets/images/notebook/White Crowned Sparrow.png"
                     }
                 };
             }
@@ -1760,7 +1810,9 @@ A common beauty in its own way.`,
                     'stilt': this.stiltSpriteSheet,
                     'grebe': this.grebeSpriteSheet,
                     'grackle': this.grackleSpriteSheet,
-                    'housefinch': this.housefinchSpriteSheet
+                    'housefinch': this.housefinchSpriteSheet,
+                    'rockdove': this.rockdoveSpriteSheet,
+                    'whitecrownedsparrow': this.whitecrownedsparrowSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -1772,7 +1824,7 @@ A common beauty in its own way.`,
                     'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
-                    'grebe': 4, 'grackle': 4, 'housefinch': 4
+                    'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -1784,7 +1836,7 @@ A common beauty in its own way.`,
                     'chickadee': 4, 'eagle': 6, 'crow': 5, 'goose': 4,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
-                    'grebe': 4, 'grackle': 4, 'housefinch': 4
+                    'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -2058,6 +2110,10 @@ A common beauty in its own way.`,
                         ? Math.floor(Math.random() * (this.stiltSpriteTotalFrames || 1))
                         : selected.type === 'housefinch'
                         ? Math.floor(Math.random() * (this.housefinchSpriteTotalFrames || 1))
+                        : selected.type === 'rockdove'
+                        ? Math.floor(Math.random() * (this.rockdoveSpriteTotalFrames || 1))
+                        : selected.type === 'whitecrownedsparrow'
+                        ? Math.floor(Math.random() * (this.whitecrownedsparrowSpriteTotalFrames || 1))
                         : Math.floor(Math.random() * (this.spriteTotalFrames || 1))
                 };
                 
@@ -2103,6 +2159,12 @@ A common beauty in its own way.`,
                     } else if (bird.type === 'housefinch' && this.housefinchSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.housefinchSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.housefinchSpriteTotalFrames;
+                    } else if (bird.type === 'rockdove' && this.rockdoveSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.rockdoveSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.rockdoveSpriteTotalFrames;
+                    } else if (bird.type === 'whitecrownedsparrow' && this.whitecrownedsparrowSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.whitecrownedsparrowSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.whitecrownedsparrowSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
@@ -3107,6 +3169,32 @@ A common beauty in its own way.`,
                         const destHeight = 80;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.housefinchSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'rockdove' && this.isRockdoveSpriteSheetLoaded) {
+                        const cols = this.rockdoveSpriteSheetCols;
+                        const rows = this.rockdoveSpriteSheetRows;
+                        const frameW = this.rockdoveSpriteSheet.width / cols;
+                        const frameH = this.rockdoveSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 85;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.rockdoveSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'whitecrownedsparrow' && this.isWhitecrownedsparrowSpriteSheetLoaded) {
+                        const cols = this.whitecrownedsparrowSpriteSheetCols;
+                        const rows = this.whitecrownedsparrowSpriteSheetRows;
+                        const frameW = this.whitecrownedsparrowSpriteSheet.width / cols;
+                        const frameH = this.whitecrownedsparrowSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 80;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.whitecrownedsparrowSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
