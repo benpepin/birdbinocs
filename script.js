@@ -842,13 +842,18 @@
                 this.notebookOpen = !this.notebookOpen;
 
                 if (this.notebookOpen) {
-                    // Show open notebook, hide closed
-                    this.notebookElements.container.style.display = 'block';
-                    this.notebookElements.closedNotebook.style.display = 'none';
+                    // Opening: Show closed button fading out, notebook expanding in
+                    this.notebookElements.closedNotebook.classList.add('button-hidden');
+                    // Small delay to ensure transition triggers
+                    setTimeout(() => {
+                        this.notebookElements.container.classList.remove('notebook-hidden');
+                    }, 10);
                 } else {
-                    // Show closed notebook, hide open
-                    this.notebookElements.container.style.display = 'none';
-                    this.notebookElements.closedNotebook.style.display = 'block';
+                    // Closing: Notebook shrinks down, closed button fades in
+                    this.notebookElements.container.classList.add('notebook-hidden');
+                    setTimeout(() => {
+                        this.notebookElements.closedNotebook.classList.remove('button-hidden');
+                    }, 10);
                 }
             }
 

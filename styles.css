@@ -51,7 +51,14 @@ body {
   outline-offset: -1px;
   z-index: 1000;
   cursor: auto !important;
-  display: block;
+  transition: opacity 0.25s ease;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#birdNotebook.notebook-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Closed Notebook State */
@@ -70,10 +77,17 @@ body {
   cursor: pointer;
   z-index: 1000;
   padding: 0;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.4s ease;
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.closed-notebook:hover {
+.closed-notebook.button-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.closed-notebook:hover:not(.button-hidden) {
   transform: scale(1.05) rotate(-2deg);
 }
 
