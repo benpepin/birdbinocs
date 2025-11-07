@@ -2035,14 +2035,35 @@ A symbol of the wilderness.`,
                         }
                     });
                 } else {
-                    // Just update active state without rebuilding
-                    existingItems.forEach(item => {
-                        if (item.dataset.birdType === this.currentNotebookBird) {
+                    // Update active state and counts without full rebuild
+                    let activeItem = null;
+                    existingItems.forEach((item, index) => {
+                        const species = this.todaysSpecies[index];
+
+                        // Update active state
+                        if (species.type === this.currentNotebookBird) {
                             item.classList.add('active');
+                            activeItem = item;
                         } else {
                             item.classList.remove('active');
                         }
+
+                        // Update count text if it changed
+                        const nameDiv = item.querySelector('.species-name');
+                        const newText = species.count > 1 ? `${species.name} (${species.count})` : species.name;
+                        if (nameDiv && nameDiv.textContent !== newText) {
+                            nameDiv.textContent = newText;
+                        }
                     });
+
+                    // Auto-scroll to show the active item
+                    if (activeItem) {
+                        activeItem.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                            inline: 'nearest'
+                        });
+                    }
                 }
 
                 // Species count removed from UI
