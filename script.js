@@ -1377,8 +1377,18 @@ A symbol of the wilderness.`,
                     this.notebookElements.birdName.textContent = speciesData.name.toUpperCase() + '.';
                     this.notebookElements.birdScientificName.textContent = speciesData.scientificName || 'Scientific name not available';
                 }
+
+                // Hide image while loading to prevent flash of wrong image
+                this.notebookElements.birdImage.style.display = 'none';
                 this.notebookElements.birdImage.src = birdData.image;
-                this.notebookElements.birdImage.style.display = 'block';
+                // Show image once it's loaded (or immediately if cached)
+                this.notebookElements.birdImage.onload = () => {
+                    this.notebookElements.birdImage.style.display = 'block';
+                };
+                // Handle cached images that don't fire onload
+                if (this.notebookElements.birdImage.complete) {
+                    this.notebookElements.birdImage.style.display = 'block';
+                }
 
                 // Update poem content
                 if (this.notebookElements.poemTitleDisplay) this.notebookElements.poemTitleDisplay.textContent = birdData.title;
