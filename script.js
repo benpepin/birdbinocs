@@ -93,6 +93,8 @@
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
                     { type: 'plover',       name: 'Snowy Plover',               scientificName: 'Charadrius nivosus', weight: 6,  points: 35, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 120, color: '#D3D3D3',  flightPattern: 'flutter' },
+                    // { type: 'piedbilledgrebe', name: 'Pied-billed Grebe',       scientificName: 'Podilymbus podiceps', weight: 7,  points: 42, minSize: 20, maxSize: 28, minSpeed: 60,  maxSpeed: 90,  color: '#5C4A3A',  flightPattern: 'steady' },
+                    // { type: 'loon',         name: 'Common Loon',                scientificName: 'Gavia immer', weight: 5,  points: 55, minSize: 30, maxSize: 42, minSpeed: 50,  maxSpeed: 80,  color: '#2C3E50',  flightPattern: 'steady' },
                     { type: 'grackle',      name: 'Great-tailed Grackle',       scientificName: 'Quiscalus mexicanus', weight: 6,  points: 24, minSize: 18, maxSize: 26, minSpeed: 75,  maxSpeed: 120, color: '#1A1A2E',  flightPattern: 'steady' },
                     { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' },
                     { type: 'rockdove',     name: 'Rock Dove',                  scientificName: 'Columba livia', weight: 7,  points: 14, minSize: 16, maxSize: 22, minSpeed: 80,  maxSpeed: 130, color: '#6E7C8E',  flightPattern: 'steady' },
@@ -530,6 +532,32 @@
                 };
                 this.ploverSpriteSheet.src = 'assets/images/sprites/snowyplover-sprite-128px-16-4.png';
 
+                // Pied-billed Grebe-specific sprite sheet
+                this.piedbilledgrebeSpriteSheet = new Image();
+                this.isPiedbilledgrebeSpriteSheetLoaded = false;
+                // Configure pied-billed grebe sprite sheet layout (4x4 grid - 16 frames)
+                this.piedbilledgrebeSpriteSheetCols = 4;
+                this.piedbilledgrebeSpriteSheetRows = 4;
+                this.piedbilledgrebeSpriteTotalFrames = this.piedbilledgrebeSpriteSheetCols * this.piedbilledgrebeSpriteSheetRows;
+                this.piedbilledgrebeSpriteAnimFps = 12; // animation speed in frames per second
+                this.piedbilledgrebeSpriteSheet.onload = () => {
+                    this.isPiedbilledgrebeSpriteSheetLoaded = true;
+                };
+                this.piedbilledgrebeSpriteSheet.src = 'assets/images/sprites/piedbilledgrebe-sprite-128px-16-5.png';
+
+                // Common Loon-specific sprite sheet
+                this.loonSpriteSheet = new Image();
+                this.isLoonSpriteSheetLoaded = false;
+                // Configure common loon sprite sheet layout (4x4 grid - 16 frames)
+                this.loonSpriteSheetCols = 4;
+                this.loonSpriteSheetRows = 4;
+                this.loonSpriteTotalFrames = this.loonSpriteSheetCols * this.loonSpriteSheetRows;
+                this.loonSpriteAnimFps = 12; // animation speed in frames per second
+                this.loonSpriteSheet.onload = () => {
+                    this.isLoonSpriteSheetLoaded = true;
+                };
+                this.loonSpriteSheet.src = 'assets/images/sprites/commonloon-sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
                 
@@ -537,6 +565,7 @@
                 this.notebookData = this.createNotebookData();
                 this.currentNotebookBird = null;
                 this.notebookOpen = true;
+                this.currentPage = 1; // Track current page to avoid unnecessary DOM updates
                 
                 // Game settings - now dynamic based on viewport
                 this.updateCanvasSize();
@@ -893,6 +922,13 @@
             }
             
             showPage(pageNumber) {
+                // Skip if we're already on this page to avoid unnecessary DOM manipulation
+                if (this.currentPage === pageNumber && this.currentNotebookBird) {
+                    return;
+                }
+
+                this.currentPage = pageNumber;
+
                 const trainingPage = this.notebookElements.trainingPage;
                 const birdInfoPage = this.notebookElements.birdInfoPage;
                 const poemPage = this.notebookElements.poemPage;
@@ -1243,6 +1279,28 @@ A tiny jewel of the land.<br>
 Between the waves and dunes it runs,<br>
 Beneath the warmth of coastal suns.`,
                         image: "assets/images/notebook/Snowy Plover.png"
+                    },
+                    piedbilledgrebe: {
+                        title: "Diving Beauty",
+                        author: "by Jordan Rivers",
+                        poem: `In quiet ponds where waters still,<br>
+The pied-billed grebe displays its skill.<br>
+With striped bill and eyes so bright,<br>
+It dives below, then out of sight.<br>
+A master of the water's realm,<br>
+With nature's grace at diving's helm.`,
+                        image: "assets/images/notebook/piedbilled grebe.png"
+                    },
+                    loon: {
+                        title: "The Loon's Call",
+                        author: "by Thomas Lakewood",
+                        poem: `Across the misty morning lake,<br>
+The common loon begins to wake.<br>
+Its haunting call cuts through the air,<br>
+A wild song beyond compare.<br>
+Black and white in checkered dress,<br>
+A symbol of the wilderness.`,
+                        image: "assets/images/notebook/Commonloon.png"
                     }
                 };
             }
@@ -1843,7 +1901,9 @@ Beneath the warmth of coastal suns.`,
                     'housefinch': this.housefinchSpriteSheet,
                     'rockdove': this.rockdoveSpriteSheet,
                     'whitecrownedsparrow': this.whitecrownedsparrowSpriteSheet,
-                    'plover': this.ploverSpriteSheet
+                    'plover': this.ploverSpriteSheet,
+                    'piedbilledgrebe': this.piedbilledgrebeSpriteSheet,
+                    'loon': this.loonSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -1856,7 +1916,7 @@ Beneath the warmth of coastal suns.`,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
-                    'plover': 4
+                    'plover': 4, 'piedbilledgrebe': 4, 'loon': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -1869,7 +1929,7 @@ Beneath the warmth of coastal suns.`,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
-                    'plover': 4
+                    'plover': 4, 'piedbilledgrebe': 4, 'loon': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -1924,48 +1984,52 @@ Beneath the warmth of coastal suns.`,
             
             updateNotebookSpeciesList() {
                 const speciesList = this.notebookElements.speciesList;
-                speciesList.innerHTML = '';
 
-                // Show empty state if no species discovered yet
-                if (this.todaysSpecies.length === 0) {
-                    this.showEmptyState();
-                    return;
-                }
+                // Check if we need to rebuild the list (new species added or list is empty)
+                const existingItems = speciesList.querySelectorAll('.species-item');
+                const needsRebuild = existingItems.length !== this.todaysSpecies.length;
 
-                // Add discovered species
-                let activeItem = null;
-                this.todaysSpecies.forEach((species, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'species-item';
-                    if (species.type === this.currentNotebookBird) {
-                        item.classList.add('active');
-                        activeItem = item;
+                if (needsRebuild) {
+                    // Full rebuild needed
+                    speciesList.innerHTML = '';
+
+                    // Show empty state if no species discovered yet
+                    if (this.todaysSpecies.length === 0) {
+                        this.showEmptyState();
+                        return;
                     }
 
-                    const nameDiv = document.createElement('div');
-                    nameDiv.className = 'species-name';
-                    nameDiv.textContent = species.count > 1 ? `${species.name} (${species.count})` : species.name;
-                    item.appendChild(nameDiv);
-                    speciesList.appendChild(item);
+                    // Add discovered species
+                    this.todaysSpecies.forEach((species, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'species-item';
+                        item.dataset.birdType = species.type;
+                        if (species.type === this.currentNotebookBird) {
+                            item.classList.add('active');
+                        }
 
-                    // Add divider after each item except the last one
-                    if (index < this.todaysSpecies.length - 1) {
-                        const divider = document.createElement('div');
-                        divider.className = 'species-divider';
-                        speciesList.appendChild(divider);
-                    }
-                });
+                        const nameDiv = document.createElement('div');
+                        nameDiv.className = 'species-name';
+                        nameDiv.textContent = species.count > 1 ? `${species.name} (${species.count})` : species.name;
+                        item.appendChild(nameDiv);
+                        speciesList.appendChild(item);
 
-                // Auto-scroll to show the active item in the species list
-                if (activeItem) {
-                    // Use setTimeout to ensure the DOM has been updated
-                    setTimeout(() => {
-                        activeItem.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'nearest',
-                            inline: 'nearest'
-                        });
-                    }, 100);
+                        // Add divider after each item except the last one
+                        if (index < this.todaysSpecies.length - 1) {
+                            const divider = document.createElement('div');
+                            divider.className = 'species-divider';
+                            speciesList.appendChild(divider);
+                        }
+                    });
+                } else {
+                    // Just update active state without rebuilding
+                    existingItems.forEach(item => {
+                        if (item.dataset.birdType === this.currentNotebookBird) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
                 }
 
                 // Species count removed from UI
@@ -2201,6 +2265,12 @@ Beneath the warmth of coastal suns.`,
                     } else if (bird.type === 'plover' && this.ploverSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.ploverSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.ploverSpriteTotalFrames;
+                    } else if (bird.type === 'piedbilledgrebe' && this.piedbilledgrebeSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.piedbilledgrebeSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.piedbilledgrebeSpriteTotalFrames;
+                    } else if (bird.type === 'loon' && this.loonSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.loonSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.loonSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
@@ -3244,6 +3314,32 @@ Beneath the warmth of coastal suns.`,
                         const destHeight = 75;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.ploverSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'piedbilledgrebe' && this.isPiedbilledgrebeSpriteSheetLoaded) {
+                        const cols = this.piedbilledgrebeSpriteSheetCols;
+                        const rows = this.piedbilledgrebeSpriteSheetRows;
+                        const frameW = this.piedbilledgrebeSpriteSheet.width / cols;
+                        const frameH = this.piedbilledgrebeSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 85;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.piedbilledgrebeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'loon' && this.isLoonSpriteSheetLoaded) {
+                        const cols = this.loonSpriteSheetCols;
+                        const rows = this.loonSpriteSheetRows;
+                        const frameW = this.loonSpriteSheet.width / cols;
+                        const frameH = this.loonSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 100;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.loonSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
