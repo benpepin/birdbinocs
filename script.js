@@ -1397,6 +1397,9 @@ A symbol of the wilderness.`,
                 const scrollPage = Math.round(scrollTop / pageHeight);
                 const currentPage = scrollPage + 2; // Convert to page 2 or 3
 
+                // Reset currentPage to force showPage to update the display
+                this.currentPage = null;
+
                 // Show the current page (2 or 3) to preserve scroll position
                 this.showPage(currentPage >= 2 && currentPage <= 3 ? currentPage : 2);
 
