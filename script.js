@@ -1372,23 +1372,23 @@ A symbol of the wilderness.`,
                 // Find the species data to get the common and scientific names
                 const speciesData = this.speciesCatalog.find(s => s.type === birdType);
 
-                // Update bird info in the bird info page
+                // Fade out bird info page during transition
+                const birdInfoPage = this.notebookElements.birdInfoPage;
+                birdInfoPage.style.opacity = '0';
+
+                // Update content while hidden
+                this.notebookElements.birdImage.src = birdData.image;
+                this.notebookElements.birdImage.style.display = 'block';
+
                 if (speciesData) {
                     this.notebookElements.birdName.textContent = speciesData.name.toUpperCase() + '.';
                     this.notebookElements.birdScientificName.textContent = speciesData.scientificName || 'Scientific name not available';
                 }
 
-                // Hide image while loading to prevent flash of wrong image
-                this.notebookElements.birdImage.style.display = 'none';
-                this.notebookElements.birdImage.src = birdData.image;
-                // Show image once it's loaded (or immediately if cached)
-                this.notebookElements.birdImage.onload = () => {
-                    this.notebookElements.birdImage.style.display = 'block';
-                };
-                // Handle cached images that don't fire onload
-                if (this.notebookElements.birdImage.complete) {
-                    this.notebookElements.birdImage.style.display = 'block';
-                }
+                // Fade back in after a brief delay to ensure image has updated
+                requestAnimationFrame(() => {
+                    birdInfoPage.style.opacity = '1';
+                });
 
                 // Update poem content
                 if (this.notebookElements.poemTitleDisplay) this.notebookElements.poemTitleDisplay.textContent = birdData.title;

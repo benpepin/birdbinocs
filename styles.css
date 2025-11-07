@@ -564,6 +564,7 @@ body {
   background: #F0E4D1;
   justify-content: center;
   align-items: center;
+  transition: opacity 0.15s ease-in-out;
 }
 
 .bird-info-content {
