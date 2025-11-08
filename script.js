@@ -95,7 +95,9 @@
                     { type: 'plover',       name: 'Snowy Plover',               scientificName: 'Charadrius nivosus', weight: 6,  points: 35, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 120, color: '#D3D3D3',  flightPattern: 'flutter' },
                     // { type: 'piedbilledgrebe', name: 'Pied-billed Grebe',       scientificName: 'Podilymbus podiceps', weight: 7,  points: 42, minSize: 20, maxSize: 28, minSpeed: 60,  maxSpeed: 90,  color: '#5C4A3A',  flightPattern: 'steady' },
                     // { type: 'loon',         name: 'Common Loon',                scientificName: 'Gavia immer', weight: 5,  points: 55, minSize: 30, maxSize: 42, minSpeed: 50,  maxSpeed: 80,  color: '#2C3E50',  flightPattern: 'steady' },
+                    { type: 'stellersjay',  name: "Steller's Jay",              scientificName: 'Cyanocitta stelleri', weight: 6,  points: 28, minSize: 16, maxSize: 24, minSpeed: 70,  maxSpeed: 115, color: '#1E3A5F',  flightPattern: 'bounce' },
                     { type: 'grackle',      name: 'Great-tailed Grackle',       scientificName: 'Quiscalus mexicanus', weight: 6,  points: 24, minSize: 18, maxSize: 26, minSpeed: 75,  maxSpeed: 120, color: '#1A1A2E',  flightPattern: 'steady' },
+                    { type: 'blackheadedgrosbeak', name: 'Black-headed Grosbeak',  scientificName: 'Pheucticus melanocephalus', weight: 7,  points: 26, minSize: 15, maxSize: 21, minSpeed: 70,  maxSpeed: 115, color: '#D2691E',  flightPattern: 'bounce' },
                     { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' },
                     { type: 'rockdove',     name: 'Rock Dove',                  scientificName: 'Columba livia', weight: 7,  points: 14, minSize: 16, maxSize: 22, minSpeed: 80,  maxSpeed: 130, color: '#6E7C8E',  flightPattern: 'steady' },
                     { type: 'whitecrownedsparrow', name: 'White-crowned Sparrow', scientificName: 'Zonotrichia leucophrys', weight: 6,  points: 20, minSize: 13, maxSize: 19, minSpeed: 90,  maxSpeed: 140, color: '#8B7D6B',  flightPattern: 'bounce' }
@@ -557,6 +559,32 @@
                     this.isLoonSpriteSheetLoaded = true;
                 };
                 this.loonSpriteSheet.src = 'assets/images/sprites/commonloon-sprite-128px-16-4.png';
+
+                // Steller's Jay-specific sprite sheet
+                this.stellersjaySpriteSheet = new Image();
+                this.isStellersjaySpriteSheetLoaded = false;
+                // Configure Steller's Jay sprite sheet layout (4x4 grid - 16 frames)
+                this.stellersjaySpriteSheetCols = 4;
+                this.stellersjaySpriteSheetRows = 4;
+                this.stellersjaySpriteTotalFrames = this.stellersjaySpriteSheetCols * this.stellersjaySpriteSheetRows;
+                this.stellersjaySpriteAnimFps = 12; // animation speed in frames per second
+                this.stellersjaySpriteSheet.onload = () => {
+                    this.isStellersjaySpriteSheetLoaded = true;
+                };
+                this.stellersjaySpriteSheet.src = 'assets/images/sprites/stellers-sprite-128px-16-4.png';
+
+                // Black-headed Grosbeak-specific sprite sheet
+                this.blackheadedgrosbeakSpriteSheet = new Image();
+                this.isBlackheadedgrosbeakSpriteSheetLoaded = false;
+                // Configure Black-headed Grosbeak sprite sheet layout (4x4 grid - 16 frames)
+                this.blackheadedgrosbeakSpriteSheetCols = 4;
+                this.blackheadedgrosbeakSpriteSheetRows = 4;
+                this.blackheadedgrosbeakSpriteTotalFrames = this.blackheadedgrosbeakSpriteSheetCols * this.blackheadedgrosbeakSpriteSheetRows;
+                this.blackheadedgrosbeakSpriteAnimFps = 12; // animation speed in frames per second
+                this.blackheadedgrosbeakSpriteSheet.onload = () => {
+                    this.isBlackheadedgrosbeakSpriteSheetLoaded = true;
+                };
+                this.blackheadedgrosbeakSpriteSheet.src = 'assets/images/sprites/blackheaded grosbeaksprite-128px-16-4.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1301,6 +1329,28 @@ A wild song beyond compare.<br>
 Black and white in checkered dress,<br>
 A symbol of the wilderness.`,
                         image: "assets/images/notebook/Commonloon.png"
+                    },
+                    stellersjay: {
+                        title: "Mountain Sentinel",
+                        author: "by Sierra Pines",
+                        poem: `Among the pines, bold and blue,<br>
+The Steller's jay comes into view.<br>
+With crested head and fearless call,<br>
+A mountain spirit, standing tall.<br>
+Through forests deep, it swoops and plays,<br>
+A jewel of the mountain ways.`,
+                        image: "assets/images/notebook/stellersjaynotebokk.png"
+                    },
+                    blackheadedgrosbeak: {
+                        title: "Summer Songster",
+                        author: "by Robin Meadows",
+                        poem: `In orchards green where blossoms grow,<br>
+The grosbeak sings from branches low.<br>
+With orange breast and ebony crown,<br>
+A melody rings through the town.<br>
+Sweet warbler of the summer breeze,<br>
+A troubadour among the trees.`,
+                        image: "assets/images/notebook/Blackheaded grosbeak.png"
                     }
                 };
             }
@@ -3374,6 +3424,32 @@ A symbol of the wilderness.`,
                         const destHeight = 100;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.loonSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'stellersjay' && this.isStellersjaySpriteSheetLoaded) {
+                        const cols = this.stellersjaySpriteSheetCols;
+                        const rows = this.stellersjaySpriteSheetRows;
+                        const frameW = this.stellersjaySpriteSheet.width / cols;
+                        const frameH = this.stellersjaySpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 75;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.stellersjaySpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'blackheadedgrosbeak' && this.isBlackheadedgrosbeakSpriteSheetLoaded) {
+                        const cols = this.blackheadedgrosbeakSpriteSheetCols;
+                        const rows = this.blackheadedgrosbeakSpriteSheetRows;
+                        const frameW = this.blackheadedgrosbeakSpriteSheet.width / cols;
+                        const frameH = this.blackheadedgrosbeakSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 70;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.blackheadedgrosbeakSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
