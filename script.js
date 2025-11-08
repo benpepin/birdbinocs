@@ -88,6 +88,7 @@
                     { type: 'duck',         name: 'Mallard',                    scientificName: 'Anas platyrhynchos', weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
                     { type: 'goose',        name: 'Canada Goose',              scientificName: 'Branta canadensis', weight: 6,  points: 35, minSize: 34, maxSize: 50, minSpeed: 60,  maxSpeed: 90,  color: '#4B3F2F',  flightPattern: 'vGlide' },
                     { type: 'pelican',      name: 'White Pelican',              scientificName: 'Pelecanus erythrorhynchos', weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#F5F5F5',  flightPattern: 'seaGlide' },
+                    { type: 'westerngull',  name: 'Western Gull',               scientificName: 'Larus occidentalis', weight: 5,  points: 30, minSize: 28, maxSize: 38, minSpeed: 50,  maxSpeed: 80,  color: '#8B8B8B',  flightPattern: 'seaGlide' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
@@ -627,6 +628,19 @@
                     this.isSpottedtowheeSpriteSheetLoaded = true;
                 };
                 this.spottedtowheeSpriteSheet.src = 'assets/images/sprites/spotted towhee sprite-128px-16-4.png';
+
+                // Western Gull-specific sprite sheet
+                this.westerngullSpriteSheet = new Image();
+                this.isWesterngullSpriteSheetLoaded = false;
+                // Configure Western Gull sprite sheet layout (4x4 grid - 16 frames)
+                this.westerngullSpriteSheetCols = 4;
+                this.westerngullSpriteSheetRows = 4;
+                this.westerngullSpriteTotalFrames = this.westerngullSpriteSheetCols * this.westerngullSpriteSheetRows;
+                this.westerngullSpriteAnimFps = 12; // animation speed in frames per second
+                this.westerngullSpriteSheet.onload = () => {
+                    this.isWesterngullSpriteSheetLoaded = true;
+                };
+                this.westerngullSpriteSheet.src = 'assets/images/sprites/westerngull sprite.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1426,6 +1440,17 @@ It kicks through leaves to find its bread.<br>
 A woodland sprite, both bold and shy,<br>
 Its "drink-your-tea" call fills the sky.`,
                         image: "assets/images/notebook/Spotted Towhee.png"
+                    },
+                    westerngull: {
+                        title: "Coast Guardian",
+                        author: "by Pacific Shores",
+                        poem: `Along the rocky coastal line,<br>
+The western gull rules maritime.<br>
+With yellow bill and piercing cry,<br>
+It soars beneath the ocean sky.<br>
+A scavenger both bold and free,<br>
+The master of the coastal sea.`,
+                        image: "assets/images/notebook/Western Gull.png"
                     }
                 };
             }
@@ -2046,7 +2071,8 @@ Its "drink-your-tea" call fills the sky.`,
                     'blackheadedgrosbeak': this.blackheadedgrosbeakSpriteSheet,
                     'mourningdove': this.mourningdoveSpriteSheet,
                     'acornwoodpecker': this.acornwoodpeckerSpriteSheet,
-                    'spottedtowhee': this.spottedtowheeSpriteSheet
+                    'spottedtowhee': this.spottedtowheeSpriteSheet,
+                    'westerngull': this.westerngullSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -2061,7 +2087,7 @@ Its "drink-your-tea" call fills the sky.`,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
                     'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
-                    'spottedtowhee': 4
+                    'spottedtowhee': 4, 'westerngull': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -2076,7 +2102,7 @@ Its "drink-your-tea" call fills the sky.`,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
                     'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
-                    'spottedtowhee': 4
+                    'spottedtowhee': 4, 'westerngull': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -3573,6 +3599,19 @@ Its "drink-your-tea" call fills the sky.`,
                         const destHeight = 71;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.spottedtowheeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'westerngull' && this.isWesterngullSpriteSheetLoaded) {
+                        const cols = this.westerngullSpriteSheetCols;
+                        const rows = this.westerngullSpriteSheetRows;
+                        const frameW = this.westerngullSpriteSheet.width / cols;
+                        const frameH = this.westerngullSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 90;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.westerngullSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
