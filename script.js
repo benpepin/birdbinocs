@@ -102,7 +102,8 @@
                     { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' },
                     { type: 'rockdove',     name: 'Rock Dove',                  scientificName: 'Columba livia', weight: 7,  points: 14, minSize: 16, maxSize: 22, minSpeed: 80,  maxSpeed: 130, color: '#6E7C8E',  flightPattern: 'steady' },
                     { type: 'mourningdove', name: 'Mourning Dove',              scientificName: 'Zenaida macroura', weight: 6,  points: 18, minSize: 15, maxSize: 22, minSpeed: 75,  maxSpeed: 120, color: '#B5A397',  flightPattern: 'steady' },
-                    { type: 'whitecrownedsparrow', name: 'White-crowned Sparrow', scientificName: 'Zonotrichia leucophrys', weight: 6,  points: 20, minSize: 13, maxSize: 19, minSpeed: 90,  maxSpeed: 140, color: '#8B7D6B',  flightPattern: 'bounce' }
+                    { type: 'whitecrownedsparrow', name: 'White-crowned Sparrow', scientificName: 'Zonotrichia leucophrys', weight: 6,  points: 20, minSize: 13, maxSize: 19, minSpeed: 90,  maxSpeed: 140, color: '#8B7D6B',  flightPattern: 'bounce' },
+                    { type: 'spottedtowhee', name: 'Spotted Towhee',            scientificName: 'Pipilo maculatus', weight: 6,  points: 24, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 125, color: '#3D1F1F',  flightPattern: 'bounce' }
                 ];
                 
                 // Bird journal system
@@ -613,6 +614,19 @@
                     this.isAcornwoodpeckerSpriteSheetLoaded = true;
                 };
                 this.acornwoodpeckerSpriteSheet.src = 'assets/images/sprites/acornwoodpeckersprite-128px-16-4.png';
+
+                // Spotted Towhee-specific sprite sheet
+                this.spottedtowheeSpriteSheet = new Image();
+                this.isSpottedtowheeSpriteSheetLoaded = false;
+                // Configure Spotted Towhee sprite sheet layout (4x4 grid - 16 frames)
+                this.spottedtowheeSpriteSheetCols = 4;
+                this.spottedtowheeSpriteSheetRows = 4;
+                this.spottedtowheeSpriteTotalFrames = this.spottedtowheeSpriteSheetCols * this.spottedtowheeSpriteSheetRows;
+                this.spottedtowheeSpriteAnimFps = 12; // animation speed in frames per second
+                this.spottedtowheeSpriteSheet.onload = () => {
+                    this.isSpottedtowheeSpriteSheetLoaded = true;
+                };
+                this.spottedtowheeSpriteSheet.src = 'assets/images/sprites/spotted towhee sprite-128px-16-4.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1401,6 +1415,17 @@ Thousands of acorns, organized.<br>
 A master hoarder, bold and bright,<br>
 A striking bird in black and white.`,
                         image: "assets/images/notebook/acorn woodpecker.png"
+                    },
+                    spottedtowhee: {
+                        title: "Ground Dweller",
+                        author: "by Forest Floor",
+                        poem: `In undergrowth with scratching sound,<br>
+The spotted towhee scours the ground.<br>
+With rusty flanks and eyes of red,<br>
+It kicks through leaves to find its bread.<br>
+A woodland sprite, both bold and shy,<br>
+Its "drink-your-tea" call fills the sky.`,
+                        image: "assets/images/notebook/Spotted Towhee.png"
                     }
                 };
             }
@@ -2020,7 +2045,8 @@ A striking bird in black and white.`,
                     'stellersjay': this.stellersjaySpriteSheet,
                     'blackheadedgrosbeak': this.blackheadedgrosbeakSpriteSheet,
                     'mourningdove': this.mourningdoveSpriteSheet,
-                    'acornwoodpecker': this.acornwoodpeckerSpriteSheet
+                    'acornwoodpecker': this.acornwoodpeckerSpriteSheet,
+                    'spottedtowhee': this.spottedtowheeSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -2034,7 +2060,8 @@ A striking bird in black and white.`,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
-                    'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4
+                    'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
+                    'spottedtowhee': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -2048,7 +2075,8 @@ A striking bird in black and white.`,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
-                    'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4
+                    'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
+                    'spottedtowhee': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -3532,6 +3560,19 @@ A striking bird in black and white.`,
                         const destHeight = 74;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.acornwoodpeckerSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'spottedtowhee' && this.isSpottedtowheeSpriteSheetLoaded) {
+                        const cols = this.spottedtowheeSpriteSheetCols;
+                        const rows = this.spottedtowheeSpriteSheetRows;
+                        const frameW = this.spottedtowheeSpriteSheet.width / cols;
+                        const frameH = this.spottedtowheeSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 71;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.spottedtowheeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
