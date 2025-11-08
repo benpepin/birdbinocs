@@ -77,6 +77,7 @@
                     { type: 'swallow',      name: 'Barn Swallow',              scientificName: 'Hirundo rustica', weight: 0,  points: 24, minSize: 12, maxSize: 18, minSpeed: 110, maxSpeed: 170, color: '#1E3A8A',  flightPattern: 'swoop' },
                     { type: 'oriole',       name: 'Baltimore Oriole',          scientificName: 'Icterus galbula', weight: 4,  points: 28, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 130, color: '#FF8C00',  flightPattern: 'sineSlow' },
                     { type: 'woodpecker',   name: 'Downy Woodpecker',          scientificName: 'Picoides pubescens', weight: 5,  points: 26, minSize: 14, maxSize: 20, minSpeed: 60,  maxSpeed: 90,  color: '#2F4F4F',  flightPattern: 'zigzag' },
+                    { type: 'acornwoodpecker', name: 'Acorn Woodpecker',       scientificName: 'Melanerpes formicivorus', weight: 5,  points: 32, minSize: 16, maxSize: 22, minSpeed: 65,  maxSpeed: 95,  color: '#8B4513',  flightPattern: 'zigzag' },
                     { type: 'crow',         name: 'American Crow',             scientificName: 'Corvus brachyrhynchos', weight: 5,  points: 20, minSize: 22, maxSize: 30, minSpeed: 60,  maxSpeed: 100, color: '#111111',  flightPattern: 'glide' },
                     { type: 'raven',        name: 'Common Raven',              scientificName: 'Corvus corax', weight: 3,  points: 30, minSize: 24, maxSize: 34, minSpeed: 60,  maxSpeed: 100, color: '#0B0B0B',  flightPattern: 'glide' },
                     { type: 'owl',          name: 'Great Horned Owl',          scientificName: 'Bubo virginianus', weight: 0,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
@@ -599,6 +600,19 @@
                     this.isMourningdoveSpriteSheetLoaded = true;
                 };
                 this.mourningdoveSpriteSheet.src = 'assets/images/sprites/mourning dove-sprite-128px-16 (2).png';
+
+                // Acorn Woodpecker-specific sprite sheet
+                this.acornwoodpeckerSpriteSheet = new Image();
+                this.isAcornwoodpeckerSpriteSheetLoaded = false;
+                // Configure Acorn Woodpecker sprite sheet layout (4x4 grid - 16 frames)
+                this.acornwoodpeckerSpriteSheetCols = 4;
+                this.acornwoodpeckerSpriteSheetRows = 4;
+                this.acornwoodpeckerSpriteTotalFrames = this.acornwoodpeckerSpriteSheetCols * this.acornwoodpeckerSpriteSheetRows;
+                this.acornwoodpeckerSpriteAnimFps = 12; // animation speed in frames per second
+                this.acornwoodpeckerSpriteSheet.onload = () => {
+                    this.isAcornwoodpeckerSpriteSheetLoaded = true;
+                };
+                this.acornwoodpeckerSpriteSheet.src = 'assets/images/sprites/acornwoodpeckersprite-128px-16-4.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1376,6 +1390,17 @@ A peaceful presence, soft and light.<br>
 Through fields and yards its song does flow,<br>
 A soothing voice both high and low.`,
                         image: "assets/images/notebook/Mourning Dove.png"
+                    },
+                    acornwoodpecker: {
+                        title: "Keeper of the Oaks",
+                        author: "by Oak Valley",
+                        poem: `With clownish face and crimson cap,<br>
+The acorn woodpecker fills the gap.<br>
+In oak tree homes it stores its prize,<br>
+Thousands of acorns, organized.<br>
+A master hoarder, bold and bright,<br>
+A striking bird in black and white.`,
+                        image: "assets/images/notebook/acorn woodpecker.png"
                     }
                 };
             }
@@ -1991,7 +2016,11 @@ A soothing voice both high and low.`,
                     'whitecrownedsparrow': this.whitecrownedsparrowSpriteSheet,
                     'plover': this.ploverSpriteSheet,
                     'piedbilledgrebe': this.piedbilledgrebeSpriteSheet,
-                    'loon': this.loonSpriteSheet
+                    'loon': this.loonSpriteSheet,
+                    'stellersjay': this.stellersjaySpriteSheet,
+                    'blackheadedgrosbeak': this.blackheadedgrosbeakSpriteSheet,
+                    'mourningdove': this.mourningdoveSpriteSheet,
+                    'acornwoodpecker': this.acornwoodpeckerSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -2004,7 +2033,8 @@ A soothing voice both high and low.`,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
-                    'plover': 4, 'piedbilledgrebe': 4, 'loon': 4
+                    'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
+                    'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -2017,7 +2047,8 @@ A soothing voice both high and low.`,
                     'hawk': 6, 'hummingbird': 4, 'heron': 5, 'owl': 5,
                     'oriole': 5, 'raven': 4, 'kingfisher': 4, 'vulture': 4, 'stilt': 4,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
-                    'plover': 4, 'piedbilledgrebe': 4, 'loon': 4
+                    'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
+                    'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -3488,6 +3519,19 @@ A soothing voice both high and low.`,
                         const destHeight = 72;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.mourningdoveSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'acornwoodpecker' && this.isAcornwoodpeckerSpriteSheetLoaded) {
+                        const cols = this.acornwoodpeckerSpriteSheetCols;
+                        const rows = this.acornwoodpeckerSpriteSheetRows;
+                        const frameW = this.acornwoodpeckerSpriteSheet.width / cols;
+                        const frameH = this.acornwoodpeckerSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 74;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.acornwoodpeckerSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
