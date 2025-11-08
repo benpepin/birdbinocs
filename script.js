@@ -1353,7 +1353,7 @@ With crested head and fearless call,<br>
 A mountain spirit, standing tall.<br>
 Through forests deep, it swoops and plays,<br>
 A jewel of the mountain ways.`,
-                        image: "assets/images/notebook/stellersjaynotebokk.png"
+                        image: "assets/images/notebook/stellersjaynotebook.png"
                     },
                     blackheadedgrosbeak: {
                         title: "Summer Songster",
