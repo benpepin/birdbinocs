@@ -529,7 +529,7 @@ body {
 .bird-image-container img {
   width: 158px;
   height: 195px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .bird-label {

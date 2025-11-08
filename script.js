@@ -100,6 +100,7 @@
                     { type: 'blackheadedgrosbeak', name: 'Black-headed Grosbeak',  scientificName: 'Pheucticus melanocephalus', weight: 7,  points: 26, minSize: 15, maxSize: 21, minSpeed: 70,  maxSpeed: 115, color: '#D2691E',  flightPattern: 'bounce' },
                     { type: 'housefinch',   name: 'House Finch',                scientificName: 'Haemorhous mexicanus', weight: 8,  points: 16, minSize: 12, maxSize: 18, minSpeed: 65,  maxSpeed: 110, color: '#DC143C',  flightPattern: 'bounce' },
                     { type: 'rockdove',     name: 'Rock Dove',                  scientificName: 'Columba livia', weight: 7,  points: 14, minSize: 16, maxSize: 22, minSpeed: 80,  maxSpeed: 130, color: '#6E7C8E',  flightPattern: 'steady' },
+                    { type: 'mourningdove', name: 'Mourning Dove',              scientificName: 'Zenaida macroura', weight: 6,  points: 18, minSize: 15, maxSize: 22, minSpeed: 75,  maxSpeed: 120, color: '#B5A397',  flightPattern: 'steady' },
                     { type: 'whitecrownedsparrow', name: 'White-crowned Sparrow', scientificName: 'Zonotrichia leucophrys', weight: 6,  points: 20, minSize: 13, maxSize: 19, minSpeed: 90,  maxSpeed: 140, color: '#8B7D6B',  flightPattern: 'bounce' }
                 ];
                 
@@ -585,6 +586,19 @@
                     this.isBlackheadedgrosbeakSpriteSheetLoaded = true;
                 };
                 this.blackheadedgrosbeakSpriteSheet.src = 'assets/images/sprites/blackheaded grosbeaksprite-128px-16-4.png';
+
+                // Mourning Dove-specific sprite sheet
+                this.mourningdoveSpriteSheet = new Image();
+                this.isMourningdoveSpriteSheetLoaded = false;
+                // Configure Mourning Dove sprite sheet layout (4x4 grid - 16 frames)
+                this.mourningdoveSpriteSheetCols = 4;
+                this.mourningdoveSpriteSheetRows = 4;
+                this.mourningdoveSpriteTotalFrames = this.mourningdoveSpriteSheetCols * this.mourningdoveSpriteSheetRows;
+                this.mourningdoveSpriteAnimFps = 12; // animation speed in frames per second
+                this.mourningdoveSpriteSheet.onload = () => {
+                    this.isMourningdoveSpriteSheetLoaded = true;
+                };
+                this.mourningdoveSpriteSheet.src = 'assets/images/sprites/mourning dove-sprite-128px-16 (2).png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -1351,6 +1365,17 @@ A melody rings through the town.<br>
 Sweet warbler of the summer breeze,<br>
 A troubadour among the trees.`,
                         image: "assets/images/notebook/Blackheaded grosbeak.png"
+                    },
+                    mourningdove: {
+                        title: "Dawn's Gentle Voice",
+                        author: "by Olivia Dawn",
+                        poem: `In morning light with mournful coo,<br>
+The gentle dove greets morning's dew.<br>
+With tapered tail and graceful flight,<br>
+A peaceful presence, soft and light.<br>
+Through fields and yards its song does flow,<br>
+A soothing voice both high and low.`,
+                        image: "assets/images/notebook/Mourning Dove.png"
                     }
                 };
             }
@@ -3450,6 +3475,19 @@ A troubadour among the trees.`,
                         const destHeight = 70;
                         const destWidth = destHeight * aspectRatio;
                         ctx.drawImage(this.blackheadedgrosbeakSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                    } else if (bird.type === 'mourningdove' && this.isMourningdoveSpriteSheetLoaded) {
+                        const cols = this.mourningdoveSpriteSheetCols;
+                        const rows = this.mourningdoveSpriteSheetRows;
+                        const frameW = this.mourningdoveSpriteSheet.width / cols;
+                        const frameH = this.mourningdoveSpriteSheet.height / rows;
+                        const frameIndex = bird.frameIndex % (cols * rows);
+                        const sx = (frameIndex % cols) * frameW;
+                        const sy = Math.floor(frameIndex / cols) * frameH;
+                        // Draw frame maintaining aspect ratio
+                        const aspectRatio = frameW / frameH;
+                        const destHeight = 72;
+                        const destWidth = destHeight * aspectRatio;
+                        ctx.drawImage(this.mourningdoveSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
