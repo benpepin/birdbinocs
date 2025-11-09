@@ -37,17 +37,21 @@
             constructor() {
                 this.canvas = document.getElementById('gameCanvas');
                 this.ctx = this.canvas.getContext('2d');
-                
+
+                // Create off-screen canvas for binocular zoom rendering (performance optimization)
+                this.offscreenCanvas = document.createElement('canvas');
+                this.offscreenCtx = this.offscreenCanvas.getContext('2d');
+
                 // Game state
                 this.isRunning = false;
                 this.frameCount = 0;
                 this.lastTime = 0;
                 this.fps = 0;
                 this.deltaTime = 0;
-                
+
                 // Mouse state
                 this.mouse = { x: 0, y: 0, isDown: false };
-                
+
                 // Binocular system
                 this.binoculars = {
                     isActive: false,
@@ -83,12 +87,13 @@
                     { type: 'owl',          name: 'Great Horned Owl',          scientificName: 'Bubo virginianus', weight: 0,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
                     { type: 'vulture',      name: 'Turkey Vulture',            scientificName: 'Cathartes aura', weight: 6,  points: 50, minSize: 32, maxSize: 46, minSpeed: 35,  maxSpeed: 65,  color: '#3D2817',  flightPattern: 'sineVerySlow' },
                     { type: 'hawk',         name: 'Red-tailed Hawk',           scientificName: 'Buteo jamaicensis', weight: 0,  points: 40, minSize: 35, maxSize: 50, minSpeed: 30,  maxSpeed: 60,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
-                    { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 3,  points: 80, minSize: 40, maxSize: 60, minSpeed: 105,  maxSpeed: 165,  color: '#5C4033',  flightPattern: 'majestic' },
+                    { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 2,  points: 80, minSize: 30, maxSize: 45, minSpeed: 105,  maxSpeed: 165,  color: '#5C4033',  flightPattern: 'majestic' },
                     { type: 'heron',        name: 'Great Blue Heron',          scientificName: 'Ardea herodias', weight: 0,  points: 70, minSize: 38, maxSize: 55, minSpeed: 60,  maxSpeed: 85,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
                     { type: 'duck',         name: 'Mallard',                    scientificName: 'Anas platyrhynchos', weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
                     { type: 'goose',        name: 'Canada Goose',              scientificName: 'Branta canadensis', weight: 6,  points: 35, minSize: 34, maxSize: 50, minSpeed: 60,  maxSpeed: 90,  color: '#4B3F2F',  flightPattern: 'vGlide' },
                     { type: 'pelican',      name: 'White Pelican',              scientificName: 'Pelecanus erythrorhynchos', weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#F5F5F5',  flightPattern: 'seaGlide' },
                     { type: 'westerngull',  name: 'Western Gull',               scientificName: 'Larus occidentalis', weight: 5,  points: 30, minSize: 28, maxSize: 38, minSpeed: 50,  maxSpeed: 80,  color: '#8B8B8B',  flightPattern: 'seaGlide' },
+                    { type: 'cormorant',    name: 'Double-crested Cormorant',   scientificName: 'Nannopterum auritum', weight: 4,  points: 35, minSize: 26, maxSize: 36, minSpeed: 60,  maxSpeed: 95,  color: '#2C2C2C',  flightPattern: 'steady' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
@@ -642,15 +647,69 @@
                 };
                 this.westerngullSpriteSheet.src = 'assets/images/sprites/westerngull sprite.png';
 
+                // Double-crested Cormorant-specific sprite sheet
+                this.cormorantSpriteSheet = new Image();
+                this.isCormorantSpriteSheetLoaded = false;
+                // Configure cormorant sprite sheet layout (4x4 grid - 16 frames)
+                this.cormorantSpriteSheetCols = 4;
+                this.cormorantSpriteSheetRows = 4;
+                this.cormorantSpriteTotalFrames = this.cormorantSpriteSheetCols * this.cormorantSpriteSheetRows;
+                this.cormorantSpriteAnimFps = 12; // animation speed in frames per second
+                this.cormorantSpriteSheet.onload = () => {
+                    this.isCormorantSpriteSheetLoaded = true;
+                };
+                this.cormorantSpriteSheet.src = 'assets/images/sprites/doublecrestedcormorant-sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
-                
+
+                // PERFORMANCE OPTIMIZATION: Sprite lookup table for O(1) sprite selection
+                // Maps bird type to sprite configuration (replaces 500-line if-else chain)
+                this.spriteConfig = {
+                    'flamingo': { sheet: 'flamingoSpriteSheet', loaded: 'isFlamingoSpriteSheetLoaded', cols: 'flamingoSpriteSheetCols', rows: 'flamingoSpriteSheetRows', height: 80 },
+                    'robin': { sheet: 'robinSpriteSheet', loaded: 'isRobinSpriteSheetLoaded', cols: 'robinSpriteSheetCols', rows: 'robinSpriteSheetRows', height: 80 },
+                    'cardinal': { sheet: 'cardinalSpriteSheet', loaded: 'isCardinalSpriteSheetLoaded', cols: 'cardinalSpriteSheetCols', rows: 'cardinalSpriteSheetRows', height: 80 },
+                    'woodpecker': { sheet: 'woodpeckerSpriteSheet', loaded: 'isWoodpeckerSpriteSheetLoaded', cols: 'woodpeckerSpriteSheetCols', rows: 'woodpeckerSpriteSheetRows', height: 80 },
+                    'duck': { sheet: 'mallardSpriteSheet', loaded: 'isMallardSpriteSheetLoaded', cols: 'mallardSpriteSheetCols', rows: 'mallardSpriteSheetRows', height: 80 },
+                    'goldfinch': { sheet: 'goldfinchSpriteSheet', loaded: 'isGoldfinchSpriteSheetLoaded', cols: 'goldfinchSpriteSheetCols', rows: 'goldfinchSpriteSheetRows', height: 80 },
+                    'pelican': { sheet: 'pelicanSpriteSheet', loaded: 'isPelicanSpriteSheetLoaded', cols: 'pelicanSpriteSheetCols', rows: 'pelicanSpriteSheetRows', height: 80 },
+                    'bluejay': { sheet: 'bluejaySpriteSheet', loaded: 'isBluejayeSpriteSheetLoaded', cols: 'bluejaySpriteSheetCols', rows: 'bluejaySpriteSheetRows', height: 80 },
+                    'chickadee': { sheet: 'chickadeeSpriteSheet', loaded: 'isChickadeeSpriteSheetLoaded', cols: 'chickadeeSpriteSheetCols', rows: 'chickadeeSpriteSheetRows', height: 80 },
+                    'eagle': { sheet: 'baldeagleSpriteSheet', loaded: 'isBaldEagleSpriteSheetLoaded', cols: 'baldeagleSpriteSheetCols', rows: 'baldeagleSpriteSheetRows', height: 120 },
+                    'crow': { sheet: 'crowSpriteSheet', loaded: 'isCrowSpriteSheetLoaded', cols: 'crowSpriteSheetCols', rows: 'crowSpriteSheetRows', height: 80 },
+                    'goose': { sheet: 'gooseSpriteSheet', loaded: 'isGooseSpriteSheetLoaded', cols: 'gooseSpriteSheetCols', rows: 'gooseSpriteSheetRows', height: 80 },
+                    'hawk': { sheet: 'hawkSpriteSheet', loaded: 'isHawkSpriteSheetLoaded', cols: 'hawkSpriteSheetCols', rows: 'hawkSpriteSheetRows', height: 80 },
+                    'hummingbird': { sheet: 'hummingbirdSpriteSheet', loaded: 'isHummingbirdSpriteSheetLoaded', cols: 'hummingbirdSpriteSheetCols', rows: 'hummingbirdSpriteSheetRows', height: 80 },
+                    'heron': { sheet: 'heronSpriteSheet', loaded: 'isHeronSpriteSheetLoaded', cols: 'heronSpriteSheetCols', rows: 'heronSpriteSheetRows', height: 80 },
+                    'owl': { sheet: 'owlSpriteSheet', loaded: 'isOwlSpriteSheetLoaded', cols: 'owlSpriteSheetCols', rows: 'owlSpriteSheetRows', height: 80 },
+                    'vulture': { sheet: 'vultureSpriteSheet', loaded: 'isVultureSpriteSheetLoaded', cols: 'vultureSpriteSheetCols', rows: 'vultureSpriteSheetRows', height: 90 },
+                    'oriole': { sheet: 'oriolSpriteSheet', loaded: 'isOriolSpriteSheetLoaded', cols: 'oriolSpriteSheetCols', rows: 'oriolSpriteSheetRows', height: 80 },
+                    'raven': { sheet: 'ravenSpriteSheet', loaded: 'isRavenSpriteSheetLoaded', cols: 'ravenSpriteSheetCols', rows: 'ravenSpriteSheetRows', height: 80 },
+                    'kingfisher': { sheet: 'kingfisherSpriteSheet', loaded: 'isKingfisherSpriteSheetLoaded', cols: 'kingfisherSpriteSheetCols', rows: 'kingfisherSpriteSheetRows', height: 80 },
+                    'stilt': { sheet: 'stiltSpriteSheet', loaded: 'isStiltSpriteSheetLoaded', cols: 'stiltSpriteSheetCols', rows: 'stiltSpriteSheetRows', height: 80 },
+                    'grebe': { sheet: 'grebeSpriteSheet', loaded: 'isGrebeSpriteSheetLoaded', cols: 'grebeSpriteSheetCols', rows: 'grebeSpriteSheetRows', height: 80 },
+                    'grackle': { sheet: 'grackleSpriteSheet', loaded: 'isGrackleSpriteSheetLoaded', cols: 'grackleSpriteSheetCols', rows: 'grackleSpriteSheetRows', height: 75 },
+                    'housefinch': { sheet: 'housefinchSpriteSheet', loaded: 'isHousefinchSpriteSheetLoaded', cols: 'housefinchSpriteSheetCols', rows: 'housefinchSpriteSheetRows', height: 80 },
+                    'rockdove': { sheet: 'rockdoveSpriteSheet', loaded: 'isRockdoveSpriteSheetLoaded', cols: 'rockdoveSpriteSheetCols', rows: 'rockdoveSpriteSheetRows', height: 85 },
+                    'whitecrownedsparrow': { sheet: 'whitecrownedsparrowSpriteSheet', loaded: 'isWhitecrownedsparrowSpriteSheetLoaded', cols: 'whitecrownedsparrowSpriteSheetCols', rows: 'whitecrownedsparrowSpriteSheetRows', height: 80 },
+                    'plover': { sheet: 'ploverSpriteSheet', loaded: 'isPloverSpriteSheetLoaded', cols: 'ploverSpriteSheetCols', rows: 'ploverSpriteSheetRows', height: 75 },
+                    'piedbilledgrebe': { sheet: 'piedbilledgrebeSpriteSheet', loaded: 'isPiedbilledgrebeSpriteSheetLoaded', cols: 'piedbilledgrebeSpriteSheetCols', rows: 'piedbilledgrebeSpriteSheetRows', height: 85 },
+                    'loon': { sheet: 'loonSpriteSheet', loaded: 'isLoonSpriteSheetLoaded', cols: 'loonSpriteSheetCols', rows: 'loonSpriteSheetRows', height: 100 },
+                    'stellersjay': { sheet: 'stellersjaySpriteSheet', loaded: 'isStellersjaySpriteSheetLoaded', cols: 'stellersjaySpriteSheetCols', rows: 'stellersjaySpriteSheetRows', height: 75 },
+                    'blackheadedgrosbeak': { sheet: 'blackheadedgrosbeakSpriteSheet', loaded: 'isBlackheadedgrosbeakSpriteSheetLoaded', cols: 'blackheadedgrosbeakSpriteSheetCols', rows: 'blackheadedgrosbeakSpriteSheetRows', height: 70 },
+                    'mourningdove': { sheet: 'mourningdoveSpriteSheet', loaded: 'isMourningdoveSpriteSheetLoaded', cols: 'mourningdoveSpriteSheetCols', rows: 'mourningdoveSpriteSheetRows', height: 72 },
+                    'acornwoodpecker': { sheet: 'acornwoodpeckerSpriteSheet', loaded: 'isAcornwoodpeckerSpriteSheetLoaded', cols: 'acornwoodpeckerSpriteSheetCols', rows: 'acornwoodpeckerSpriteSheetRows', height: 74 },
+                    'spottedtowhee': { sheet: 'spottedtowheeSpriteSheet', loaded: 'isSpottedtowheeSpriteSheetLoaded', cols: 'spottedtowheeSpriteSheetCols', rows: 'spottedtowheeSpriteSheetRows', height: 71 },
+                    'westerngull': { sheet: 'westerngullSpriteSheet', loaded: 'isWesterngullSpriteSheetLoaded', cols: 'westerngullSpriteSheetCols', rows: 'westerngullSpriteSheetRows', height: 90 },
+                    'cormorant': { sheet: 'cormorantSpriteSheet', loaded: 'isCormorantSpriteSheetLoaded', cols: 'cormorantSpriteSheetCols', rows: 'cormorantSpriteSheetRows', height: 85 }
+                };
+
                 // Notebook system
                 this.notebookData = this.createNotebookData();
                 this.currentNotebookBird = null;
                 this.notebookOpen = true;
                 this.currentPage = 1; // Track current page to avoid unnecessary DOM updates
-                
+
                 // Game settings - now dynamic based on viewport
                 this.updateCanvasSize();
                 
@@ -689,7 +748,12 @@
                 this.canvas.width = this.canvasWidth;
                 this.canvas.height = this.canvasHeight;
                 this.ctx.imageSmoothingEnabled = true;
-                
+
+                // Set up offscreen canvas for binocular rendering (same size as main canvas)
+                this.offscreenCanvas.width = this.canvasWidth;
+                this.offscreenCanvas.height = this.canvasHeight;
+                this.offscreenCtx.imageSmoothingEnabled = true;
+
                 // Set canvas style to fill the entire viewport
                 this.canvas.style.width = '100vw';
                 this.canvas.style.height = '100vh';
@@ -2362,10 +2426,16 @@ The master of the coastal sea.`,
                 const maxSpeed = selected.maxSpeed;
                 const birdName = selected.name;
 
+                // Eagles fly in the top 20% of the screen
+                const screenHeight = this.frameBounds.bottom - this.frameBounds.top;
+                const yRange = selected.type === 'eagle'
+                    ? screenHeight * 0.2  // Top 20% for eagles
+                    : screenHeight - 100;  // Full height for other birds
+
                 const bird = {
                     id: Date.now() + Math.random(),
                     x: this.frameBounds.left - 50,
-                    y: this.frameBounds.top + Math.random() * (this.frameBounds.bottom - this.frameBounds.top - 100),
+                    y: this.frameBounds.top + Math.random() * yRange,
                     velocityX: minSpeed + Math.random() * (maxSpeed - minSpeed),
                     velocityY: (Math.random() - 0.5) * 20,
                     type: selected.type,
@@ -2752,31 +2822,42 @@ The master of the coastal sea.`,
             
             renderBinocularView() {
                 const ctx = this.ctx;
-
-                // 1) Draw normal (unzoomed) scene
-                this.drawBackground();
-                this.drawBirds();
-
-                // 2) Draw zoomed scene clipped to circular view
                 const centerX = this.binoculars.x;
                 const centerY = this.binoculars.y;
                 const radius = this.binoculars.viewRadius;
 
+                // 1) Draw normal (unzoomed) background and birds to main canvas
+                this.drawBackground();
+                this.drawBirds();
+
+                // 2) Draw zoomed scene to offscreen canvas (PERFORMANCE: avoid redrawing background/birds twice)
+                const offCtx = this.offscreenCtx;
+                offCtx.save();
+                offCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+                // Apply zoom transformation on offscreen canvas
+                offCtx.translate(centerX, centerY);
+                offCtx.scale(this.binoculars.zoomLevel, this.binoculars.zoomLevel);
+                offCtx.translate(-centerX, -centerY);
+
+                // Draw zoomed background and birds to offscreen canvas
+                const tempCtx = this.ctx;
+                this.ctx = offCtx;
+                this.drawBackground();
+                this.drawBirds();
+                this.ctx = tempCtx;
+
+                offCtx.restore();
+
+                // 3) Copy circular region from offscreen canvas to main canvas
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
                 ctx.clip();
-
-                ctx.translate(centerX, centerY);
-                ctx.scale(this.binoculars.zoomLevel, this.binoculars.zoomLevel);
-                ctx.translate(-centerX, -centerY);
-
-                this.drawBackground();
-                this.drawBirds();
-
+                ctx.drawImage(this.offscreenCanvas, 0, 0);
                 ctx.restore();
 
-                // 3) Draw particles clipped to scope but NOT zoomed
+                // 4) Draw particles clipped to scope but NOT zoomed
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -2784,7 +2865,7 @@ The master of the coastal sea.`,
                 this.drawParticles();
                 ctx.restore();
 
-                // 4) HUD/overlays on top (not zoomed) - only draw if binoculars are still active
+                // 5) HUD/overlays on top (not zoomed) - only draw if binoculars are still active
                 if (this.binoculars.isActive) {
                     this.drawBinocularMask();
                 }
@@ -3141,477 +3222,41 @@ The master of the coastal sea.`,
             
             drawBirds() {
                 const ctx = this.ctx;
-                
+
                 this.birds.forEach(bird => {
                     ctx.save();
                     ctx.translate(bird.x, bird.y);
-                    
+
                     const size = bird.size;
                     const wingFlap = Math.sin(bird.wingPhase) * 0.3;
-                    
+
                     // Scale the sprite based on bird size
                     const scale = size / 15; // Base size is 15, so scale accordingly (doubled from 30)
                     ctx.scale(scale, scale);
-                    
+
                     // Apply wing flapping animation by scaling vertically
                     ctx.scale(1, 1 + wingFlap * 0.2);
-                    
-                    // Use specific sprite sheets for flamingos, robins, cardinals, woodpeckers, mallards, goldfinch, pelican, bluejay, chickadee, bald eagle, crow, and house finch, regular sprite sheet for others
-                    if (bird.type === 'flamingo' && this.isFlamingoSpriteSheetLoaded) {
-                        const cols = this.flamingoSpriteSheetCols;
-                        const rows = this.flamingoSpriteSheetRows;
-                        const frameW = this.flamingoSpriteSheet.width / cols;
-                        const frameH = this.flamingoSpriteSheet.height / rows;
+
+                    // PERFORMANCE: Use O(1) sprite lookup table instead of O(n) if-else chain
+                    const spriteInfo = this.spriteConfig[bird.type];
+                    if (spriteInfo && this[spriteInfo.loaded]) {
+                        // Get sprite data from lookup table
+                        const spriteSheet = this[spriteInfo.sheet];
+                        const cols = this[spriteInfo.cols];
+                        const rows = this[spriteInfo.rows];
+                        const destHeight = spriteInfo.height;
+
+                        // Calculate frame position
+                        const frameW = spriteSheet.width / cols;
+                        const frameH = spriteSheet.height / rows;
                         const frameIndex = bird.frameIndex % (cols * rows);
                         const sx = (frameIndex % cols) * frameW;
                         const sy = Math.floor(frameIndex / cols) * frameH;
+
                         // Draw frame maintaining aspect ratio
                         const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
                         const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.flamingoSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'robin' && this.isRobinSpriteSheetLoaded) {
-                        const cols = this.robinSpriteSheetCols;
-                        const rows = this.robinSpriteSheetRows;
-                        const frameW = this.robinSpriteSheet.width / cols;
-                        const frameH = this.robinSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.robinSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'cardinal' && this.isCardinalSpriteSheetLoaded) {
-                        const cols = this.cardinalSpriteSheetCols;
-                        const rows = this.cardinalSpriteSheetRows;
-                        const frameW = this.cardinalSpriteSheet.width / cols;
-                        const frameH = this.cardinalSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.cardinalSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'woodpecker' && this.isWoodpeckerSpriteSheetLoaded) {
-                        const cols = this.woodpeckerSpriteSheetCols;
-                        const rows = this.woodpeckerSpriteSheetRows;
-                        const frameW = this.woodpeckerSpriteSheet.width / cols;
-                        const frameH = this.woodpeckerSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.woodpeckerSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'duck' && this.isMallardSpriteSheetLoaded) {
-                        const cols = this.mallardSpriteSheetCols;
-                        const rows = this.mallardSpriteSheetRows;
-                        const frameW = this.mallardSpriteSheet.width / cols;
-                        const frameH = this.mallardSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.mallardSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'goldfinch' && this.isGoldfinchSpriteSheetLoaded) {
-                        const cols = this.goldfinchSpriteSheetCols;
-                        const rows = this.goldfinchSpriteSheetRows;
-                        const frameW = this.goldfinchSpriteSheet.width / cols;
-                        const frameH = this.goldfinchSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.goldfinchSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'pelican' && this.isPelicanSpriteSheetLoaded) {
-                        const cols = this.pelicanSpriteSheetCols;
-                        const rows = this.pelicanSpriteSheetRows;
-                        const frameW = this.pelicanSpriteSheet.width / cols;
-                        const frameH = this.pelicanSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.pelicanSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'bluejay' && this.isBluejayeSpriteSheetLoaded) {
-                        const cols = this.bluejaySpriteSheetCols;
-                        const rows = this.bluejaySpriteSheetRows;
-                        const frameW = this.bluejaySpriteSheet.width / cols;
-                        const frameH = this.bluejaySpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.bluejaySpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'chickadee' && this.isChickadeeSpriteSheetLoaded) {
-                        const cols = this.chickadeeSpriteSheetCols;
-                        const rows = this.chickadeeSpriteSheetRows;
-                        const frameW = this.chickadeeSpriteSheet.width / cols;
-                        const frameH = this.chickadeeSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.chickadeeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'eagle' && this.isBaldEagleSpriteSheetLoaded) {
-                        const cols = this.baldeagleSpriteSheetCols;
-                        const rows = this.baldeagleSpriteSheetRows;
-                        const frameW = this.baldeagleSpriteSheet.width / cols;
-                        const frameH = this.baldeagleSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.baldeagleSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'crow' && this.isCrowSpriteSheetLoaded) {
-                        const cols = this.crowSpriteSheetCols;
-                        const rows = this.crowSpriteSheetRows;
-                        const frameW = this.crowSpriteSheet.width / cols;
-                        const frameH = this.crowSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.crowSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'goose' && this.isGooseSpriteSheetLoaded) {
-                        const cols = this.gooseSpriteSheetCols;
-                        const rows = this.gooseSpriteSheetRows;
-                        const frameW = this.gooseSpriteSheet.width / cols;
-                        const frameH = this.gooseSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.gooseSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'hawk' && this.isHawkSpriteSheetLoaded) {
-                        const cols = this.hawkSpriteSheetCols;
-                        const rows = this.hawkSpriteSheetRows;
-                        const frameW = this.hawkSpriteSheet.width / cols;
-                        const frameH = this.hawkSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.hawkSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'hummingbird' && this.isHummingbirdSpriteSheetLoaded) {
-                        const cols = this.hummingbirdSpriteSheetCols;
-                        const rows = this.hummingbirdSpriteSheetRows;
-                        const frameW = this.hummingbirdSpriteSheet.width / cols;
-                        const frameH = this.hummingbirdSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.hummingbirdSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'heron' && this.isHeronSpriteSheetLoaded) {
-                        const cols = this.heronSpriteSheetCols;
-                        const rows = this.heronSpriteSheetRows;
-                        const frameW = this.heronSpriteSheet.width / cols;
-                        const frameH = this.heronSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.heronSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'owl' && this.isOwlSpriteSheetLoaded) {
-                        const cols = this.owlSpriteSheetCols;
-                        const rows = this.owlSpriteSheetRows;
-                        const frameW = this.owlSpriteSheet.width / cols;
-                        const frameH = this.owlSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.owlSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'vulture' && this.isVultureSpriteSheetLoaded) {
-                        const cols = this.vultureSpriteSheetCols;
-                        const rows = this.vultureSpriteSheetRows;
-                        const frameW = this.vultureSpriteSheet.width / cols;
-                        const frameH = this.vultureSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 90; // slightly larger for vulture
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.vultureSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'oriole' && this.isOriolSpriteSheetLoaded) {
-                        const cols = this.oriolSpriteSheetCols;
-                        const rows = this.oriolSpriteSheetRows;
-                        const frameW = this.oriolSpriteSheet.width / cols;
-                        const frameH = this.oriolSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.oriolSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'raven' && this.isRavenSpriteSheetLoaded) {
-                        const cols = this.ravenSpriteSheetCols;
-                        const rows = this.ravenSpriteSheetRows;
-                        const frameW = this.ravenSpriteSheet.width / cols;
-                        const frameH = this.ravenSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.ravenSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'kingfisher' && this.isKingfisherSpriteSheetLoaded) {
-                        const cols = this.kingfisherSpriteSheetCols;
-                        const rows = this.kingfisherSpriteSheetRows;
-                        const frameW = this.kingfisherSpriteSheet.width / cols;
-                        const frameH = this.kingfisherSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.kingfisherSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'stilt' && this.isStiltSpriteSheetLoaded) {
-                        const cols = this.stiltSpriteSheetCols;
-                        const rows = this.stiltSpriteSheetRows;
-                        const frameW = this.stiltSpriteSheet.width / cols;
-                        const frameH = this.stiltSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.stiltSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'grebe' && this.isGrebeSpriteSheetLoaded) {
-                        const cols = this.grebeSpriteSheetCols;
-                        const rows = this.grebeSpriteSheetRows;
-                        const frameW = this.grebeSpriteSheet.width / cols;
-                        const frameH = this.grebeSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.grebeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'grackle' && this.isGrackleSpriteSheetLoaded) {
-                        const cols = this.grackleSpriteSheetCols;
-                        const rows = this.grackleSpriteSheetRows;
-                        const frameW = this.grackleSpriteSheet.width / cols;
-                        const frameH = this.grackleSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 75;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.grackleSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'housefinch' && this.isHousefinchSpriteSheetLoaded) {
-                        const cols = this.housefinchSpriteSheetCols;
-                        const rows = this.housefinchSpriteSheetRows;
-                        const frameW = this.housefinchSpriteSheet.width / cols;
-                        const frameH = this.housefinchSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.housefinchSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'rockdove' && this.isRockdoveSpriteSheetLoaded) {
-                        const cols = this.rockdoveSpriteSheetCols;
-                        const rows = this.rockdoveSpriteSheetRows;
-                        const frameW = this.rockdoveSpriteSheet.width / cols;
-                        const frameH = this.rockdoveSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 85;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.rockdoveSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'whitecrownedsparrow' && this.isWhitecrownedsparrowSpriteSheetLoaded) {
-                        const cols = this.whitecrownedsparrowSpriteSheetCols;
-                        const rows = this.whitecrownedsparrowSpriteSheetRows;
-                        const frameW = this.whitecrownedsparrowSpriteSheet.width / cols;
-                        const frameH = this.whitecrownedsparrowSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 80;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.whitecrownedsparrowSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'plover' && this.isPloverSpriteSheetLoaded) {
-                        const cols = this.ploverSpriteSheetCols;
-                        const rows = this.ploverSpriteSheetRows;
-                        const frameW = this.ploverSpriteSheet.width / cols;
-                        const frameH = this.ploverSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 75;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.ploverSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'piedbilledgrebe' && this.isPiedbilledgrebeSpriteSheetLoaded) {
-                        const cols = this.piedbilledgrebeSpriteSheetCols;
-                        const rows = this.piedbilledgrebeSpriteSheetRows;
-                        const frameW = this.piedbilledgrebeSpriteSheet.width / cols;
-                        const frameH = this.piedbilledgrebeSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 85;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.piedbilledgrebeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'loon' && this.isLoonSpriteSheetLoaded) {
-                        const cols = this.loonSpriteSheetCols;
-                        const rows = this.loonSpriteSheetRows;
-                        const frameW = this.loonSpriteSheet.width / cols;
-                        const frameH = this.loonSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 100;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.loonSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'stellersjay' && this.isStellersjaySpriteSheetLoaded) {
-                        const cols = this.stellersjaySpriteSheetCols;
-                        const rows = this.stellersjaySpriteSheetRows;
-                        const frameW = this.stellersjaySpriteSheet.width / cols;
-                        const frameH = this.stellersjaySpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 75;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.stellersjaySpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'blackheadedgrosbeak' && this.isBlackheadedgrosbeakSpriteSheetLoaded) {
-                        const cols = this.blackheadedgrosbeakSpriteSheetCols;
-                        const rows = this.blackheadedgrosbeakSpriteSheetRows;
-                        const frameW = this.blackheadedgrosbeakSpriteSheet.width / cols;
-                        const frameH = this.blackheadedgrosbeakSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 70;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.blackheadedgrosbeakSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'mourningdove' && this.isMourningdoveSpriteSheetLoaded) {
-                        const cols = this.mourningdoveSpriteSheetCols;
-                        const rows = this.mourningdoveSpriteSheetRows;
-                        const frameW = this.mourningdoveSpriteSheet.width / cols;
-                        const frameH = this.mourningdoveSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 72;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.mourningdoveSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'acornwoodpecker' && this.isAcornwoodpeckerSpriteSheetLoaded) {
-                        const cols = this.acornwoodpeckerSpriteSheetCols;
-                        const rows = this.acornwoodpeckerSpriteSheetRows;
-                        const frameW = this.acornwoodpeckerSpriteSheet.width / cols;
-                        const frameH = this.acornwoodpeckerSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 74;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.acornwoodpeckerSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'spottedtowhee' && this.isSpottedtowheeSpriteSheetLoaded) {
-                        const cols = this.spottedtowheeSpriteSheetCols;
-                        const rows = this.spottedtowheeSpriteSheetRows;
-                        const frameW = this.spottedtowheeSpriteSheet.width / cols;
-                        const frameH = this.spottedtowheeSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 71;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.spottedtowheeSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
-                    } else if (bird.type === 'westerngull' && this.isWesterngullSpriteSheetLoaded) {
-                        const cols = this.westerngullSpriteSheetCols;
-                        const rows = this.westerngullSpriteSheetRows;
-                        const frameW = this.westerngullSpriteSheet.width / cols;
-                        const frameH = this.westerngullSpriteSheet.height / rows;
-                        const frameIndex = bird.frameIndex % (cols * rows);
-                        const sx = (frameIndex % cols) * frameW;
-                        const sy = Math.floor(frameIndex / cols) * frameH;
-                        // Draw frame maintaining aspect ratio
-                        const aspectRatio = frameW / frameH;
-                        const destHeight = 90;
-                        const destWidth = destHeight * aspectRatio;
-                        ctx.drawImage(this.westerngullSpriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
+                        ctx.drawImage(spriteSheet, sx, sy, frameW, frameH, -destWidth/2, -destHeight/2, destWidth, destHeight);
                     } else if (this.isSpriteSheetLoaded) {
                         const cols = this.spriteSheetCols;
                         const rows = this.spriteSheetRows;
