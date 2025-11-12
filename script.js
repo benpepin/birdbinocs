@@ -95,6 +95,7 @@
                     { type: 'westerngull',  name: 'Western Gull',               scientificName: 'Larus occidentalis', weight: 5,  points: 30, minSize: 28, maxSize: 38, minSpeed: 50,  maxSpeed: 80,  color: '#8B8B8B',  flightPattern: 'seaGlide' },
                     { type: 'cormorant',    name: 'Double-crested Cormorant',   scientificName: 'Nannopterum auritum', weight: 4,  points: 35, minSize: 26, maxSize: 36, minSpeed: 60,  maxSpeed: 95,  color: '#2C2C2C',  flightPattern: 'steady' },
                     { type: 'cedarwaxwing', name: 'Cedar Waxwing',              scientificName: 'Bombycilla cedrorum', weight: 4,  points: 32, minSize: 14, maxSize: 20, minSpeed: 70,  maxSpeed: 115, color: '#C9A55A',  flightPattern: 'bounce' },
+                    { type: 'europeanstarling', name: 'European Starling',      scientificName: 'Sturnus vulgaris', weight: 8,  points: 18, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#2C2416',  flightPattern: 'bounce' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
@@ -674,6 +675,19 @@
                 };
                 this.cedarwaxwingSpriteSheet.src = 'assets/images/sprites/cedarwaxwing-sprite-128px-16-4.png';
 
+                // European Starling-specific sprite sheet
+                this.europeanstarlingSpriteSheet = new Image();
+                this.isEuropeanstarlingSpriteSheetLoaded = false;
+                // Configure European Starling sprite sheet layout (4x4 grid - 16 frames)
+                this.europeanstarlingSpriteSheetCols = 4;
+                this.europeanstarlingSpriteSheetRows = 4;
+                this.europeanstarlingSpriteTotalFrames = this.europeanstarlingSpriteSheetCols * this.europeanstarlingSpriteSheetRows;
+                this.europeanstarlingSpriteAnimFps = 12; // animation speed in frames per second
+                this.europeanstarlingSpriteSheet.onload = () => {
+                    this.isEuropeanstarlingSpriteSheetLoaded = true;
+                };
+                this.europeanstarlingSpriteSheet.src = 'assets/images/sprites/europeanstarling-sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
 
@@ -716,7 +730,8 @@
                     'spottedtowhee': { sheet: 'spottedtowheeSpriteSheet', loaded: 'isSpottedtowheeSpriteSheetLoaded', cols: 'spottedtowheeSpriteSheetCols', rows: 'spottedtowheeSpriteSheetRows', height: 71 },
                     'westerngull': { sheet: 'westerngullSpriteSheet', loaded: 'isWesterngullSpriteSheetLoaded', cols: 'westerngullSpriteSheetCols', rows: 'westerngullSpriteSheetRows', height: 90 },
                     'cormorant': { sheet: 'cormorantSpriteSheet', loaded: 'isCormorantSpriteSheetLoaded', cols: 'cormorantSpriteSheetCols', rows: 'cormorantSpriteSheetRows', height: 85 },
-                    'cedarwaxwing': { sheet: 'cedarwaxwingSpriteSheet', loaded: 'isCedarwaxwingSpriteSheetLoaded', cols: 'cedarwaxwingSpriteSheetCols', rows: 'cedarwaxwingSpriteSheetRows', height: 70 }
+                    'cedarwaxwing': { sheet: 'cedarwaxwingSpriteSheet', loaded: 'isCedarwaxwingSpriteSheetLoaded', cols: 'cedarwaxwingSpriteSheetCols', rows: 'cedarwaxwingSpriteSheetRows', height: 70 },
+                    'europeanstarling': { sheet: 'europeanstarlingSpriteSheet', loaded: 'isEuropeanstarlingSpriteSheetLoaded', cols: 'europeanstarlingSpriteSheetCols', rows: 'europeanstarlingSpriteSheetRows', height: 72 }
                 };
 
                 // Notebook system
@@ -1552,6 +1567,17 @@ Feasting where the berries spread.<br>
 With silky plumage, soft and brown,<br>
 The finest dandy in the town.`,
                         image: "assets/images/notebook/Cedar Waxwing.png"
+                    },
+                    europeanstarling: {
+                        title: "Iridescent Invader",
+                        author: "by Urban Watch",
+                        poem: `From distant shores, the starling came,<br>
+With speckled coat and Shakespeare's name.<br>
+In flocks they swirl, murmurations dance,<br>
+A spectacle of circumstance.<br>
+Though common now in every town,<br>
+Their beauty cannot be turned down.`,
+                        image: "assets/images/notebook/euro starling.png"
                     }
                 };
             }
