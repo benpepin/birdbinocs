@@ -96,6 +96,7 @@
                     { type: 'cormorant',    name: 'Double-crested Cormorant',   scientificName: 'Nannopterum auritum', weight: 4,  points: 35, minSize: 26, maxSize: 36, minSpeed: 60,  maxSpeed: 95,  color: '#2C2C2C',  flightPattern: 'steady' },
                     { type: 'cedarwaxwing', name: 'Cedar Waxwing',              scientificName: 'Bombycilla cedrorum', weight: 4,  points: 32, minSize: 14, maxSize: 20, minSpeed: 70,  maxSpeed: 115, color: '#C9A55A',  flightPattern: 'bounce' },
                     { type: 'europeanstarling', name: 'European Starling',      scientificName: 'Sturnus vulgaris', weight: 8,  points: 18, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#2C2416',  flightPattern: 'bounce' },
+                    { type: 'cascrubjay',   name: 'California Scrub-Jay',       scientificName: 'Aphelocoma californica', weight: 6,  points: 26, minSize: 16, maxSize: 24, minSpeed: 70,  maxSpeed: 115, color: '#4A6FA5',  flightPattern: 'bounce' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
@@ -688,6 +689,19 @@
                 };
                 this.europeanstarlingSpriteSheet.src = 'assets/images/sprites/europeanstarling-sprite-128px-16-4.png';
 
+                // California Scrub-Jay-specific sprite sheet
+                this.cascrubjaySpriteSheet = new Image();
+                this.isCascrubjaySpriteSheetLoaded = false;
+                // Configure CA Scrub-Jay sprite sheet layout (4x4 grid - 16 frames)
+                this.cascrubjaySpriteSheetCols = 4;
+                this.cascrubjaySpriteSheetRows = 4;
+                this.cascrubjaySpriteTotalFrames = this.cascrubjaySpriteSheetCols * this.cascrubjaySpriteSheetRows;
+                this.cascrubjaySpriteAnimFps = 12; // animation speed in frames per second
+                this.cascrubjaySpriteSheet.onload = () => {
+                    this.isCascrubjaySpriteSheetLoaded = true;
+                };
+                this.cascrubjaySpriteSheet.src = 'assets/images/sprites/cascrubjay-sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
 
@@ -731,7 +745,8 @@
                     'westerngull': { sheet: 'westerngullSpriteSheet', loaded: 'isWesterngullSpriteSheetLoaded', cols: 'westerngullSpriteSheetCols', rows: 'westerngullSpriteSheetRows', height: 90 },
                     'cormorant': { sheet: 'cormorantSpriteSheet', loaded: 'isCormorantSpriteSheetLoaded', cols: 'cormorantSpriteSheetCols', rows: 'cormorantSpriteSheetRows', height: 85 },
                     'cedarwaxwing': { sheet: 'cedarwaxwingSpriteSheet', loaded: 'isCedarwaxwingSpriteSheetLoaded', cols: 'cedarwaxwingSpriteSheetCols', rows: 'cedarwaxwingSpriteSheetRows', height: 70 },
-                    'europeanstarling': { sheet: 'europeanstarlingSpriteSheet', loaded: 'isEuropeanstarlingSpriteSheetLoaded', cols: 'europeanstarlingSpriteSheetCols', rows: 'europeanstarlingSpriteSheetRows', height: 72 }
+                    'europeanstarling': { sheet: 'europeanstarlingSpriteSheet', loaded: 'isEuropeanstarlingSpriteSheetLoaded', cols: 'europeanstarlingSpriteSheetCols', rows: 'europeanstarlingSpriteSheetRows', height: 72 },
+                    'cascrubjay': { sheet: 'cascrubjaySpriteSheet', loaded: 'isCascrubjaySpriteSheetLoaded', cols: 'cascrubjaySpriteSheetCols', rows: 'cascrubjaySpriteSheetRows', height: 76 }
                 };
 
                 // Notebook system
@@ -1578,6 +1593,17 @@ A spectacle of circumstance.<br>
 Though common now in every town,<br>
 Their beauty cannot be turned down.`,
                         image: "assets/images/notebook/euro starling.png"
+                    },
+                    cascrubjay: {
+                        title: "Bold Blue Thief",
+                        author: "by Oak Ridge",
+                        poem: `Blue and gray, without a crest,<br>
+The scrub-jay raids the acorn nest.<br>
+Bold and clever, quick and loud,<br>
+A fearless bird, unbowed.<br>
+Through chaparral and oak they roam,<br>
+California is their home.`,
+                        image: "assets/images/notebook/ca scrubjay.png"
                     }
                 };
             }
