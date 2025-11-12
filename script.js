@@ -94,7 +94,7 @@
                     { type: 'pelican',      name: 'White Pelican',              scientificName: 'Pelecanus erythrorhynchos', weight: 3,  points: 65, minSize: 42, maxSize: 60, minSpeed: 35,  maxSpeed: 55,  color: '#F5F5F5',  flightPattern: 'seaGlide' },
                     { type: 'westerngull',  name: 'Western Gull',               scientificName: 'Larus occidentalis', weight: 5,  points: 30, minSize: 28, maxSize: 38, minSpeed: 50,  maxSpeed: 80,  color: '#8B8B8B',  flightPattern: 'seaGlide' },
                     { type: 'cormorant',    name: 'Double-crested Cormorant',   scientificName: 'Nannopterum auritum', weight: 4,  points: 35, minSize: 26, maxSize: 36, minSpeed: 60,  maxSpeed: 95,  color: '#2C2C2C',  flightPattern: 'steady' },
-                    { type: 'cedarwaxwing', name: 'Cedar Waxwing',              scientificName: 'Bombycilla cedrorum', weight: 7,  points: 32, minSize: 14, maxSize: 20, minSpeed: 70,  maxSpeed: 115, color: '#C9A55A',  flightPattern: 'bounce' },
+                    { type: 'cedarwaxwing', name: 'Cedar Waxwing',              scientificName: 'Bombycilla cedrorum', weight: 6,  points: 32, minSize: 14, maxSize: 20, minSpeed: 70,  maxSpeed: 115, color: '#C9A55A',  flightPattern: 'bounce' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
@@ -672,7 +672,7 @@
                 this.cedarwaxwingSpriteSheet.onload = () => {
                     this.isCedarwaxwingSpriteSheetLoaded = true;
                 };
-                this.cedarwaxwingSpriteSheet.src = 'assets/images/sprites/cedarwaxwing-sprite-128px-16 (2).png';
+                this.cedarwaxwingSpriteSheet.src = 'assets/images/sprites/cedarwaxwing-sprite-128px-16-4.png';
 
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
@@ -3273,6 +3273,11 @@ The finest dandy in the town.`,
 
                     // Apply wing flapping animation by scaling vertically
                     ctx.scale(1, 1 + wingFlap * 0.2);
+
+                    // Apply species-specific rotation adjustments
+                    if (bird.type === 'cedarwaxwing') {
+                        ctx.rotate(-20 * Math.PI / 180); // Rotate 20 degrees left (counterclockwise)
+                    }
 
                     // PERFORMANCE: Use O(1) sprite lookup table instead of O(n) if-else chain
                     const spriteInfo = this.spriteConfig[bird.type];
