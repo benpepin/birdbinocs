@@ -1515,6 +1515,17 @@ It soars beneath the ocean sky.<br>
 A scavenger both bold and free,<br>
 The master of the coastal sea.`,
                         image: "assets/images/notebook/Western Gull.png"
+                    },
+                    cormorant: {
+                        title: "Diving Fisher",
+                        author: "by Marina Deepwater",
+                        poem: `With double crest and emerald eyes,<br>
+The cormorant beneath waves flies.<br>
+Dark wings spread to dry in sun,<br>
+A fisher's work is never done.<br>
+Diving deep for silvered prize,<br>
+Master of the waterways.`,
+                        image: "assets/images/notebook/Double-crested-Cormorant.png"
                     }
                 };
             }
