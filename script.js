@@ -1555,7 +1555,7 @@ Dark wings spread to dry in sun,<br>
 A fisher's work is never done.<br>
 Diving deep for silvered prize,<br>
 Master of the waterways.`,
-                        image: "assets/images/notebook/Double-crested-Cormorant.png"
+                        image: "assets/images/notebook/doublecrested.png"
                     },
                     cedarwaxwing: {
                         title: "Berry Bandit",
