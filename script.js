@@ -97,6 +97,7 @@
                     { type: 'cedarwaxwing', name: 'Cedar Waxwing',              scientificName: 'Bombycilla cedrorum', weight: 4,  points: 32, minSize: 14, maxSize: 20, minSpeed: 70,  maxSpeed: 115, color: '#C9A55A',  flightPattern: 'bounce' },
                     { type: 'europeanstarling', name: 'European Starling',      scientificName: 'Sturnus vulgaris', weight: 8,  points: 18, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#2C2416',  flightPattern: 'bounce' },
                     { type: 'cascrubjay',   name: 'California Scrub-Jay',       scientificName: 'Aphelocoma californica', weight: 6,  points: 26, minSize: 16, maxSize: 24, minSpeed: 70,  maxSpeed: 115, color: '#4A6FA5',  flightPattern: 'bounce' },
+                    { type: 'redwingedblackbird', name: 'Red-winged Blackbird',  scientificName: 'Agelaius phoeniceus', weight: 80,  points: 20, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#000000',  flightPattern: 'bounce' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
@@ -702,6 +703,19 @@
                 };
                 this.cascrubjaySpriteSheet.src = 'assets/images/sprites/cascrubjay-sprite-128px-16-4.png';
 
+                // Red-winged Blackbird-specific sprite sheet
+                this.redwingedblackbirdSpriteSheet = new Image();
+                this.isRedwingedblackbirdSpriteSheetLoaded = false;
+                // Configure Red-winged Blackbird sprite sheet layout (4x4 grid - 16 frames)
+                this.redwingedblackbirdSpriteSheetCols = 4;
+                this.redwingedblackbirdSpriteSheetRows = 4;
+                this.redwingedblackbirdSpriteTotalFrames = this.redwingedblackbirdSpriteSheetCols * this.redwingedblackbirdSpriteSheetRows;
+                this.redwingedblackbirdSpriteAnimFps = 12; // animation speed in frames per second
+                this.redwingedblackbirdSpriteSheet.onload = () => {
+                    this.isRedwingedblackbirdSpriteSheetLoaded = true;
+                };
+                this.redwingedblackbirdSpriteSheet.src = 'assets/images/sprites/redwingedblack bird sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
 
@@ -746,7 +760,8 @@
                     'cormorant': { sheet: 'cormorantSpriteSheet', loaded: 'isCormorantSpriteSheetLoaded', cols: 'cormorantSpriteSheetCols', rows: 'cormorantSpriteSheetRows', height: 85 },
                     'cedarwaxwing': { sheet: 'cedarwaxwingSpriteSheet', loaded: 'isCedarwaxwingSpriteSheetLoaded', cols: 'cedarwaxwingSpriteSheetCols', rows: 'cedarwaxwingSpriteSheetRows', height: 70 },
                     'europeanstarling': { sheet: 'europeanstarlingSpriteSheet', loaded: 'isEuropeanstarlingSpriteSheetLoaded', cols: 'europeanstarlingSpriteSheetCols', rows: 'europeanstarlingSpriteSheetRows', height: 72 },
-                    'cascrubjay': { sheet: 'cascrubjaySpriteSheet', loaded: 'isCascrubjaySpriteSheetLoaded', cols: 'cascrubjaySpriteSheetCols', rows: 'cascrubjaySpriteSheetRows', height: 76 }
+                    'cascrubjay': { sheet: 'cascrubjaySpriteSheet', loaded: 'isCascrubjaySpriteSheetLoaded', cols: 'cascrubjaySpriteSheetCols', rows: 'cascrubjaySpriteSheetRows', height: 76 },
+                    'redwingedblackbird': { sheet: 'redwingedblackbirdSpriteSheet', loaded: 'isRedwingedblackbirdSpriteSheetLoaded', cols: 'redwingedblackbirdSpriteSheetCols', rows: 'redwingedblackbirdSpriteSheetRows', height: 73 }
                 };
 
                 // Notebook system
@@ -1604,6 +1619,17 @@ A fearless bird, unbowed.<br>
 Through chaparral and oak they roam,<br>
 California is their home.`,
                         image: "assets/images/notebook/ca scrubjay.png"
+                    },
+                    redwingedblackbird: {
+                        title: "Marshland Guardian",
+                        author: "by Wetland Watch",
+                        poem: `With scarlet shoulders blazing bright,<br>
+The blackbird claims his marshland right.<br>
+His konk-la-ree rings loud and clear,<br>
+Warning all who venture near.<br>
+On cattail thrones through spring they reign,<br>
+Masters of the wetland plain.`,
+                        image: "assets/images/notebook/Red winged blackbird.png"
                     }
                 };
             }
