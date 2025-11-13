@@ -95,11 +95,12 @@
                     { type: 'westerngull',  name: 'Western Gull',               scientificName: 'Larus occidentalis', weight: 5,  points: 30, minSize: 28, maxSize: 38, minSpeed: 50,  maxSpeed: 80,  color: '#8B8B8B',  flightPattern: 'seaGlide' },
                     { type: 'cormorant',    name: 'Double-crested Cormorant',   scientificName: 'Nannopterum auritum', weight: 4,  points: 35, minSize: 26, maxSize: 36, minSpeed: 60,  maxSpeed: 95,  color: '#2C2C2C',  flightPattern: 'steady' },
                     { type: 'cedarwaxwing', name: 'Cedar Waxwing',              scientificName: 'Bombycilla cedrorum', weight: 4,  points: 32, minSize: 14, maxSize: 20, minSpeed: 70,  maxSpeed: 115, color: '#C9A55A',  flightPattern: 'bounce' },
-                    { type: 'europeanstarling', name: 'European Starling',      scientificName: 'Sturnus vulgaris', weight: 8,  points: 18, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#2C2416',  flightPattern: 'bounce' },
+                    { type: 'europeanstarling', name: 'European Starling',      scientificName: 'Sturnus vulgaris', weight: 4,  points: 18, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#2C2416',  flightPattern: 'bounce' },
                     { type: 'cascrubjay',   name: 'California Scrub-Jay',       scientificName: 'Aphelocoma californica', weight: 6,  points: 26, minSize: 16, maxSize: 24, minSpeed: 70,  maxSpeed: 115, color: '#4A6FA5',  flightPattern: 'bounce' },
-                    { type: 'redwingedblackbird', name: 'Red-winged Blackbird',  scientificName: 'Agelaius phoeniceus', weight: 80,  points: 20, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#000000',  flightPattern: 'bounce' },
+                    { type: 'redwingedblackbird', name: 'Red-winged Blackbird',  scientificName: 'Agelaius phoeniceus', weight: 8,  points: 20, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#000000',  flightPattern: 'bounce' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
+                    { type: 'annashummingbird', name: "Anna's Hummingbird",    scientificName: 'Calypte anna', weight: 6,  points: 95, minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#E91E8C',  flightPattern: 'hover' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
@@ -716,6 +717,19 @@
                 };
                 this.redwingedblackbirdSpriteSheet.src = 'assets/images/sprites/redwingedblack bird sprite-128px-16-4.png';
 
+                // Anna's Hummingbird-specific sprite sheet
+                this.annashummingbirdSpriteSheet = new Image();
+                this.isAnnashummingbirdSpriteSheetLoaded = false;
+                // Configure Anna's Hummingbird sprite sheet layout (4x4 grid - 16 frames)
+                this.annashummingbirdSpriteSheetCols = 4;
+                this.annashummingbirdSpriteSheetRows = 4;
+                this.annashummingbirdSpriteTotalFrames = this.annashummingbirdSpriteSheetCols * this.annashummingbirdSpriteSheetRows;
+                this.annashummingbirdSpriteAnimFps = 12; // animation speed in frames per second
+                this.annashummingbirdSpriteSheet.onload = () => {
+                    this.isAnnashummingbirdSpriteSheetLoaded = true;
+                };
+                this.annashummingbirdSpriteSheet.src = "assets/images/sprites/anna's hummingbird-sprite-128px-16-4.png";
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
 
@@ -761,7 +775,8 @@
                     'cedarwaxwing': { sheet: 'cedarwaxwingSpriteSheet', loaded: 'isCedarwaxwingSpriteSheetLoaded', cols: 'cedarwaxwingSpriteSheetCols', rows: 'cedarwaxwingSpriteSheetRows', height: 70 },
                     'europeanstarling': { sheet: 'europeanstarlingSpriteSheet', loaded: 'isEuropeanstarlingSpriteSheetLoaded', cols: 'europeanstarlingSpriteSheetCols', rows: 'europeanstarlingSpriteSheetRows', height: 72 },
                     'cascrubjay': { sheet: 'cascrubjaySpriteSheet', loaded: 'isCascrubjaySpriteSheetLoaded', cols: 'cascrubjaySpriteSheetCols', rows: 'cascrubjaySpriteSheetRows', height: 76 },
-                    'redwingedblackbird': { sheet: 'redwingedblackbirdSpriteSheet', loaded: 'isRedwingedblackbirdSpriteSheetLoaded', cols: 'redwingedblackbirdSpriteSheetCols', rows: 'redwingedblackbirdSpriteSheetRows', height: 73 }
+                    'redwingedblackbird': { sheet: 'redwingedblackbirdSpriteSheet', loaded: 'isRedwingedblackbirdSpriteSheetLoaded', cols: 'redwingedblackbirdSpriteSheetCols', rows: 'redwingedblackbirdSpriteSheetRows', height: 73 },
+                    'annashummingbird': { sheet: 'annashummingbirdSpriteSheet', loaded: 'isAnnashummingbirdSpriteSheetLoaded', cols: 'annashummingbirdSpriteSheetCols', rows: 'annashummingbirdSpriteSheetRows', height: 65 }
                 };
 
                 // Notebook system
@@ -1630,6 +1645,17 @@ Warning all who venture near.<br>
 On cattail thrones through spring they reign,<br>
 Masters of the wetland plain.`,
                         image: "assets/images/notebook/Red winged blackbird.png"
+                    },
+                    annashummingbird: {
+                        title: "Rose-crowned Jewel",
+                        author: "by Garden Observer",
+                        poem: `With gorget flashing rose and red,<br>
+Through garden blooms the jewel is led.<br>
+So swift and small, a blur in flight,<br>
+Wings beating faster than our sight.<br>
+Year-round this beauty makes its home,<br>
+Through western lands it loves to roam.`,
+                        image: "assets/images/notebook/anna's hummingbird.png"
                     }
                 };
             }
