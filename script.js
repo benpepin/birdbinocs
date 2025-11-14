@@ -101,6 +101,7 @@
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'annashummingbird', name: "Anna's Hummingbird",    scientificName: 'Calypte anna', weight: 6,  points: 95, minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#E91E8C',  flightPattern: 'hover' },
+                    { type: 'bushtit',      name: 'American Bushtit',           scientificName: 'Psaltriparus minimus', weight: 7,  points: 24, minSize: 10, maxSize: 14, minSpeed: 80,  maxSpeed: 130, color: '#8B8B7A',  flightPattern: 'flutter' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
@@ -730,6 +731,19 @@
                 };
                 this.annashummingbirdSpriteSheet.src = "assets/images/sprites/anna's hummingbird-sprite-128px-16-4.png";
 
+                // American Bushtit-specific sprite sheet
+                this.bushtitSpriteSheet = new Image();
+                this.isBushtitSpriteSheetLoaded = false;
+                // Configure American Bushtit sprite sheet layout (4x4 grid - 16 frames)
+                this.bushtitSpriteSheetCols = 4;
+                this.bushtitSpriteSheetRows = 4;
+                this.bushtitSpriteTotalFrames = this.bushtitSpriteSheetCols * this.bushtitSpriteSheetRows;
+                this.bushtitSpriteAnimFps = 12; // animation speed in frames per second
+                this.bushtitSpriteSheet.onload = () => {
+                    this.isBushtitSpriteSheetLoaded = true;
+                };
+                this.bushtitSpriteSheet.src = 'assets/images/sprites/american-bushtit-sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
 
@@ -776,7 +790,8 @@
                     'europeanstarling': { sheet: 'europeanstarlingSpriteSheet', loaded: 'isEuropeanstarlingSpriteSheetLoaded', cols: 'europeanstarlingSpriteSheetCols', rows: 'europeanstarlingSpriteSheetRows', height: 72 },
                     'cascrubjay': { sheet: 'cascrubjaySpriteSheet', loaded: 'isCascrubjaySpriteSheetLoaded', cols: 'cascrubjaySpriteSheetCols', rows: 'cascrubjaySpriteSheetRows', height: 76 },
                     'redwingedblackbird': { sheet: 'redwingedblackbirdSpriteSheet', loaded: 'isRedwingedblackbirdSpriteSheetLoaded', cols: 'redwingedblackbirdSpriteSheetCols', rows: 'redwingedblackbirdSpriteSheetRows', height: 73 },
-                    'annashummingbird': { sheet: 'annashummingbirdSpriteSheet', loaded: 'isAnnashummingbirdSpriteSheetLoaded', cols: 'annashummingbirdSpriteSheetCols', rows: 'annashummingbirdSpriteSheetRows', height: 65 }
+                    'annashummingbird': { sheet: 'annashummingbirdSpriteSheet', loaded: 'isAnnashummingbirdSpriteSheetLoaded', cols: 'annashummingbirdSpriteSheetCols', rows: 'annashummingbirdSpriteSheetRows', height: 65 },
+                    'bushtit': { sheet: 'bushtitSpriteSheet', loaded: 'isBushtitSpriteSheetLoaded', cols: 'bushtitSpriteSheetCols', rows: 'bushtitSpriteSheetRows', height: 68 }
                 };
 
                 // Notebook system
@@ -1656,6 +1671,17 @@ Wings beating faster than our sight.<br>
 Year-round this beauty makes its home,<br>
 Through western lands it loves to roam.`,
                         image: "assets/images/notebook/anna's hummingbird.png"
+                    },
+                    bushtit: {
+                        title: "Tiny Acrobat",
+                        author: "by Branch Watchers",
+                        poem: `In restless flocks they bounce and cling,<br>
+The smallest songbirds on the wing.<br>
+Gray and brown, with beady eyes,<br>
+Through twigs and leaves their laughter flies.<br>
+Pendulous nests like socks they weave,<br>
+In oak and pine they never leave.`,
+                        image: "assets/images/notebook/Amerian Bushtit.png"
                     }
                 };
             }
