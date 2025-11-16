@@ -102,6 +102,7 @@
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'annashummingbird', name: "Anna's Hummingbird",    scientificName: 'Calypte anna', weight: 6,  points: 95, minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#E91E8C',  flightPattern: 'hover' },
                     { type: 'bushtit',      name: 'American Bushtit',           scientificName: 'Psaltriparus minimus', weight: 7,  points: 24, minSize: 10, maxSize: 14, minSpeed: 80,  maxSpeed: 130, color: '#8B8B7A',  flightPattern: 'flutter' },
+                    { type: 'westernmeadowlark', name: 'Western Meadowlark',    scientificName: 'Sturnella neglecta', weight: 6,  points: 28, minSize: 16, maxSize: 22, minSpeed: 70,  maxSpeed: 115, color: '#F4D03F',  flightPattern: 'bounce' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
@@ -744,6 +745,19 @@
                 };
                 this.bushtitSpriteSheet.src = 'assets/images/sprites/american-bushtit-sprite-128px-16-4.png';
 
+                // Western Meadowlark-specific sprite sheet
+                this.westernmeadowlarkSpriteSheet = new Image();
+                this.isWesternmeadowlarkSpriteSheetLoaded = false;
+                // Configure Western Meadowlark sprite sheet layout (4x4 grid - 16 frames)
+                this.westernmeadowlarkSpriteSheetCols = 4;
+                this.westernmeadowlarkSpriteSheetRows = 4;
+                this.westernmeadowlarkSpriteTotalFrames = this.westernmeadowlarkSpriteSheetCols * this.westernmeadowlarkSpriteSheetRows;
+                this.westernmeadowlarkSpriteAnimFps = 12; // animation speed in frames per second
+                this.westernmeadowlarkSpriteSheet.onload = () => {
+                    this.isWesternmeadowlarkSpriteSheetLoaded = true;
+                };
+                this.westernmeadowlarkSpriteSheet.src = 'assets/images/sprites/western-meadowlark-sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
 
@@ -791,7 +805,8 @@
                     'cascrubjay': { sheet: 'cascrubjaySpriteSheet', loaded: 'isCascrubjaySpriteSheetLoaded', cols: 'cascrubjaySpriteSheetCols', rows: 'cascrubjaySpriteSheetRows', height: 76 },
                     'redwingedblackbird': { sheet: 'redwingedblackbirdSpriteSheet', loaded: 'isRedwingedblackbirdSpriteSheetLoaded', cols: 'redwingedblackbirdSpriteSheetCols', rows: 'redwingedblackbirdSpriteSheetRows', height: 73 },
                     'annashummingbird': { sheet: 'annashummingbirdSpriteSheet', loaded: 'isAnnashummingbirdSpriteSheetLoaded', cols: 'annashummingbirdSpriteSheetCols', rows: 'annashummingbirdSpriteSheetRows', height: 65 },
-                    'bushtit': { sheet: 'bushtitSpriteSheet', loaded: 'isBushtitSpriteSheetLoaded', cols: 'bushtitSpriteSheetCols', rows: 'bushtitSpriteSheetRows', height: 68 }
+                    'bushtit': { sheet: 'bushtitSpriteSheet', loaded: 'isBushtitSpriteSheetLoaded', cols: 'bushtitSpriteSheetCols', rows: 'bushtitSpriteSheetRows', height: 68 },
+                    'westernmeadowlark': { sheet: 'westernmeadowlarkSpriteSheet', loaded: 'isWesternmeadowlarkSpriteSheetLoaded', cols: 'westernmeadowlarkSpriteSheetCols', rows: 'westernmeadowlarkSpriteSheetRows', height: 74 }
                 };
 
                 // Notebook system
@@ -1682,6 +1697,17 @@ Through twigs and leaves their laughter flies.<br>
 Pendulous nests like socks they weave,<br>
 In oak and pine they never leave.`,
                         image: "assets/images/notebook/Amerian Bushtit.png"
+                    },
+                    westernmeadowlark: {
+                        title: "Prairie Songster",
+                        author: "by Grassland Watcher",
+                        poem: `From fence posts high, its flute-like song,<br>
+Echoes meadows all day long.<br>
+With yellow breast and black V bold,<br>
+A treasure worth more than gold.<br>
+Through prairie grasses, low it flies,<br>
+A symphony beneath the skies.`,
+                        image: "assets/images/notebook/westernmeadowlark.png"
                     }
                 };
             }
