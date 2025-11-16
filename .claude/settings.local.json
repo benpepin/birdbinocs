@@ -16,7 +16,14 @@
       "Bash(open index.html)",
       "Bash(open:*)",
       "Bash(git log:*)",
-      "Bash(paste:*)"
+      "Bash(paste:*)",
+      "Bash(ls:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(vercel --version:*)",
+      "Bash(vercel)",
+      "Bash(npx vercel)",
+      "Bash(npx vercel login:*)"
     ],
     "deny": [],
     "ask": []
