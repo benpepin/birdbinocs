@@ -26,6 +26,13 @@
         }
     </script>
     <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "@vercel/analytics": "./node_modules/@vercel/analytics/dist/index.mjs"
+        }
+    }
+    </script>
 </head>
 <body>
     <!-- Mobile Warning Overlay -->
@@ -198,6 +205,6 @@
 
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

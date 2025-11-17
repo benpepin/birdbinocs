@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/benpepin/birdbinocs/issues"
   },
-  "homepage": "https://github.com/benpepin/birdbinocs#readme"
+  "homepage": "https://github.com/benpepin/birdbinocs#readme",
+  "dependencies": {
+    "@vercel/analytics": "^1.5.0"
+  }
 }

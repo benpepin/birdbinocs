@@ -3902,3 +3902,8 @@ A symphony beneath the skies.`,
             }
         });
 
+        // Initialize Vercel Analytics
+        import('@vercel/analytics').then(({ inject }) => {
+            inject();
+        });
+
