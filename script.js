@@ -64,7 +64,7 @@
                 // Bird system
                 this.birds = [];
                 this.birdSpawnTimer = 0;
-                this.birdSpawnInterval = 3000;
+                this.birdSpawnInterval = 4300;
                 this.birdsSpotted = 0;
                 this.discoveredSpecies = new Set();
                 this.totalScore = 0;
@@ -2603,7 +2603,7 @@ A symphony beneath the skies.`,
                 if (this.birdSpawnTimer >= this.birdSpawnInterval) {
                     this.spawnBird();
                     this.birdSpawnTimer = 0;
-                    this.birdSpawnInterval = 2000 + Math.random() * 3000;
+                    this.birdSpawnInterval = 2900 + Math.random() * 4300;
                 }
 
                 this.checkBirdSpotting();
