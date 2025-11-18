@@ -64,7 +64,7 @@
                 // Bird system
                 this.birds = [];
                 this.birdSpawnTimer = 0;
-                this.birdSpawnInterval = 4300;
+                this.birdSpawnInterval = 6000;
                 this.birdsSpotted = 0;
                 this.discoveredSpecies = new Set();
                 this.totalScore = 0;
@@ -104,6 +104,7 @@
                     { type: 'annashummingbird', name: "Anna's Hummingbird",    scientificName: 'Calypte anna', weight: 6,  points: 95, minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#E91E8C',  flightPattern: 'hover' },
                     { type: 'bushtit',      name: 'American Bushtit',           scientificName: 'Psaltriparus minimus', weight: 7,  points: 24, minSize: 10, maxSize: 14, minSpeed: 80,  maxSpeed: 130, color: '#8B8B7A',  flightPattern: 'flutter' },
                     { type: 'westernmeadowlark', name: 'Western Meadowlark',    scientificName: 'Sturnella neglecta', weight: 6,  points: 28, minSize: 16, maxSize: 22, minSpeed: 70,  maxSpeed: 115, color: '#F4D03F',  flightPattern: 'bounce' },
+                    { type: 'longbilledcurlew', name: 'Long-billed Curlew',     scientificName: 'Numenius americanus', weight: 5,  points: 42, minSize: 26, maxSize: 36, minSpeed: 60,  maxSpeed: 95,  color: '#C9A776',  flightPattern: 'steady' },
                     { type: 'flamingo',     name: 'American Flamingo',          scientificName: 'Phoenicopterus ruber',  weight: 10,  points: 85, minSize: 35, maxSize: 50, minSpeed: 40,  maxSpeed: 70,  color: '#FF69B4',  flightPattern: 'majestic' },
                     { type: 'stilt',        name: 'Black-necked Stilt',         scientificName: 'Himantopus mexicanus', weight: 5,  points: 32, minSize: 20, maxSize: 28, minSpeed: 70,  maxSpeed: 110, color: '#2F2F2F',  flightPattern: 'steady' },
                     { type: 'grebe',        name: 'Western Grebe',              scientificName: 'Aechmophorus occidentalis', weight: 7,  points: 45, minSize: 25, maxSize: 35, minSpeed: 65,  maxSpeed: 95,  color: '#3A3A3A',  flightPattern: 'steady' },
@@ -772,6 +773,19 @@
                 };
                 this.westernmeadowlarkSpriteSheet.src = 'assets/images/sprites/western-meadowlark-sprite-128px-16-4.png';
 
+                // Long-billed Curlew-specific sprite sheet
+                this.longbilledcurlewSpriteSheet = new Image();
+                this.isLongbilledcurlewSpriteSheetLoaded = false;
+                // Configure Long-billed Curlew sprite sheet layout (4x4 grid - 16 frames)
+                this.longbilledcurlewSpriteSheetCols = 4;
+                this.longbilledcurlewSpriteSheetRows = 4;
+                this.longbilledcurlewSpriteTotalFrames = this.longbilledcurlewSpriteSheetCols * this.longbilledcurlewSpriteSheetRows;
+                this.longbilledcurlewSpriteAnimFps = 12; // animation speed in frames per second
+                this.longbilledcurlewSpriteSheet.onload = () => {
+                    this.isLongbilledcurlewSpriteSheetLoaded = true;
+                };
+                this.longbilledcurlewSpriteSheet.src = 'assets/images/sprites/long billed curlew sprite-128px-16-4.png';
+
                 // Sound system (visual feedback for now)
                 this.soundEnabled = true;
 
@@ -821,7 +835,8 @@
                     'brewersblackbird': { sheet: 'brewersblackbirdSpriteSheet', loaded: 'isBrewersblackbirdSpriteSheetLoaded', cols: 'brewersblackbirdSpriteSheetCols', rows: 'brewersblackbirdSpriteSheetRows', height: 73 },
                     'annashummingbird': { sheet: 'annashummingbirdSpriteSheet', loaded: 'isAnnashummingbirdSpriteSheetLoaded', cols: 'annashummingbirdSpriteSheetCols', rows: 'annashummingbirdSpriteSheetRows', height: 65 },
                     'bushtit': { sheet: 'bushtitSpriteSheet', loaded: 'isBushtitSpriteSheetLoaded', cols: 'bushtitSpriteSheetCols', rows: 'bushtitSpriteSheetRows', height: 68 },
-                    'westernmeadowlark': { sheet: 'westernmeadowlarkSpriteSheet', loaded: 'isWesternmeadowlarkSpriteSheetLoaded', cols: 'westernmeadowlarkSpriteSheetCols', rows: 'westernmeadowlarkSpriteSheetRows', height: 74 }
+                    'westernmeadowlark': { sheet: 'westernmeadowlarkSpriteSheet', loaded: 'isWesternmeadowlarkSpriteSheetLoaded', cols: 'westernmeadowlarkSpriteSheetCols', rows: 'westernmeadowlarkSpriteSheetRows', height: 74 },
+                    'longbilledcurlew': { sheet: 'longbilledcurlewSpriteSheet', loaded: 'isLongbilledcurlewSpriteSheetLoaded', cols: 'longbilledcurlewSpriteSheetCols', rows: 'longbilledcurlewSpriteSheetRows', height: 85 }
                 };
 
                 // Notebook system
@@ -1734,6 +1749,17 @@ A treasure worth more than gold.<br>
 Through prairie grasses, low it flies,<br>
 A symphony beneath the skies.`,
                         image: "assets/images/notebook/westernmeadowlark.png"
+                    },
+                    longbilledcurlew: {
+                        title: "Shore's Sentinel",
+                        author: "by Coastal Observer",
+                        poem: `With downward bill, impossibly long,<br>
+The curlew probes wet sand for song.<br>
+In mudflats wide and coastal plains,<br>
+Its haunting cry forever reigns.<br>
+Cinnamon wings on graceful flight,<br>
+A shorebird's ancient, wild delight.`,
+                        image: "assets/images/notebook/long billed curlew.png"
                     }
                 };
             }
@@ -2356,7 +2382,8 @@ A symphony beneath the skies.`,
                     'acornwoodpecker': this.acornwoodpeckerSpriteSheet,
                     'spottedtowhee': this.spottedtowheeSpriteSheet,
                     'westerngull': this.westerngullSpriteSheet,
-                    'brewersblackbird': this.brewersblackbirdSpriteSheet
+                    'brewersblackbird': this.brewersblackbirdSpriteSheet,
+                    'longbilledcurlew': this.longbilledcurlewSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -2371,7 +2398,7 @@ A symphony beneath the skies.`,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
                     'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
-                    'spottedtowhee': 4, 'westerngull': 4, 'brewersblackbird': 4
+                    'spottedtowhee': 4, 'westerngull': 4, 'brewersblackbird': 4, 'longbilledcurlew': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -2386,7 +2413,7 @@ A symphony beneath the skies.`,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
                     'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
-                    'spottedtowhee': 4, 'westerngull': 4, 'brewersblackbird': 4
+                    'spottedtowhee': 4, 'westerngull': 4, 'brewersblackbird': 4, 'longbilledcurlew': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
@@ -2603,7 +2630,7 @@ A symphony beneath the skies.`,
                 if (this.birdSpawnTimer >= this.birdSpawnInterval) {
                     this.spawnBird();
                     this.birdSpawnTimer = 0;
-                    this.birdSpawnInterval = 2900 + Math.random() * 4300;
+                    this.birdSpawnInterval = 4000 + Math.random() * 6000;
                 }
 
                 this.checkBirdSpotting();
