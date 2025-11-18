@@ -98,6 +98,7 @@
                     { type: 'europeanstarling', name: 'European Starling',      scientificName: 'Sturnus vulgaris', weight: 4,  points: 18, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#2C2416',  flightPattern: 'bounce' },
                     { type: 'cascrubjay',   name: 'California Scrub-Jay',       scientificName: 'Aphelocoma californica', weight: 6,  points: 26, minSize: 16, maxSize: 24, minSpeed: 70,  maxSpeed: 115, color: '#4A6FA5',  flightPattern: 'bounce' },
                     { type: 'redwingedblackbird', name: 'Red-winged Blackbird',  scientificName: 'Agelaius phoeniceus', weight: 8,  points: 20, minSize: 14, maxSize: 20, minSpeed: 75,  maxSpeed: 120, color: '#000000',  flightPattern: 'bounce' },
+                    { type: 'brewersblackbird', name: 'Brewer\'s Blackbird',  scientificName: 'Euphagus cyanocephalus', weight: 7,  points: 22, minSize: 14, maxSize: 20, minSpeed: 70,  maxSpeed: 115, color: '#1A1A1A',  flightPattern: 'bounce' },
                     { type: 'kingfisher',   name: 'Belted Kingfisher',          scientificName: 'Megaceryle alcyon', weight: 2,  points: 38, minSize: 16, maxSize: 22, minSpeed: 90,  maxSpeed: 140, color: '#4682B4',  flightPattern: 'hoverDive' },
                     { type: 'hummingbird',  name: 'Ruby-throated Hummingbird', scientificName: 'Archilochus colubris', weight: 1,  points: 100,minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#228B22',  flightPattern: 'hover' },
                     { type: 'annashummingbird', name: "Anna's Hummingbird",    scientificName: 'Calypte anna', weight: 6,  points: 95, minSize: 8,  maxSize: 12, minSpeed: 120, maxSpeed: 200, color: '#E91E8C',  flightPattern: 'hover' },
@@ -719,6 +720,19 @@
                 };
                 this.redwingedblackbirdSpriteSheet.src = 'assets/images/sprites/redwingedblack bird sprite-128px-16-4.png';
 
+                // Brewer's Blackbird-specific sprite sheet
+                this.brewersblackbirdSpriteSheet = new Image();
+                this.isBrewersblackbirdSpriteSheetLoaded = false;
+                // Configure Brewer's Blackbird sprite sheet layout (4x4 grid - 16 frames)
+                this.brewersblackbirdSpriteSheetCols = 4;
+                this.brewersblackbirdSpriteSheetRows = 4;
+                this.brewersblackbirdSpriteTotalFrames = this.brewersblackbirdSpriteSheetCols * this.brewersblackbirdSpriteSheetRows;
+                this.brewersblackbirdSpriteAnimFps = 12; // animation speed in frames per second
+                this.brewersblackbirdSpriteSheet.onload = () => {
+                    this.isBrewersblackbirdSpriteSheetLoaded = true;
+                };
+                this.brewersblackbirdSpriteSheet.src = 'assets/images/sprites/brewers black bird sprite-128px-16-4.png';
+
                 // Anna's Hummingbird-specific sprite sheet
                 this.annashummingbirdSpriteSheet = new Image();
                 this.isAnnashummingbirdSpriteSheetLoaded = false;
@@ -804,6 +818,7 @@
                     'europeanstarling': { sheet: 'europeanstarlingSpriteSheet', loaded: 'isEuropeanstarlingSpriteSheetLoaded', cols: 'europeanstarlingSpriteSheetCols', rows: 'europeanstarlingSpriteSheetRows', height: 72 },
                     'cascrubjay': { sheet: 'cascrubjaySpriteSheet', loaded: 'isCascrubjaySpriteSheetLoaded', cols: 'cascrubjaySpriteSheetCols', rows: 'cascrubjaySpriteSheetRows', height: 76 },
                     'redwingedblackbird': { sheet: 'redwingedblackbirdSpriteSheet', loaded: 'isRedwingedblackbirdSpriteSheetLoaded', cols: 'redwingedblackbirdSpriteSheetCols', rows: 'redwingedblackbirdSpriteSheetRows', height: 73 },
+                    'brewersblackbird': { sheet: 'brewersblackbirdSpriteSheet', loaded: 'isBrewersblackbirdSpriteSheetLoaded', cols: 'brewersblackbirdSpriteSheetCols', rows: 'brewersblackbirdSpriteSheetRows', height: 73 },
                     'annashummingbird': { sheet: 'annashummingbirdSpriteSheet', loaded: 'isAnnashummingbirdSpriteSheetLoaded', cols: 'annashummingbirdSpriteSheetCols', rows: 'annashummingbirdSpriteSheetRows', height: 65 },
                     'bushtit': { sheet: 'bushtitSpriteSheet', loaded: 'isBushtitSpriteSheetLoaded', cols: 'bushtitSpriteSheetCols', rows: 'bushtitSpriteSheetRows', height: 68 },
                     'westernmeadowlark': { sheet: 'westernmeadowlarkSpriteSheet', loaded: 'isWesternmeadowlarkSpriteSheetLoaded', cols: 'westernmeadowlarkSpriteSheetCols', rows: 'westernmeadowlarkSpriteSheetRows', height: 74 }
@@ -1676,6 +1691,17 @@ On cattail thrones through spring they reign,<br>
 Masters of the wetland plain.`,
                         image: "assets/images/notebook/Red winged blackbird.png"
                     },
+                    brewersblackbird: {
+                        title: "Urban Wanderer",
+                        author: "by City Naturalist",
+                        poem: `With yellow eyes that pierce the day,<br>
+Through parking lots and fields they stray.<br>
+Glossy black with purple sheen,<br>
+The most adaptable bird I've seen.<br>
+From mountain pass to city street,<br>
+Brewer's blackbird makes life complete.`,
+                        image: "assets/images/notebook/brewers blackbird.png"
+                    },
                     annashummingbird: {
                         title: "Rose-crowned Jewel",
                         author: "by Garden Observer",
@@ -2329,7 +2355,8 @@ A symphony beneath the skies.`,
                     'mourningdove': this.mourningdoveSpriteSheet,
                     'acornwoodpecker': this.acornwoodpeckerSpriteSheet,
                     'spottedtowhee': this.spottedtowheeSpriteSheet,
-                    'westerngull': this.westerngullSpriteSheet
+                    'westerngull': this.westerngullSpriteSheet,
+                    'brewersblackbird': this.brewersblackbirdSpriteSheet
                 };
                 return typeMap[bird.type] || this.spriteSheet;
             }
@@ -2344,7 +2371,7 @@ A symphony beneath the skies.`,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
                     'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
-                    'spottedtowhee': 4, 'westerngull': 4
+                    'spottedtowhee': 4, 'westerngull': 4, 'brewersblackbird': 4
                 };
                 return colsMap[bird.type] || 4;
             }
@@ -2359,7 +2386,7 @@ A symphony beneath the skies.`,
                     'grebe': 4, 'grackle': 4, 'housefinch': 4, 'rockdove': 4, 'whitecrownedsparrow': 4,
                     'plover': 4, 'piedbilledgrebe': 4, 'loon': 4,
                     'stellersjay': 4, 'blackheadedgrosbeak': 4, 'mourningdove': 4, 'acornwoodpecker': 4,
-                    'spottedtowhee': 4, 'westerngull': 4
+                    'spottedtowhee': 4, 'westerngull': 4, 'brewersblackbird': 4
                 };
                 return rowsMap[bird.type] || 4;
             }
