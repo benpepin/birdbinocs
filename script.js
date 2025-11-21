@@ -77,6 +77,7 @@
                     { type: 'cardinal',     name: 'Northern Cardinal',         scientificName: 'Cardinalis cardinalis',  weight: 8,  points: 25, minSize: 16, maxSize: 24, minSpeed: 120,  maxSpeed: 240,  color: '#DC143C',  flightPattern: 'steady' },
                     { type: 'sparrow',      name: 'House Sparrow',             scientificName: 'Passer domesticus',      weight: 0, points: 12, minSize: 12, maxSize: 18, minSpeed: 80,  maxSpeed: 130, color: '#8B7355',  flightPattern: 'dart' },
                     { type: 'chickadee',    name: 'Black-capped Chickadee',    scientificName: 'Poecile atricapillus',   weight: 9,  points: 18, minSize: 12, maxSize: 18, minSpeed: 70,  maxSpeed: 110, color: '#3C3C3C',  flightPattern: 'flutter' },
+                    { type: 'darkeyedjunco', name: 'Dark-eyed Junco',          scientificName: 'Junco hyemalis',         weight: 2,  points: 20, minSize: 12, maxSize: 18, minSpeed: 70,  maxSpeed: 115, color: '#4A4A4A',  flightPattern: 'bounce' },
                     { type: 'goldfinch',    name: 'American Goldfinch',        scientificName: 'Spinus tristis', weight: 7,  points: 22, minSize: 12, maxSize: 16, minSpeed: 70,  maxSpeed: 120, color: '#FFD700',  flightPattern: 'bounce' },
                     { type: 'swallow',      name: 'Barn Swallow',              scientificName: 'Hirundo rustica', weight: 0,  points: 24, minSize: 12, maxSize: 18, minSpeed: 110, maxSpeed: 170, color: '#1E3A8A',  flightPattern: 'swoop' },
                     { type: 'oriole',       name: 'Baltimore Oriole',          scientificName: 'Icterus galbula', weight: 4,  points: 28, minSize: 14, maxSize: 20, minSpeed: 80,  maxSpeed: 130, color: '#FF8C00',  flightPattern: 'sineSlow' },
@@ -317,6 +318,19 @@
                     this.isChickadeeSpriteSheetLoaded = true;
                 };
                 this.chickadeeSpriteSheet.src = 'assets/images/sprites/black-capped-chickadee-spritesheet.png';
+
+                // Dark-eyed Junco-specific sprite sheet
+                this.darkeyedjuncoSpriteSheet = new Image();
+                this.isDarkeyedjuncoSpriteSheetLoaded = false;
+                // Configure dark-eyed junco sprite sheet layout (4x4 grid)
+                this.darkeyedjuncoSpriteSheetCols = 4;
+                this.darkeyedjuncoSpriteSheetRows = 4;
+                this.darkeyedjuncoSpriteTotalFrames = this.darkeyedjuncoSpriteSheetCols * this.darkeyedjuncoSpriteSheetRows;
+                this.darkeyedjuncoSpriteAnimFps = 12; // animation speed in frames per second
+                this.darkeyedjuncoSpriteSheet.onload = () => {
+                    this.isDarkeyedjuncoSpriteSheetLoaded = true;
+                };
+                this.darkeyedjuncoSpriteSheet.src = 'assets/images/sprites/darkeyedjunco-sprite-128px-16-4.png';
 
                 // Bald Eagle-specific sprite sheet
                 this.baldeagleSpriteSheet = new Image();
@@ -801,6 +815,7 @@
                     'pelican': { sheet: 'pelicanSpriteSheet', loaded: 'isPelicanSpriteSheetLoaded', cols: 'pelicanSpriteSheetCols', rows: 'pelicanSpriteSheetRows', height: 80 },
                     'bluejay': { sheet: 'bluejaySpriteSheet', loaded: 'isBluejayeSpriteSheetLoaded', cols: 'bluejaySpriteSheetCols', rows: 'bluejaySpriteSheetRows', height: 80 },
                     'chickadee': { sheet: 'chickadeeSpriteSheet', loaded: 'isChickadeeSpriteSheetLoaded', cols: 'chickadeeSpriteSheetCols', rows: 'chickadeeSpriteSheetRows', height: 80 },
+                    'darkeyedjunco': { sheet: 'darkeyedjuncoSpriteSheet', loaded: 'isDarkeyedjuncoSpriteSheetLoaded', cols: 'darkeyedjuncoSpriteSheetCols', rows: 'darkeyedjuncoSpriteSheetRows', height: 80 },
                     'eagle': { sheet: 'baldeagleSpriteSheet', loaded: 'isBaldEagleSpriteSheetLoaded', cols: 'baldeagleSpriteSheetCols', rows: 'baldeagleSpriteSheetRows', height: 120 },
                     'crow': { sheet: 'crowSpriteSheet', loaded: 'isCrowSpriteSheetLoaded', cols: 'crowSpriteSheetCols', rows: 'crowSpriteSheetRows', height: 80 },
                     'goose': { sheet: 'gooseSpriteSheet', loaded: 'isGooseSpriteSheetLoaded', cols: 'gooseSpriteSheetCols', rows: 'gooseSpriteSheetRows', height: 80 },
@@ -1300,6 +1315,17 @@ Small but mighty, brave and true.<br>
 With a cap of midnight blue,<br>
 Bringing joy throughout the year.`,
                         image: "assets/images/notebook/Black-capped-chickadee.png"
+                    },
+                    darkeyedjunco: {
+                        title: "Snowbird",
+                        author: "by Margaret Williams",
+                        poem: `Gray as winter's cloudy sky,<br>
+White belly flashing as you fly.<br>
+Hopping softly on the ground,<br>
+Seeds beneath the snow you've found.<br>
+Herald of the colder days,<br>
+Snowbird in your winter ways.`,
+                        image: "assets/images/notebook/darkeyedjunco.png"
                     },
                     goldfinch: {
                         title: "Golden Flight",
@@ -2356,6 +2382,7 @@ A shorebird's ancient, wild delight.`,
                     'pelican': this.pelicanSpriteSheet,
                     'bluejay': this.bluejaySpriteSheet,
                     'chickadee': this.chickadeeSpriteSheet,
+                    'darkeyedjunco': this.darkeyedjuncoSpriteSheet,
                     'eagle': this.baldeagleSpriteSheet,
                     'crow': this.crowSpriteSheet,
                     'goose': this.gooseSpriteSheet,
@@ -2782,6 +2809,9 @@ A shorebird's ancient, wild delight.`,
                     } else if (bird.type === 'loon' && this.loonSpriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.loonSpriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.loonSpriteTotalFrames;
+                    } else if (bird.type === 'darkeyedjunco' && this.darkeyedjuncoSpriteTotalFrames) {
+                        const advance = Math.max(1, Math.floor(this.darkeyedjuncoSpriteAnimFps * bird.animTime));
+                        bird.frameIndex = advance % this.darkeyedjuncoSpriteTotalFrames;
                     } else if (this.spriteTotalFrames) {
                         const advance = Math.max(1, Math.floor(this.spriteAnimFps * bird.animTime));
                         bird.frameIndex = advance % this.spriteTotalFrames;
