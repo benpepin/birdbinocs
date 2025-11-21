@@ -86,7 +86,7 @@
                     { type: 'raven',        name: 'Common Raven',              scientificName: 'Corvus corax', weight: 3,  points: 30, minSize: 24, maxSize: 34, minSpeed: 60,  maxSpeed: 100, color: '#0B0B0B',  flightPattern: 'glide' },
                     { type: 'owl',          name: 'Great Horned Owl',          scientificName: 'Bubo virginianus', weight: 0,  points: 45, minSize: 28, maxSize: 40, minSpeed: 40,  maxSpeed: 70,  color: '#6B4423',  flightPattern: 'smooth' },
                     { type: 'vulture',      name: 'Turkey Vulture',            scientificName: 'Cathartes aura', weight: 6,  points: 50, minSize: 32, maxSize: 46, minSpeed: 35,  maxSpeed: 65,  color: '#3D2817',  flightPattern: 'sineVerySlow' },
-                    { type: 'hawk',         name: 'Red-tailed Hawk',           scientificName: 'Buteo jamaicensis', weight: 0,  points: 40, minSize: 35, maxSize: 50, minSpeed: 30,  maxSpeed: 60,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
+                    { type: 'hawk',         name: 'Red-tailed Hawk',           scientificName: 'Buteo jamaicensis', weight: 2,  points: 40, minSize: 18, maxSize: 25, minSpeed: 100,  maxSpeed: 150,  color: '#8B4513',  flightPattern: 'sineVerySlow' },
                     { type: 'eagle',        name: 'Bald Eagle',                 scientificName: 'Haliaeetus leucocephalus', weight: 2,  points: 80, minSize: 30, maxSize: 45, minSpeed: 105,  maxSpeed: 165,  color: '#5C4033',  flightPattern: 'majestic' },
                     { type: 'heron',        name: 'Great Blue Heron',          scientificName: 'Ardea herodias', weight: 0,  points: 70, minSize: 38, maxSize: 55, minSpeed: 60,  maxSpeed: 85,  color: '#6A7FA0',  flightPattern: 'slowFlap' },
                     { type: 'duck',         name: 'Mallard',                    scientificName: 'Anas platyrhynchos', weight: 4,  points: 22, minSize: 24, maxSize: 32, minSpeed: 70,  maxSpeed: 110, color: '#2E8B57',  flightPattern: 'steady' },
@@ -360,15 +360,15 @@
                 // Red-tailed Hawk-specific sprite sheet
                 this.hawkSpriteSheet = new Image();
                 this.isHawkSpriteSheetLoaded = false;
-                // Configure hawk sprite sheet layout (6x6 grid)
-                this.hawkSpriteSheetCols = 6;
-                this.hawkSpriteSheetRows = 6;
+                // Configure hawk sprite sheet layout (4x4 grid)
+                this.hawkSpriteSheetCols = 4;
+                this.hawkSpriteSheetRows = 4;
                 this.hawkSpriteTotalFrames = this.hawkSpriteSheetCols * this.hawkSpriteSheetRows;
                 this.hawkSpriteAnimFps = 12; // animation speed in frames per second
                 this.hawkSpriteSheet.onload = () => {
                     this.isHawkSpriteSheetLoaded = true;
                 };
-                this.hawkSpriteSheet.src = 'assets/images/sprites/redtailedhawksprite.png';
+                this.hawkSpriteSheet.src = 'assets/images/sprites/hawksprite.png';
 
                 // Ruby-throated Hummingbird-specific sprite sheet
                 this.hummingbirdSpriteSheet = new Image();
